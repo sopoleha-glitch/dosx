@@ -1,185 +1,339 @@
-// Конфигурация ЮMoney (client_id можно показывать в коде)
+// Конфигурация ЮMoney
 const YOOMONEY_CLIENT_ID = 'F7642ED1CA446A7CB47557510D5A8638B35B180125A793FCF6A2EB8F98BBBAC9';
 
-// Каталог документов
+// ============================================
+// КАТАЛОГ ДОКУМЕНТОВ (15 штук с новыми ценами)
+// ============================================
 const documentsCatalog = [
+    // 1. Договор аренды квартиры
     {
         id: 1,
         title: "Договор аренды квартиры",
         category: "realty",
-        price: 249,
-        description: "Полноценный договор найма жилого помещения",
-        fullDescription: "Договор составлен с учетом всех требований ГК РФ. Включает: предмет договора, права и обязанности сторон, порядок расчетов, ответственность, порядок расторжения.",
+        price: 229,
+        description: "Полноценный договор найма жилого помещения с описью имущества",
+        fullDescription: "Договор составлен с учетом всех требований ГК РФ. Включает: предмет договора, права и обязанности сторон, порядок расчетов, ответственность, порядок расторжения, а также приложение с описью имущества.",
         features: [
-            "Защита прав арендодателя",
-            "Прописаны все риски",
-            "Возможность указать залог",
-            "Кто платит коммуналку"
+            "Защита прав арендодателя и арендатора",
+            "Подробная опись имущества",
+            "Порядок внесения залога",
+            "Кто платит коммунальные услуги",
+            "Права на проживание с животными"
         ],
         formats: ["PDF", "DOCX"],
         popular: true,
         downloads: 1543
     },
+    
+    // 2. Расписка о получении денег
     {
         id: 2,
         title: "Расписка о получении денег",
         category: "finance",
         price: 149,
-        description: "Юридически значимая расписка. Идеально для займов между физлицами.",
-        fullDescription: "Расписка составлена так, чтобы иметь доказательную силу в суде. Включает: ФИО сторон, паспортные данные, сумму цифрами и прописью, дату возврата, проценты.",
+        description: "Юридически значимая расписка с возможностью привлечения свидетелей",
+        fullDescription: "Расписка составлена так, чтобы иметь доказательную силу в суде. Включает: ФИО сторон, паспортные данные, сумму цифрами и прописью, дату возврата, возможность привлечения двух свидетелей.",
         features: [
             "Помогает вернуть долг через суд",
-            "Учитывает проценты",
-            "Штраф за просрочку",
-            "Можно указать поручителя"
+            "Возможность привлечения свидетелей",
+            "Четкая дата возврата",
+            "Паспортные данные обеих сторон",
+            "Сумма прописью и цифрами"
         ],
         formats: ["PDF", "DOCX"],
         popular: true,
         downloads: 2341
     },
+    
+    // 3. Договор купли-продажи автомобиля
     {
         id: 3,
         title: "Договор купли-продажи автомобиля",
         category: "auto",
-        price: 299,
-        description: "Официальный договор для продажи авто. Помогает избежать проблем с ГИБДД.",
-        fullDescription: "Соответствует требованиям ГИБДД. Включает: полные характеристики авто, паспортные данные сторон, цену, порядок передачи.",
+        price: 289,
+        description: "Официальный договор для продажи авто. Соответствует требованиям ГИБДД.",
+        fullDescription: "Договор купли-продажи транспортного средства. Включает: полные характеристики авто (VIN, двигатель, кузов, цвет), паспортные данные сторон, цену, порядок передачи, отсутствие обременений.",
         features: [
-            "Для ГИБДД подходит",
-            "Учитывает техсостояние",
-            "Акт приема-передачи",
-            "Без риска обмана"
+            "Соответствует требованиям ГИБДД",
+            "Все технические характеристики",
+            "Составляется в 3 экземплярах",
+            "Включает расписку о передаче денег",
+            "Срок для перерегистрации 10 дней"
         ],
         formats: ["PDF", "DOCX"],
         popular: true,
         downloads: 1876
     },
+    
+    // 4. Сборник претензий (6 образцов)
     {
         id: 4,
-        title: "Претензия на возврат товара",
+        title: "Сборник претензий (6 образцов)",
         category: "claims",
-        price: 199,
-        description: "Юридически грамотная претензия в магазин. Помогает вернуть деньги за брак.",
-        fullDescription: "Составлена по ЗоЗПП. Включает: ссылки на статьи закона, требования о возврате или замене, сроки ответа.",
+        price: 299,
+        description: "6 готовых образцов претензий для защиты прав потребителей",
+        fullDescription: "Полный сборник претензий для всех ситуаций: при обнаружении недостатков (гарантия), для некачественного товара (до 2 лет), для технически сложных товаров, возврат товара надлежащего качества, нарушение сроков работ, недостатки услуг.",
         features: [
-            "Работает по Закону о защите прав потребителей",
-            "Помогает без суда",
-            "Срок ответа 10 дней",
-            "Можно приложить чек"
+            "Претензия по недостаткам (гарантия)",
+            "Претензия для товара (до 2 лет)",
+            "Претензия для технически сложных товаров",
+            "Заявление на возврат (не подошел)",
+            "Претензия по нарушению сроков",
+            "Претензия по недостаткам услуг"
         ],
         formats: ["PDF", "DOCX"],
-        popular: false,
+        popular: true,
         downloads: 987
     },
+    
+    // 5. Трудовой договор
     {
         id: 5,
         title: "Трудовой договор",
         category: "business",
-        price: 349,
-        description: "Полноценный трудовой договор для официального оформления сотрудника.",
-        fullDescription: "Соответствует ТК РФ. Включает: режим работы, оплату, обязанности, ответственность, соцпакет.",
+        price: 299,
+        description: "Полноценный трудовой договор для официального оформления сотрудника",
+        fullDescription: "Трудовой договор составлен в соответствии с ТК РФ. Включает: предмет договора, срок действия, условия оплаты труда, режим рабочего времени, права и обязанности сторон, ответственность, реквизиты.",
         features: [
             "Для ИП и ООО",
-            "Учитывает все нюансы ТК",
+            "Учитывает все требования ТК РФ",
             "Испытательный срок",
-            "Материальная ответственность"
+            "Должностной оклад и премии",
+            "Режим рабочего времени",
+            "Ежегодный отпуск",
+            "Социальное страхование"
         ],
         formats: ["PDF", "DOCX"],
-        popular: false,
+        popular: true,
         downloads: 654
     },
+    
+    // 6. Договор дарения
     {
         id: 6,
-        title: "Договор дарения",
+        title: "Договор дарения (с актом)",
         category: "realty",
-        price: 279,
-        description: "Договор дарения недвижимости или движимого имущества между близкими.",
-        fullDescription: "Составлен с учетом рисков оспаривания. Подходит для дарения квартиры, машины, денег.",
+        price: 249,
+        description: "Договор дарения движимого или недвижимого имущества с актом приема-передачи",
+        fullDescription: "Полноценный договор дарения для передачи имущества или денежных средств. Включает: предмет договора, права и обязанности сторон, порядок передачи, отказ от дара, отмену дарения, акт приема-передачи.",
         features: [
-            "Между родственниками",
-            "Без налога",
-            "Регистрация в Росреестре",
-            "Защита от оспаривания"
+            "Дарение движимого и недвижимого имущества",
+            "Дарение денежных средств",
+            "Возможность отказа от дара",
+            "Отмена дарения по закону",
+            "Акт приема-передачи в комплекте"
         ],
         formats: ["PDF", "DOCX"],
         popular: false,
         downloads: 543
     },
+    
+    // 7. Договор займа
     {
         id: 7,
-        title: "Договор займа",
+        title: "Договор займа (с процентами)",
         category: "finance",
         price: 199,
-        description: "Официальный договор займа с процентами или без. Для крупных сумм.",
-        fullDescription: "Позволяет дать в долг без риска. Включает: график платежей, проценты, штрафы, залог.",
+        description: "Официальный договор займа между физическими лицами с процентами или без",
+        fullDescription: "Договор займа, составленный по ГК РФ. Включает: предмет договора, порядок предоставления и возврата, проценты, ответственность за просрочку, форс-мажор, реквизиты.",
         features: [
-            "С процентами или без",
-            "Можно с залогом",
+            "С процентами или без (можно 0%)",
+            "Подходит для крупных сумм",
+            "Четкий график возврата",
             "Пени за просрочку",
+            "Форс-мажорные обстоятельства",
             "Досудебный порядок"
         ],
         formats: ["PDF", "DOCX"],
         popular: true,
         downloads: 1432
     },
+    
+    // 8. Соглашение о детях при разводе
     {
         id: 8,
-        title: "Соглашение о детях при разводе",
+        title: "Соглашение о детях и разделе имущества",
         category: "family",
-        price: 399,
-        description: "Соглашение о месте жительства детей и порядке общения после развода.",
-        fullDescription: "Помогает избежать споров в суде. Учитывает интересы ребенка, график встреч, алименты.",
+        price: 349,
+        description: "Полное соглашение о детях и разделе имущества при разводе",
+        fullDescription: "Соглашение составлено по Семейному кодексу РФ. Включает: место жительства детей, порядок общения, алименты, раздел квартиры, автомобилей и иного имущества.",
         features: [
-            "Утверждается судом",
-            "Защита прав ребенка",
-            "Четкий график",
-            "Алименты"
+            "Место жительства детей",
+            "Порядок общения с ребенком",
+            "Алименты и содержание",
+            "Раздел квартиры и имущества",
+            "Юридическая сила без суда"
         ],
         formats: ["PDF", "DOCX"],
         popular: false,
         downloads: 432
     },
+    
+    // 9. Сборник завещаний (4 вида)
     {
         id: 9,
-        title: "Завещание",
+        title: "Сборник завещаний (4 вида)",
         category: "family",
         price: 299,
-        description: "Простое завещание на случай смерти. Можно указать наследников и доли.",
-        fullDescription: "Составлено по требованиям нотариата. Включает: назначение наследников, распределение долей.",
+        description: "4 готовых шаблона завещаний для разных ситуаций",
+        fullDescription: "Сборник завещаний по ГК РФ: с подназначением наследника, с лишением наследства, всего имущества, на имя супруга.",
         features: [
-            "Можно без нотариуса",
-            "Закрытое завещание",
-            "Подназначение наследников",
-            "Завещательный отказ"
+            "С подназначением наследника",
+            "С лишением наследства",
+            "На имя супруга",
+            "Для составления по месту лечения",
+            "Соответствуют ГК РФ (ст. 1149)"
         ],
         formats: ["PDF", "DOCX"],
         popular: false,
         downloads: 876
+    },
+    
+    // 10. Счет на оплату
+    {
+        id: 10,
+        title: "Счет на оплату (бланк)",
+        category: "business",
+        price: 99,
+        description: "Готовый бланк счета на оплату для выставления клиентам",
+        fullDescription: "Универсальный бланк счета на оплату. Включает: реквизиты поставщика, покупателя, таблицу для позиций, итоговые суммы, подписи.",
+        features: [
+            "Готовый бланк для печати",
+            "Все необходимые реквизиты",
+            "Таблица для нескольких позиций",
+            "Расчет итоговой суммы",
+            "Подписи руководителя и бухгалтера"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: true,
+        downloads: 2345
+    },
+    
+    // 11. Договор оказания услуг
+    {
+        id: 11,
+        title: "Договор оказания услуг (универсальный)",
+        category: "business",
+        price: 269,
+        description: "Универсальный договор для любых услуг: ремонт, клининг, обучение, консультации",
+        fullDescription: "Договор возмездного оказания услуг по ГК РФ. Включает: предмет, права и обязанности, сроки, цену, ответственность, порядок сдачи-приемки.",
+        features: [
+            "Универсальный — для любых услуг",
+            "Четкие сроки оказания",
+            "Порядок сдачи-приемки",
+            "Ответственность за просрочку",
+            "Право заказчика проверять ход работ"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: true,
+        downloads: 1543
+    },
+    
+    // 12. Договор купли-продажи товара
+    {
+        id: 12,
+        title: "Договор купли-продажи товара (с актом)",
+        category: "business",
+        price: 249,
+        description: "Универсальный договор купли-продажи для любых товаров",
+        fullDescription: "Договор купли-продажи по ГК РФ с актом приема-передачи. Включает: предмет, качество, цену, порядок передачи, ответственность.",
+        features: [
+            "Универсальный — для любых товаров",
+            "Подробные условия о качестве",
+            "Гибкая система оплаты",
+            "Порядок приемки и проверки",
+            "Акт приема-передачи в комплекте"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: true,
+        downloads: 876
+    },
+    
+    // 13. Акт выполненных работ
+    {
+        id: 13,
+        title: "Акт выполненных работ (оказанных услуг)",
+        category: "business",
+        price: 99,
+        description: "Готовый бланк акта приема-сдачи работ/услуг",
+        fullDescription: "Акт выполненных работ, подтверждающий факт оказания услуг. Включает: реквизиты сторон, перечень услуг, количество, цену, итоговую сумму.",
+        features: [
+            "Подтверждение факта оказания услуг",
+            "Детализация по каждой услуге",
+            "Указание количества и цены",
+            "Итоговая сумма прописью",
+            "Фраза об отсутствии претензий"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: true,
+        downloads: 1654
+    },
+    
+    // 14. Сборник доверенностей (5 видов)
+    {
+        id: 14,
+        title: "Сборник доверенностей (5 видов)",
+        category: "business",
+        price: 299,
+        description: "5 готовых шаблонов доверенностей для разных ситуаций",
+        fullDescription: "Сборник доверенностей: в налоговую, на ребенка, на получение денег, генеральная на авто, на ведение судебного дела.",
+        features: [
+            "Для налоговой (от юрлица)",
+            "На ребенка (бабушке/дедушке)",
+            "На получение денег",
+            "Генеральная на автомобиль",
+            "На ведение судебных дел"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: true,
+        downloads: 765
+    },
+    
+    // 15. Договор подряда
+    {
+        id: 15,
+        title: "Договор подряда (с ТЗ и календарным планом)",
+        category: "business",
+        price: 299,
+        description: "Полноценный договор подряда для строительных и ремонтных работ",
+        fullDescription: "Договор подряда по ГК РФ с техническим заданием и календарным планом. Включает: предмет, сроки, сумму, гарантийные обязательства.",
+        features: [
+            "Для строительства и ремонта",
+            "Четкие сроки выполнения",
+            "Гарантийные обязательства",
+            "Порядок сдачи-приемки",
+            "Техническое задание",
+            "Календарный план"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: true,
+        downloads: 543
     }
 ];
+
+// ============================================
+// БОНУСНАЯ СИСТЕМА
+// ============================================
+const BONUS_LEVELS = {
+    1: { generations: 1, checks: 0, message: "🎁 +1 генерация нейросети" },
+    3: { generations: 3, checks: 1, message: "🎁 +3 генерации + проверка документа" },
+    5: { generations: 5, checks: 2, message: "🎁 +5 генераций + 2 проверки" },
+    10: { generations: 10, checks: 5, message: "🔥 VIP + безлимит на месяц", vip: true }
+};
 
 // Тарифы
 const TARIFFS = {
     free: {
-        name: "Бесплатный",
-        canBuyTemplates: true,
-        canGenerateAI: false,
-        aiGenerations: 0,
-        price: 0
+        name: "Базовый",
+        discount: 0,
+        bonusMultiplier: 1
     },
     pro: {
         name: "PRO",
-        canBuyTemplates: true,
-        canGenerateAI: true,
-        aiGenerations: 30,
-        price: 499
-    },
-    business: {
-        name: "Бизнес",
-        canBuyTemplates: true,
-        canGenerateAI: true,
-        aiGenerations: 100,
-        price: 1490
+        price: 499,
+        discount: 0.2, // 20% скидка на все шаблоны
+        bonusMultiplier: 2, // удвоенные бонусы
+        aiGenerations: 10 // сразу 10 генераций
     }
 };
 
@@ -188,104 +342,53 @@ let cart = [];
 let currentUser = {
     tariff: 'free',
     aiGenerationsLeft: 0,
+    checksLeft: 0,
+    purchases: [], // история покупок (id документов)
     email: localStorage.getItem('user_email') || null
 };
 
-// Основной класс приложения
+// ============================================
+// ОСНОВНОЙ КЛАСС
+// ============================================
 class PreepDocs {
     constructor() {
-        this.cart = []; // Инициализируем корзину
-        this.currentUser = {
-            tariff: 'free',
-            aiGenerationsLeft: 0,
-            email: localStorage.getItem('user_email') || null
-        };
-        this.init();
-    }
-    
-    init() {
-        this.displayDocuments();
-        this.displayPopular();
-        this.setupEventListeners();
-        this.updateCartCount();
+        this.cart = [];
         this.loadUserData();
-        this.updateAILimit();
+        this.init();
     }
     
     loadUserData() {
         const saved = localStorage.getItem('preep_user');
         if (saved) {
             try {
-                this.currentUser = JSON.parse(saved);
+                currentUser = JSON.parse(saved);
             } catch (e) {
-                console.error('Error loading user data', e);
+                console.error('Error loading user data');
             }
         }
-        this.updateUserInterface();
     }
     
-    updateUserInterface() {
-        const tariffInfo = document.getElementById('tariffInfo');
-        if (!tariffInfo) return;
-        
-        if (this.currentUser.tariff === 'free') {
-            tariffInfo.innerHTML = `
-                <span>Бесплатный тариф</span>
-                <button class="btn btn-small btn-primary" id="upgradeBtn">PRO 499₽</button>
-            `;
-        } else {
-            tariffInfo.innerHTML = `
-                <span class="tariff-badge">${TARIFFS[this.currentUser.tariff]?.name || 'PRO'}</span>
-                <span class="tariff-generations">Осталось: ${this.currentUser.aiGenerationsLeft || 0}</span>
-            `;
-        }
-        
-        const aiLeftSpan = document.getElementById('aiGenerationsLeft');
-        if (aiLeftSpan) {
-            aiLeftSpan.textContent = this.currentUser.aiGenerationsLeft || 0;
-        }
-        
-        // Обновляем обработчик
-        const upgradeBtn = document.getElementById('upgradeBtn');
-        if (upgradeBtn) {
-            upgradeBtn.addEventListener('click', () => this.showTariffModal());
-        }
+    saveUserData() {
+        localStorage.setItem('preep_user', JSON.stringify(currentUser));
     }
     
-    updateAILimit() {
-        const limitBadge = document.getElementById('aiLimitBadge');
-        const limitInfo = document.getElementById('aiLimitInfo');
-        
-        if (!limitBadge || !limitInfo) return;
-        
-        if (this.currentUser.tariff === 'free') {
-            limitBadge.textContent = 'Только PRO';
-            limitInfo.style.display = 'none';
-        } else {
-            limitBadge.textContent = `${this.currentUser.aiGenerationsLeft || 0} генераций`;
-            limitInfo.style.display = 'block';
-        }
+    init() {
+        this.displayDocuments();
+        this.setupEventListeners();
+        this.updateCartCount();
+        this.updateBonusInfo();
+        this.updateAIInfo();
     }
     
     setupEventListeners() {
         // Поиск
-        const searchBtn = document.getElementById('searchBtn');
-        if (searchBtn) {
-            searchBtn.addEventListener('click', () => this.searchDocuments());
-        }
+        document.getElementById('searchBtn').addEventListener('click', () => this.searchDocuments());
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.searchDocuments();
+        });
         
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') this.searchDocuments();
-            });
-        }
-        
-        // Фильтр по категориям
-        const categoryFilter = document.getElementById('categoryFilter');
-        if (categoryFilter) {
-            categoryFilter.addEventListener('change', () => this.searchDocuments());
-        }
+        // Фильтр категорий
+        document.getElementById('categoryFilter').addEventListener('change', () => this.searchDocuments());
         
         // Категории-чипсы
         document.querySelectorAll('.category-chip').forEach(el => {
@@ -293,91 +396,36 @@ class PreepDocs {
                 document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
                 e.target.classList.add('active');
                 const cat = e.target.dataset.cat;
-                if (categoryFilter) categoryFilter.value = cat;
+                document.getElementById('categoryFilter').value = cat;
                 this.searchDocuments();
             });
         });
         
         // Корзина
-        const cartBtn = document.getElementById('cartBtn');
-        if (cartBtn) {
-            cartBtn.addEventListener('click', () => this.showCart());
-        }
+        document.getElementById('cartBtn').addEventListener('click', () => this.showCart());
+        document.getElementById('closeCartModal').addEventListener('click', () => this.closeModal('cartModal'));
         
-        const closeCartModal = document.getElementById('closeCartModal');
-        if (closeCartModal) {
-            closeCartModal.addEventListener('click', () => this.closeModal('cartModal'));
-        }
-        
-        // Модалки документов
-        const closeDocModal = document.getElementById('closeDocModal');
-        if (closeDocModal) {
-            closeDocModal.addEventListener('click', () => this.closeModal('docModal'));
-        }
+        // Модалки
+        document.getElementById('closeDocModal').addEventListener('click', () => this.closeModal('docModal'));
+        document.getElementById('closePaymentModal').addEventListener('click', () => this.closeModal('paymentModal'));
+        document.getElementById('closeSuccessModal').addEventListener('click', () => this.closeModal('successModal'));
+        document.getElementById('continueBtn').addEventListener('click', () => {
+            this.closeModal('successModal');
+            this.cart = [];
+            this.updateCartCount();
+        });
         
         // Оплата
-        const checkoutBtn = document.getElementById('checkoutBtn');
-        if (checkoutBtn) {
-            checkoutBtn.addEventListener('click', () => this.showPayment());
-        }
+        document.getElementById('checkoutBtn').addEventListener('click', () => this.showPayment());
+        document.getElementById('payBtn').addEventListener('click', () => this.processPayment());
         
-        const closePaymentModal = document.getElementById('closePaymentModal');
-        if (closePaymentModal) {
-            closePaymentModal.addEventListener('click', () => this.closeModal('paymentModal'));
-        }
-        
-        const payBtn = document.getElementById('payBtn');
-        if (payBtn) {
-            payBtn.addEventListener('click', () => this.processPayment());
-        }
-        
-        // Успешная оплата
-        const closeSuccessModal = document.getElementById('closeSuccessModal');
-        if (closeSuccessModal) {
-            closeSuccessModal.addEventListener('click', () => this.closeModal('successModal'));
-        }
-        
-        const continueBtn = document.getElementById('continueBtn');
-        if (continueBtn) {
-            continueBtn.addEventListener('click', () => {
-                this.closeModal('successModal');
-                this.cart = [];
-                this.updateCartCount();
-            });
-        }
-        
-        // Генерация нейросетью
-        const generateAiBtn = document.getElementById('generateAiBtn');
-        if (generateAiBtn) {
-            generateAiBtn.addEventListener('click', () => this.generateWithAI());
-        }
-        
-        const copyAiResult = document.getElementById('copyAiResult');
-        if (copyAiResult) {
-            copyAiResult.addEventListener('click', () => this.copyAIResult());
-        }
-        
-        const downloadAiResult = document.getElementById('downloadAiResult');
-        if (downloadAiResult) {
-            downloadAiResult.addEventListener('click', () => this.downloadAIResult());
-        }
-        
-        // Тарифы
-        const closeTariffModal = document.getElementById('closeTariffModal');
-        if (closeTariffModal) {
-            closeTariffModal.addEventListener('click', () => this.closeModal('tariffModal'));
-        }
-        
-        const confirmTariffBtn = document.getElementById('confirmTariffBtn');
-        if (confirmTariffBtn) {
-            confirmTariffBtn.addEventListener('click', () => this.processTariffPayment());
-        }
+        // Нейросеть
+        document.getElementById('generateAiBtn').addEventListener('click', () => this.generateWithAI());
+        document.getElementById('copyAiResult').addEventListener('click', () => this.copyAIResult());
+        document.getElementById('downloadAiResult').addEventListener('click', () => this.downloadAIResult());
         
         // Вход
-        const loginBtn = document.getElementById('loginBtn');
-        if (loginBtn) {
-            loginBtn.addEventListener('click', () => this.showLoginModal());
-        }
+        document.getElementById('loginBtn').addEventListener('click', () => this.showLoginModal());
         
         // Закрытие по клику вне модалки
         window.addEventListener('click', (e) => {
@@ -387,29 +435,32 @@ class PreepDocs {
         });
     }
     
-    // ===== Документы =====
+    // ===== КАТАЛОГ =====
     
     displayDocuments(filteredDocs = null) {
         const container = document.getElementById('docsContainer');
-        if (!container) return;
-        
         const docs = filteredDocs || documentsCatalog;
         
-        container.innerHTML = docs.map(doc => `
+        // Применяем скидку для PRO-тарифа
+        const discount = currentUser.tariff === 'pro' ? TARIFFS.pro.discount : 0;
+        
+        container.innerHTML = docs.map(doc => {
+            const finalPrice = discount ? Math.round(doc.price * (1 - discount)) : doc.price;
+            return `
             <div class="doc-card ${doc.popular ? 'popular' : ''}" onclick="app.showDocument(${doc.id})">
                 <span class="doc-category">${this.getCategoryName(doc.category)}</span>
                 <h3 class="doc-title">${doc.title}</h3>
                 <p class="doc-description">${doc.description}</p>
                 <div class="doc-footer">
-                    <span class="doc-price">${doc.price} ₽</span>
+                    <div>
+                        <span class="doc-price">${finalPrice} ₽</span>
+                        ${discount ? `<span class="doc-old-price">${doc.price} ₽</span>` : ''}
+                    </div>
                     <span class="doc-format">📄 ${doc.formats.join(' + ')}</span>
                 </div>
+                <div class="doc-bonus">🎁 +1 генерация</div>
             </div>
-        `).join('');
-    }
-    
-    displayPopular() {
-        // Можно добавить отдельный контейнер для популярных
+        `}).join('');
     }
     
     getCategoryName(cat) {
@@ -425,11 +476,8 @@ class PreepDocs {
     }
     
     searchDocuments() {
-        const searchInput = document.getElementById('searchInput');
-        const categoryFilter = document.getElementById('categoryFilter');
-        
-        const searchText = searchInput ? searchInput.value.toLowerCase() : '';
-        const category = categoryFilter ? categoryFilter.value : 'all';
+        const searchText = document.getElementById('searchInput').value.toLowerCase();
+        const category = document.getElementById('categoryFilter').value;
         
         const filtered = documentsCatalog.filter(doc => {
             const matchesSearch = doc.title.toLowerCase().includes(searchText) || 
@@ -440,9 +488,8 @@ class PreepDocs {
         
         this.displayDocuments(filtered);
         
-        const container = document.getElementById('docsContainer');
-        if (filtered.length === 0 && container) {
-            container.innerHTML = `
+        if (filtered.length === 0) {
+            document.getElementById('docsContainer').innerHTML = `
                 <div class="no-results">
                     <p>По вашему запросу ничего не найдено</p>
                     <button class="btn btn-outline" onclick="app.resetSearch()">Сбросить</button>
@@ -452,16 +499,10 @@ class PreepDocs {
     }
     
     resetSearch() {
-        const searchInput = document.getElementById('searchInput');
-        const categoryFilter = document.getElementById('categoryFilter');
-        
-        if (searchInput) searchInput.value = '';
-        if (categoryFilter) categoryFilter.value = 'all';
-        
+        document.getElementById('searchInput').value = '';
+        document.getElementById('categoryFilter').value = 'all';
         document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
-        const allChip = document.querySelector('.category-chip[data-cat="all"]');
-        if (allChip) allChip.classList.add('active');
-        
+        document.querySelector('.category-chip[data-cat="all"]').classList.add('active');
         this.displayDocuments();
     }
     
@@ -469,14 +510,18 @@ class PreepDocs {
         const doc = documentsCatalog.find(d => d.id === id);
         if (!doc) return;
         
-        const modalContent = document.getElementById('docDetailContent');
-        if (!modalContent) return;
+        const discount = currentUser.tariff === 'pro' ? TARIFFS.pro.discount : 0;
+        const finalPrice = discount ? Math.round(doc.price * (1 - discount)) : doc.price;
         
+        const modalContent = document.getElementById('docDetailContent');
         modalContent.innerHTML = `
             <div class="doc-detail">
                 <span class="doc-detail-category">${this.getCategoryName(doc.category)}</span>
                 <h2 class="doc-detail-title">${doc.title}</h2>
-                <div class="doc-detail-price">${doc.price} ₽</div>
+                <div class="doc-detail-price">
+                    ${finalPrice} ₽
+                    ${discount ? `<span class="doc-detail-old-price">${doc.price} ₽</span>` : ''}
+                </div>
                 
                 <div class="doc-detail-description">
                     <p>${doc.fullDescription}</p>
@@ -493,6 +538,10 @@ class PreepDocs {
                     ${doc.formats.map(f => `<span class="format-badge">📄 ${f}</span>`).join('')}
                 </div>
                 
+                <div class="doc-detail-bonus">
+                    🎁 При покупке вы получите +1 бесплатную генерацию нейросети
+                </div>
+                
                 <button class="btn btn-primary btn-block" onclick="app.addToCart(${doc.id})">
                     🛒 Добавить в корзину
                 </button>
@@ -502,18 +551,20 @@ class PreepDocs {
         this.openModal('docModal');
     }
     
-    // ===== Корзина и оплата =====
+    // ===== КОРЗИНА =====
     
     addToCart(id) {
         const doc = documentsCatalog.find(d => d.id === id);
         if (!doc) return;
         
-        if (!this.cart) this.cart = [];
+        const discount = currentUser.tariff === 'pro' ? TARIFFS.pro.discount : 0;
+        const finalPrice = discount ? Math.round(doc.price * (1 - discount)) : doc.price;
         
         this.cart.push({
             id: doc.id,
             title: doc.title,
-            price: doc.price
+            price: finalPrice,
+            originalPrice: doc.price
         });
         
         this.updateCartCount();
@@ -522,29 +573,23 @@ class PreepDocs {
     }
     
     removeFromCart(index) {
-        if (!this.cart) this.cart = [];
         this.cart.splice(index, 1);
         this.updateCartCount();
         this.showCart();
-        this.showToast('Товар удален из корзины');
     }
     
     updateCartCount() {
-        const cartCount = document.getElementById('cartCount');
-        if (cartCount) {
-            cartCount.textContent = this.cart && this.cart.length ? this.cart.length : 0;
-        }
+        document.getElementById('cartCount').textContent = this.cart.length;
     }
     
     showCart() {
         const cartItems = document.getElementById('cartItems');
-        const cartTotal = document.getElementById('cartTotal');
+        const cartBonus = document.getElementById('cartBonus');
         
-        if (!cartItems || !cartTotal) return;
-        
-        if (!this.cart || this.cart.length === 0) {
+        if (this.cart.length === 0) {
             cartItems.innerHTML = '<p class="empty-cart">Корзина пуста</p>';
-            cartTotal.textContent = 'Итого: 0 ₽';
+            cartBonus.innerHTML = '';
+            document.getElementById('cartTotal').textContent = 'Итого: 0 ₽';
         } else {
             cartItems.innerHTML = this.cart.map((item, index) => `
                 <div class="cart-item">
@@ -555,24 +600,210 @@ class PreepDocs {
             `).join('');
             
             const total = this.cart.reduce((sum, item) => sum + item.price, 0);
-            cartTotal.textContent = `Итого: ${total} ₽`;
+            document.getElementById('cartTotal').textContent = `Итого: ${total} ₽`;
+            
+            // Показываем бонусы за эту покупку
+            const bonus = this.calculateCartBonus();
+            cartBonus.innerHTML = `
+                <h4>🎁 Бонус за эту покупку:</h4>
+                <p>+${bonus.generations} генераций нейросети</p>
+                ${bonus.checks ? `<p>+${bonus.checks} проверок документов</p>` : ''}
+                ${bonus.vip ? '<p>🔥 VIP статус на месяц</p>' : ''}
+            `;
         }
         
         this.openModal('cartModal');
     }
     
+    calculateCartBonus() {
+        const count = this.cart.length;
+        const multiplier = currentUser.tariff === 'pro' ? TARIFFS.pro.bonusMultiplier : 1;
+        
+        // Ищем ближайший уровень
+        const levels = Object.keys(BONUS_LEVELS).map(Number).sort((a, b) => a - b);
+        let bonus = { generations: 0, checks: 0 };
+        
+        for (let level of levels) {
+            if (count >= level) {
+                bonus = {
+                    generations: BONUS_LEVELS[level].generations * multiplier,
+                    checks: BONUS_LEVELS[level].checks * multiplier,
+                    vip: BONUS_LEVELS[level].vip || false
+                };
+            }
+        }
+        
+        return bonus;
+    }
+    
+    // ===== БОНУСЫ =====
+    
+    updateBonusInfo() {
+        document.getElementById('bonusGenerations').textContent = currentUser.aiGenerationsLeft;
+        
+        // Считаем общее количество покупок
+        const totalPurchases = currentUser.purchases.length;
+        
+        // Находим следующий уровень
+        const levels = Object.keys(BONUS_LEVELS).map(Number).sort((a, b) => a - b);
+        let nextLevel = null;
+        let needed = 0;
+        
+        for (let level of levels) {
+            if (totalPurchases < level) {
+                nextLevel = level;
+                needed = level - totalPurchases;
+                break;
+            }
+        }
+        
+        if (nextLevel) {
+            document.getElementById('nextBonusText').textContent = 
+                `купите еще ${needed} документ${needed > 1 ? 'ов' : ''} → +${BONUS_LEVELS[nextLevel].generations} генераций`;
+            
+            const progress = (totalPurchases / nextLevel) * 100;
+            document.getElementById('progressFill').style.width = `${Math.min(progress, 100)}%`;
+        } else {
+            document.getElementById('nextBonusText').textContent = '🔥 VIP уровень достигнут!';
+            document.getElementById('progressFill').style.width = '100%';
+        }
+    }
+    
+    applyBonusAfterPurchase() {
+        const bonus = this.calculateCartBonus();
+        
+        currentUser.aiGenerationsLeft += bonus.generations;
+        currentUser.checksLeft += bonus.checks;
+        
+        // Добавляем купленные документы в историю
+        this.cart.forEach(item => {
+            currentUser.purchases.push(item.id);
+        });
+        
+        if (bonus.vip) {
+            currentUser.vipUntil = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+        }
+        
+        this.saveUserData();
+        this.updateBonusInfo();
+        this.updateAIInfo();
+        
+        // Показываем сообщение о бонусе
+        const bonusMessage = document.getElementById('bonusGiftMessage');
+        bonusMessage.innerHTML = `🎁 Вы получили +${bonus.generations} генераций нейросети!`;
+    }
+    
+    // ===== НЕЙРОСЕТЬ =====
+    
+    updateAIInfo() {
+        document.getElementById('aiGenerationsLeft').textContent = currentUser.aiGenerationsLeft;
+        document.getElementById('aiBadge').textContent = `${currentUser.aiGenerationsLeft} генераций`;
+        
+        if (currentUser.aiGenerationsLeft === 0) {
+            document.getElementById('generateAiBtn').disabled = true;
+            document.getElementById('aiLimitInfo').innerHTML = `
+                Нет доступных генераций. Купите документ, чтобы получить бонус!
+            `;
+        } else {
+            document.getElementById('generateAiBtn').disabled = false;
+        }
+    }
+    
+    async generateWithAI() {
+        if (currentUser.aiGenerationsLeft <= 0) {
+            this.showToast('У вас нет доступных генераций. Купите документ!');
+            return;
+        }
+        
+        const prompt = document.getElementById('aiPrompt').value.trim();
+        if (!prompt) {
+            this.showToast('Опишите, какой документ вам нужен');
+            return;
+        }
+        
+        // Показываем загрузку
+        document.getElementById('aiResult').style.display = 'none';
+        document.getElementById('generateAiBtn').disabled = true;
+        document.getElementById('generateAiBtn').innerHTML = '⏳ Генерация...';
+        
+        try {
+            const response = await fetch('/api/generate-doc', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: prompt,
+                    type: document.getElementById('aiDocType').value,
+                    style: document.getElementById('aiStyle').value
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Списываем генерацию
+                currentUser.aiGenerationsLeft--;
+                this.saveUserData();
+                this.updateAIInfo();
+                
+                document.getElementById('aiResultContent').textContent = data.document;
+                document.getElementById('aiResult').style.display = 'block';
+                this.showToast('Документ создан!');
+            }
+            
+        } catch (error) {
+            this.showToast('Ошибка генерации. Попробуйте еще раз');
+            
+            // Тестовый режим
+            document.getElementById('aiResultContent').textContent = this.getTestDocument(prompt);
+            document.getElementById('aiResult').style.display = 'block';
+            
+        } finally {
+            document.getElementById('generateAiBtn').disabled = false;
+            document.getElementById('generateAiBtn').innerHTML = '🔮 Создать документ';
+        }
+    }
+    
+    getTestDocument(prompt) {
+        return `ДОКУМЕНТ ПО ВАШЕМУ ЗАПРОСУ
+
+Запрос: "${prompt}"
+
+Договор составлен с учетом требований ГК РФ.
+
+1. ПРЕДМЕТ ДОГОВОРА
+... (тестовый документ) ...
+
+(Для реальной генерации подключите API)`;
+    }
+    
+    copyAIResult() {
+        const text = document.getElementById('aiResultContent').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            this.showToast('Документ скопирован');
+        });
+    }
+    
+    downloadAIResult() {
+        const text = document.getElementById('aiResultContent').textContent;
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `document_${Date.now()}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+    
+    // ===== ОПЛАТА =====
+    
     showPayment() {
-        if (!this.cart || this.cart.length === 0) {
+        if (this.cart.length === 0) {
             this.closeModal('cartModal');
             this.showToast('Корзина пуста');
             return;
         }
         
         const summary = document.getElementById('orderSummary');
-        const payAmount = document.getElementById('payAmount');
-        
-        if (!summary || !payAmount) return;
-        
         const total = this.cart.reduce((sum, item) => sum + item.price, 0);
         
         summary.innerHTML = `
@@ -588,272 +819,102 @@ class PreepDocs {
                     <span>${total} ₽</span>
                 </div>
             </div>
+            <div class="order-bonus">
+                🎁 После оплаты вы получите бонусные генерации
+            </div>
         `;
         
-        payAmount.textContent = `${total} ₽`;
+        document.getElementById('payAmount').textContent = `${total} ₽`;
         this.closeModal('cartModal');
         this.openModal('paymentModal');
     }
     
     processPayment() {
-        const email = document.getElementById('paymentEmail');
-        if (!email) return;
+        const email = document.getElementById('paymentEmail').value.trim();
         
-        const emailValue = email.value.trim();
-        
-        if (!emailValue || !emailValue.includes('@')) {
+        if (!email || !email.includes('@')) {
             this.showToast('Введите корректный email');
             return;
         }
         
-        // Сохраняем email
-        this.currentUser.email = emailValue;
-        localStorage.setItem('user_email', emailValue);
-        localStorage.setItem('preep_user', JSON.stringify(this.currentUser));
+        currentUser.email = email;
+        localStorage.setItem('user_email', email);
         
         const total = this.cart.reduce((sum, item) => sum + item.price, 0);
         const orderId = Date.now();
         
-        // Формируем URL для оплаты через ЮMoney (БЕЗ test=1)
+        // Формируем URL для ЮMoney
         const yoomoneyUrl = `https://yoomoney.ru/quickpay/confirm.xml?` +
             `receiver=${YOOMONEY_CLIENT_ID}&` +
             `quickpay-form=shop&` +
             `paymentType=AC&` +
             `sum=${total}&` +
             `label=${orderId}&` +
-            `successURL=${window.location.origin}/payment-success.html?email=${encodeURIComponent(emailValue)}&` +
-            `targets=Оплата%20документов%20Preep`;
+            `successURL=${window.location.origin}/payment-success.html?email=${encodeURIComponent(email)}`;
         
         // Сохраняем заказ
-        this.saveOrder(orderId, emailValue, this.cart);
+        this.saveOrder(orderId, email, this.cart);
         
-        // Редирект на ЮMoney
         window.location.href = yoomoneyUrl;
     }
     
     saveOrder(orderId, email, items) {
-        try {
-            const orders = JSON.parse(localStorage.getItem('preep_orders') || '{}');
-            orders[orderId] = {
-                email: email,
-                items: items,
-                status: 'pending',
-                date: new Date().toISOString()
-            };
-            localStorage.setItem('preep_orders', JSON.stringify(orders));
-        } catch (e) {
-            console.error('Error saving order', e);
-        }
+        const orders = JSON.parse(localStorage.getItem('preep_orders') || '{}');
+        orders[orderId] = {
+            email: email,
+            items: items,
+            status: 'pending',
+            date: new Date().toISOString()
+        };
+        localStorage.setItem('preep_orders', JSON.stringify(orders));
     }
     
-    // ===== Нейросеть =====
+    // ===== ТАРИФЫ =====
     
-    async generateWithAI() {
-        // Проверка тарифа
-        if (this.currentUser.tariff === 'free') {
-            this.showToast('Генерация доступна только в PRO тарифе');
-            this.showTariffModal();
-            return;
-        }
-        
-        if (!this.currentUser.aiGenerationsLeft || this.currentUser.aiGenerationsLeft <= 0) {
-            this.showToast('Закончились генерации. Пополните лимит');
-            this.showTariffModal();
-            return;
-        }
-        
-        const prompt = document.getElementById('aiPrompt');
-        if (!prompt) return;
-        
-        const promptValue = prompt.value.trim();
-        if (!promptValue) {
-            this.showToast('Опишите, какой документ вам нужен');
-            return;
-        }
-        
-        // Показываем загрузку
-        const aiResult = document.getElementById('aiResult');
-        const generateBtn = document.getElementById('generateAiBtn');
-        
-        if (aiResult) aiResult.style.display = 'none';
-        if (generateBtn) {
-            generateBtn.disabled = true;
-            generateBtn.innerHTML = '<span>⏳ Генерация...</span>';
-        }
-        
-        try {
-            // Вызов API (через Vercel)
-            const response = await fetch('/api/generate-doc', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    prompt: promptValue,
-                    type: document.getElementById('aiDocType')?.value || 'auto',
-                    style: document.getElementById('aiStyle')?.value || 'official'
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                // Уменьшаем счетчик
-                this.currentUser.aiGenerationsLeft--;
-                localStorage.setItem('preep_user', JSON.stringify(this.currentUser));
-                this.updateAILimit();
-                
-                // Показываем результат
-                const resultContent = document.getElementById('aiResultContent');
-                if (resultContent) {
-                    resultContent.textContent = data.document;
-                }
-                if (aiResult) aiResult.style.display = 'block';
-                
-                this.showToast('Документ создан!');
-            } else {
-                throw new Error(data.error || 'Ошибка генерации');
-            }
-            
-        } catch (error) {
-            console.error('AI Error:', error);
-            this.showToast('Ошибка при генерации. Попробуйте еще раз');
-            
-            // Для теста - показываем тестовый документ
-            const resultContent = document.getElementById('aiResultContent');
-            if (resultContent) {
-                resultContent.textContent = this.getTestDocument(promptValue);
-            }
-            if (aiResult) aiResult.style.display = 'block';
-            
-        } finally {
-            if (generateBtn) {
-                generateBtn.disabled = false;
-                generateBtn.innerHTML = '<span>🔮 Сгенерировать документ</span>';
-            }
-        }
-    }
-    
-    copyAIResult() {
-        const resultContent = document.getElementById('aiResultContent');
-        if (!resultContent) return;
-        
-        const text = resultContent.textContent;
-        navigator.clipboard.writeText(text).then(() => {
-            this.showToast('Документ скопирован');
-        }).catch(() => {
-            this.showToast('Ошибка копирования');
-        });
-    }
-    
-    downloadAIResult() {
-        const resultContent = document.getElementById('aiResultContent');
-        if (!resultContent) return;
-        
-        const text = resultContent.textContent;
-        const blob = new Blob([text], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `document_${Date.now()}.txt`;
-        a.click();
-        URL.revokeObjectURL(url);
-        this.showToast('Файл скачан');
-    }
-    
-    getTestDocument(prompt) {
-        return `ДОГОВОР НА ОСНОВАНИИ ВАШЕГО ЗАПРОСА
-
-Запрос: "${prompt}"
-
-ДОГОВОР АРЕНДЫ КВАРТИРЫ
-
-г. Москва                                          «${new Date().getDate()}» ${new Date().toLocaleString('ru', { month: 'long' })} ${new Date().getFullYear()} г.
-
-Гражданин РФ Иванов Иван Иванович, ... (договор сгенерирован нейросетью)
-
-... (полный текст договора) ...
-
-(Это тестовый режим. Для реальной генерации подключите API)`;
-    }
-    
-    // ===== Тарифы =====
-    
-    showTariffModal() {
-        this.openModal('tariffModal');
-    }
-    
-    selectTariff(tariff) {
-        this.currentUser.selectedTariff = tariff;
-    }
-    
-    processTariffPayment() {
-        const tariff = this.currentUser.selectedTariff || 'pro';
-        const price = TARIFFS[tariff]?.price || 499;
-        const orderId = `tariff_${Date.now()}`;
-        
-        // Формируем URL для оплаты (БЕЗ test=1)
+    upgradeToPro() {
+        const orderId = `pro_${Date.now()}`;
         const yoomoneyUrl = `https://yoomoney.ru/quickpay/confirm.xml?` +
             `receiver=${YOOMONEY_CLIENT_ID}&` +
             `quickpay-form=shop&` +
             `paymentType=AC&` +
-            `sum=${price}&` +
+            `sum=499&` +
             `label=${orderId}&` +
-            `successURL=${window.location.origin}/payment-success.html&` +
-            `targets=Тариф%20${TARIFFS[tariff]?.name || 'PRO'}`;
+            `successURL=${window.location.origin}/payment-success.html?pro=1`;
         
-        // Сохраняем заказ на тариф
-        try {
-            const orders = JSON.parse(localStorage.getItem('preep_tariff_orders') || '{}');
-            orders[orderId] = {
-                tariff: tariff,
-                status: 'pending',
-                date: new Date().toISOString()
-            };
-            localStorage.setItem('preep_tariff_orders', JSON.stringify(orders));
-        } catch (e) {
-            console.error('Error saving tariff order', e);
-        }
+        // Сохраняем заказ на PRO
+        const orders = JSON.parse(localStorage.getItem('preep_pro_orders') || '{}');
+        orders[orderId] = {
+            type: 'pro',
+            status: 'pending',
+            date: new Date().toISOString()
+        };
+        localStorage.setItem('preep_pro_orders', JSON.stringify(orders));
         
         window.location.href = yoomoneyUrl;
     }
     
-    // ===== Вход =====
+    // ===== ВСПОМОГАТЕЛЬНЫЕ =====
     
     showLoginModal() {
         const email = prompt('Введите ваш email для входа:');
         if (email && email.includes('@')) {
-            this.currentUser.email = email;
+            currentUser.email = email;
             localStorage.setItem('user_email', email);
-            localStorage.setItem('preep_user', JSON.stringify(this.currentUser));
-            this.updateUserInterface();
+            this.saveUserData();
             this.showToast('Вы вошли как ' + email);
         }
     }
     
-    // ===== Вспомогательные =====
-    
     openModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.add('show');
-        }
+        document.getElementById(modalId).classList.add('show');
     }
     
     closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.remove('show');
-        }
+        document.getElementById(modalId).classList.remove('show');
     }
     
     showToast(message) {
-        let toast = document.getElementById('toast');
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'toast';
-            toast.className = 'toast';
-            document.body.appendChild(toast);
-        }
-        
+        const toast = document.getElementById('toast');
         toast.textContent = message;
         toast.classList.add('show');
         
@@ -864,8 +925,4 @@ class PreepDocs {
 }
 
 // Инициализация
-let app;
-document.addEventListener('DOMContentLoaded', () => {
-    app = new PreepDocs();
-    window.app = app; // Делаем app глобальным для вызовов из HTML
-});
+const app = new PreepDocs();
