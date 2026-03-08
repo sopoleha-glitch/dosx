@@ -148,13 +148,192 @@ body {
     font-size: 0.85rem;
 }
 
-.cart-count {
-    background: var(--primary);
+.btn-generate {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* ========== БОНУСЫ ========== */
+.bonus-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
     color: white;
-    padding: 2px 6px;
-    border-radius: 20px;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-weight: 600;
+}
+
+.bonus-icon {
+    font-size: 1.2rem;
+}
+
+.bonus-progress {
+    margin-top: 15px;
+    padding: 15px;
+    background: var(--gray-100);
+    border-radius: var(--radius-lg);
+}
+
+.progress-text {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.progress-bar {
+    height: 8px;
+    background: var(--gray-200);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), #8b5cf6);
+    transition: width 0.3s ease;
+}
+
+/* Бонус в карточке */
+.doc-bonus {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #f59e0b;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    box-shadow: var(--shadow-md);
+}
+
+/* Старая цена (со скидкой) */
+.doc-old-price {
     font-size: 0.8rem;
+    color: var(--gray-400);
+    text-decoration: line-through;
     margin-left: 5px;
+}
+
+.doc-detail-old-price {
+    font-size: 1rem;
+    color: var(--gray-400);
+    text-decoration: line-through;
+    margin-left: 10px;
+}
+
+.doc-detail-bonus {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: white;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    margin: 20px 0;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Корзина с бонусами */
+.cart-bonus {
+    background: var(--gray-50);
+    padding: 15px;
+    border-radius: var(--radius-md);
+    margin: 15px 0;
+    border: 1px solid var(--gray-200);
+}
+
+.cart-bonus h4 {
+    margin-bottom: 10px;
+    color: var(--gray-700);
+}
+
+.cart-bonus p {
+    color: var(--success);
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+/* Успешная оплата с бонусом */
+.bonus-gift-message {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: white;
+    padding: 15px;
+    border-radius: var(--radius-md);
+    margin: 20px 0;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Уровни бонусов */
+.bonus-levels {
+    margin: 60px 0;
+}
+
+.bonus-levels h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+.bonus-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.bonus-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 25px;
+    text-align: center;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.bonus-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary);
+}
+
+.bonus-card.vip {
+    border: 2px solid #f59e0b;
+}
+
+.bonus-level {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.bonus-gift {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--success);
+}
+
+.bonus-condition {
+    color: var(--gray-500);
+    font-size: 0.9rem;
 }
 
 /* ========== ГЕРОЙ-СЕКЦИЯ ========== */
@@ -203,151 +382,6 @@ body {
 }
 
 .stat-label {
-    color: var(--gray-500);
-    font-size: 0.9rem;
-}
-
-/* ========== ТАРИФЫ ========== */
-.tariffs-section {
-    margin: 60px 0;
-}
-
-.tariffs-section h2 {
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 40px;
-}
-
-.tariffs-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.tariff-card {
-    background: white;
-    border: 2px solid var(--gray-200);
-    border-radius: var(--radius-xl);
-    padding: 30px;
-    position: relative;
-    transition: all 0.3s;
-}
-
-.tariff-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-}
-
-.tariff-card.popular {
-    border-color: var(--primary);
-    transform: scale(1.05);
-}
-
-.popular-badge {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--primary);
-    color: white;
-    padding: 4px 15px;
-    border-radius: 30px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.tariff-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.tariff-price {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--primary);
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.tariff-price span {
-    font-size: 1rem;
-    font-weight: 400;
-    color: var(--gray-400);
-}
-
-.tariff-features {
-    list-style: none;
-    margin-bottom: 25px;
-}
-
-.tariff-features li {
-    margin-bottom: 12px;
-    color: var(--gray-700);
-}
-
-/* Тарифный блок в шапке */
-.tariff-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--gray-100);
-    padding: 5px 10px;
-    border-radius: 30px;
-}
-
-.tariff-badge {
-    background: var(--primary);
-    color: white;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.tariff-generations {
-    color: var(--gray-600);
-    font-size: 0.9rem;
-}
-
-/* Компактные тарифы в модалке */
-.tariff-compact {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin: 20px 0;
-}
-
-.tariff-option {
-    background: var(--gray-50);
-    border: 2px solid var(--gray-200);
-    border-radius: var(--radius-lg);
-    padding: 20px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.tariff-option:hover {
-    border-color: var(--primary);
-    background: white;
-}
-
-.tariff-option h3 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-.tariff-option h3 span {
-    color: var(--primary);
-    font-weight: 700;
-}
-
-.tariff-option p {
     color: var(--gray-500);
     font-size: 0.9rem;
 }
@@ -413,30 +447,18 @@ body {
     cursor: pointer;
 }
 
-.btn-generate {
-    width: 100%;
-    padding: 16px;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    position: relative;
-}
-
-.btn-badge {
-    position: absolute;
-    top: -10px;
-    right: 20px;
-    background: var(--warning);
-    color: white;
-    padding: 4px 12px;
-    border-radius: 30px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
 .ai-limit-info {
     text-align: center;
     color: var(--gray-500);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    margin-top: 15px;
+}
+
+.ai-hint {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--gray-400);
+    margin-top: 5px;
 }
 
 .ai-result {
@@ -452,6 +474,16 @@ body {
     margin-bottom: 20px;
 }
 
+.ai-result-header h3 {
+    font-size: 1.3rem;
+    color: var(--gray-800);
+}
+
+.ai-result-actions {
+    display: flex;
+    gap: 10px;
+}
+
 .ai-result-content {
     background: var(--gray-50);
     border: 1px solid var(--gray-200);
@@ -463,6 +495,18 @@ body {
     font-family: 'Courier New', monospace;
     white-space: pre-wrap;
     line-height: 1.6;
+}
+
+.btn-badge {
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    background: var(--warning);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 /* ========== КАТАЛОГ ========== */
@@ -701,6 +745,88 @@ body {
     color: var(--gray-700);
 }
 
+/* ========== ТАРИФЫ ========== */
+.tariffs-section {
+    margin: 60px 0;
+}
+
+.tariffs-section h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 40px;
+}
+
+.tariffs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.tariff-card {
+    background: white;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-xl);
+    padding: 30px;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.tariff-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.tariff-card.popular {
+    border-color: var(--primary);
+    transform: scale(1.05);
+}
+
+.popular-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary);
+    color: white;
+    padding: 4px 15px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.tariff-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.tariff-price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.tariff-price span {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--gray-400);
+}
+
+.tariff-card ul {
+    list-style: none;
+    margin-bottom: 25px;
+}
+
+.tariff-card ul li {
+    margin-bottom: 12px;
+    color: var(--gray-700);
+}
+
 /* ========== ПРЕИМУЩЕСТВА ========== */
 .features {
     display: grid;
@@ -872,40 +998,14 @@ body {
     font-size: 1.2rem;
 }
 
-.payment-methods {
-    margin: 25px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.payment-method {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 15px;
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.payment-method:hover {
-    border-color: var(--primary);
-    background: var(--gray-50);
-}
-
-.payment-method input {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-}
-
-.payment-note {
-    color: var(--gray-500);
-    font-size: 0.9rem;
+.order-bonus {
     margin-top: 15px;
+    padding: 10px;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: white;
+    border-radius: var(--radius-md);
     text-align: center;
+    font-weight: 500;
 }
 
 /* Формы */
@@ -1086,5 +1186,13 @@ body {
     
     .footer-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .bonus-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .bonus-progress {
+        display: none;
     }
 }
