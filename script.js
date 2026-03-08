@@ -29,6 +29,7 @@ const DEV_FILES = {
 // КАТАЛОГ ДОКУМЕНТОВ (15 штук)
 // ============================================
 const documentsCatalog = [
+    // 1. Договор аренды квартиры
     {
         id: 1,
         title: "Договор аренды квартиры",
@@ -47,6 +48,8 @@ const documentsCatalog = [
         popular: true,
         downloads: 1543
     },
+    
+    // 2. Расписка о получении денег
     {
         id: 2,
         title: "Расписка о получении денег",
@@ -65,6 +68,8 @@ const documentsCatalog = [
         popular: true,
         downloads: 2341
     },
+    
+    // 3. Договор купли-продажи автомобиля
     {
         id: 3,
         title: "Договор купли-продажи автомобиля",
@@ -83,6 +88,8 @@ const documentsCatalog = [
         popular: true,
         downloads: 1876
     },
+    
+    // 4. Сборник претензий (6 образцов)
     {
         id: 4,
         title: "Сборник претензий (6 образцов)",
@@ -102,6 +109,8 @@ const documentsCatalog = [
         popular: true,
         downloads: 987
     },
+    
+    // 5. Трудовой договор
     {
         id: 5,
         title: "Трудовой договор",
@@ -122,6 +131,8 @@ const documentsCatalog = [
         popular: true,
         downloads: 654
     },
+    
+    // 6. Договор дарения
     {
         id: 6,
         title: "Договор дарения (с актом)",
@@ -140,6 +151,8 @@ const documentsCatalog = [
         popular: false,
         downloads: 543
     },
+    
+    // 7. Договор займа
     {
         id: 7,
         title: "Договор займа (с процентами)",
@@ -159,6 +172,8 @@ const documentsCatalog = [
         popular: true,
         downloads: 1432
     },
+    
+    // 8. Соглашение о детях при разводе
     {
         id: 8,
         title: "Соглашение о детях и разделе имущества",
@@ -177,6 +192,8 @@ const documentsCatalog = [
         popular: false,
         downloads: 432
     },
+    
+    // 9. Сборник завещаний (4 вида)
     {
         id: 9,
         title: "Сборник завещаний (4 вида)",
@@ -195,6 +212,8 @@ const documentsCatalog = [
         popular: false,
         downloads: 876
     },
+    
+    // 10. Счет на оплату
     {
         id: 10,
         title: "Счет на оплату (бланк)",
@@ -213,6 +232,8 @@ const documentsCatalog = [
         popular: true,
         downloads: 2345
     },
+    
+    // 11. Договор оказания услуг
     {
         id: 11,
         title: "Договор оказания услуг (универсальный)",
@@ -231,6 +252,8 @@ const documentsCatalog = [
         popular: true,
         downloads: 1543
     },
+    
+    // 12. Договор купли-продажи товара
     {
         id: 12,
         title: "Договор купли-продажи товара (с актом)",
@@ -249,6 +272,8 @@ const documentsCatalog = [
         popular: true,
         downloads: 876
     },
+    
+    // 13. Акт выполненных работ
     {
         id: 13,
         title: "Акт выполненных работ (оказанных услуг)",
@@ -267,6 +292,8 @@ const documentsCatalog = [
         popular: true,
         downloads: 1654
     },
+    
+    // 14. Сборник доверенностей (5 видов)
     {
         id: 14,
         title: "Сборник доверенностей (5 видов)",
@@ -285,6 +312,8 @@ const documentsCatalog = [
         popular: true,
         downloads: 765
     },
+    
+    // 15. Договор подряда
     {
         id: 15,
         title: "Договор подряда (с ТЗ и календарным планом)",
@@ -635,18 +664,31 @@ class EmailAuth {
         this.userEmail = email;
         localStorage.setItem('preep_last_email', email);
         
+        // Генерируем 6-значный код
         this.verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
         
+        // Показываем этап ввода кода
         document.getElementById('authStep1').style.display = 'none';
         document.getElementById('authStep2').style.display = 'block';
         document.getElementById('emailDisplay').textContent = email;
         
+        // Запускаем таймер
         this.startTimer();
         
+        // Показываем сообщение о отправке
+        app.showToast('⏳ Отправка кода...');
+        
         try {
-            const response = await fetch('/api/send-email-code', {
+            // ВАЖНО: используем полный URL
+            const fullUrl = window.location.origin + '/api/send-email-code';
+            console.log('Отправляем запрос на:', fullUrl);
+            
+            const response = await fetch(fullUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
                 body: JSON.stringify({
                     email: email,
                     code: this.verificationCode
@@ -654,19 +696,20 @@ class EmailAuth {
             });
             
             const data = await response.json();
+            console.log('Ответ от сервера:', data);
             
             if (response.ok) {
                 app.showToast(`✅ Код отправлен на ${email}`);
-                console.log(`Код для отладки: ${this.verificationCode}`);
+                console.log('🔐 Ваш код (для отладки):', this.verificationCode);
             } else {
-                console.error('Ошибка отправки:', data);
-                app.showToast('⚠️ Ошибка отправки. Код в консоли (F12)');
-                console.log(`Ваш код: ${this.verificationCode}`);
+                console.error('Ошибка от сервера:', data);
+                app.showToast('⚠️ Ошибка отправки. Смотри консоль (F12)');
+                console.log('🔐 Ваш код для входа:', this.verificationCode);
             }
         } catch (error) {
-            console.error('Ошибка сети:', error);
-            app.showToast('⚠️ Ошибка соединения. Код в консоли (F12)');
-            console.log(`Ваш код: ${this.verificationCode}`);
+            console.error('Ошибка соединения:', error);
+            app.showToast('⚠️ Ошибка соединения. Код в консоли');
+            console.log('🔐 Ваш код для входа:', this.verificationCode);
         }
     }
     
