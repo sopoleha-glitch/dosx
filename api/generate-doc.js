@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-    // Разрешаем запросы с любого источника (для GitHub Pages)
     res.setHeader('Access-Control-Allow-Origin', '*');
     
     if (req.method !== 'POST') {
@@ -7,11 +6,6 @@ export default async function handler(req, res) {
     }
     
     const { prompt, type, style } = req.body;
-    
-    if (!prompt) {
-        return res.status(400).json({ error: 'Prompt is required' });
-    }
-    
     const apiKey = process.env.DEEPSEEK_API_KEY;
     
     if (!apiKey) {
