@@ -13,11 +13,10 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Email and code are required' });
     }
     
-    // Берем данные из Environment Variables (которые ты только что добавил)
     const user = process.env.SMTP_USER;
     const pass = process.env.SMTP_PASSWORD;
     
-    console.log('SMTP User:', user); // Для проверки в логах
+    console.log('SMTP User:', user); 
     
     const transporter = nodemailer.createTransport({
         host: 'smtp.yandex.ru',
