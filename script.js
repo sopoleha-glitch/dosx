@@ -39,7 +39,7 @@ const documentsCatalog = [
     },
     {
         id: 3,
-        title: "Договор купли-продажи авто",
+        title: "Договор купли-продажи автомобиля",
         category: "auto",
         price: 299,
         description: "Официальный договор для продажи авто. Помогает избежать проблем с ГИБДД.",
@@ -194,6 +194,12 @@ let currentUser = {
 // Основной класс приложения
 class PreepDocs {
     constructor() {
+        this.cart = []; // Инициализируем корзину
+        this.currentUser = {
+            tariff: 'free',
+            aiGenerationsLeft: 0,
+            email: localStorage.getItem('user_email') || null
+        };
         this.init();
     }
     
@@ -209,62 +215,77 @@ class PreepDocs {
     loadUserData() {
         const saved = localStorage.getItem('preep_user');
         if (saved) {
-            currentUser = JSON.parse(saved);
-        } else {
-            // Новый пользователь - бесплатный тариф
-            currentUser = {
-                tariff: 'free',
-                aiGenerationsLeft: 0,
-                email: null
-            };
+            try {
+                this.currentUser = JSON.parse(saved);
+            } catch (e) {
+                console.error('Error loading user data', e);
+            }
         }
         this.updateUserInterface();
     }
     
     updateUserInterface() {
         const tariffInfo = document.getElementById('tariffInfo');
-        const upgradeBtn = document.getElementById('upgradeBtn');
+        if (!tariffInfo) return;
         
-        if (currentUser.tariff === 'free') {
+        if (this.currentUser.tariff === 'free') {
             tariffInfo.innerHTML = `
                 <span>Бесплатный тариф</span>
                 <button class="btn btn-small btn-primary" id="upgradeBtn">PRO 499₽</button>
             `;
         } else {
             tariffInfo.innerHTML = `
-                <span class="tariff-badge">${TARIFFS[currentUser.tariff].name}</span>
-                <span class="tariff-generations">Осталось: ${currentUser.aiGenerationsLeft}</span>
+                <span class="tariff-badge">${TARIFFS[this.currentUser.tariff]?.name || 'PRO'}</span>
+                <span class="tariff-generations">Осталось: ${this.currentUser.aiGenerationsLeft || 0}</span>
             `;
         }
         
-        document.getElementById('aiGenerationsLeft').textContent = currentUser.aiGenerationsLeft || 0;
+        const aiLeftSpan = document.getElementById('aiGenerationsLeft');
+        if (aiLeftSpan) {
+            aiLeftSpan.textContent = this.currentUser.aiGenerationsLeft || 0;
+        }
         
         // Обновляем обработчик
-        document.getElementById('upgradeBtn')?.addEventListener('click', () => this.showTariffModal());
+        const upgradeBtn = document.getElementById('upgradeBtn');
+        if (upgradeBtn) {
+            upgradeBtn.addEventListener('click', () => this.showTariffModal());
+        }
     }
     
     updateAILimit() {
         const limitBadge = document.getElementById('aiLimitBadge');
         const limitInfo = document.getElementById('aiLimitInfo');
         
-        if (currentUser.tariff === 'free') {
+        if (!limitBadge || !limitInfo) return;
+        
+        if (this.currentUser.tariff === 'free') {
             limitBadge.textContent = 'Только PRO';
             limitInfo.style.display = 'none';
         } else {
-            limitBadge.textContent = `${currentUser.aiGenerationsLeft} генераций`;
+            limitBadge.textContent = `${this.currentUser.aiGenerationsLeft || 0} генераций`;
             limitInfo.style.display = 'block';
         }
     }
     
     setupEventListeners() {
         // Поиск
-        document.getElementById('searchBtn').addEventListener('click', () => this.searchDocuments());
-        document.getElementById('searchInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') this.searchDocuments();
-        });
+        const searchBtn = document.getElementById('searchBtn');
+        if (searchBtn) {
+            searchBtn.addEventListener('click', () => this.searchDocuments());
+        }
+        
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') this.searchDocuments();
+            });
+        }
         
         // Фильтр по категориям
-        document.getElementById('categoryFilter').addEventListener('change', () => this.searchDocuments());
+        const categoryFilter = document.getElementById('categoryFilter');
+        if (categoryFilter) {
+            categoryFilter.addEventListener('change', () => this.searchDocuments());
+        }
         
         // Категории-чипсы
         document.querySelectorAll('.category-chip').forEach(el => {
@@ -272,44 +293,91 @@ class PreepDocs {
                 document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
                 e.target.classList.add('active');
                 const cat = e.target.dataset.cat;
-                document.getElementById('categoryFilter').value = cat;
+                if (categoryFilter) categoryFilter.value = cat;
                 this.searchDocuments();
             });
         });
         
         // Корзина
-        document.getElementById('cartBtn').addEventListener('click', () => this.showCart());
-        document.getElementById('closeCartModal').addEventListener('click', () => this.closeModal('cartModal'));
+        const cartBtn = document.getElementById('cartBtn');
+        if (cartBtn) {
+            cartBtn.addEventListener('click', () => this.showCart());
+        }
+        
+        const closeCartModal = document.getElementById('closeCartModal');
+        if (closeCartModal) {
+            closeCartModal.addEventListener('click', () => this.closeModal('cartModal'));
+        }
         
         // Модалки документов
-        document.getElementById('closeDocModal').addEventListener('click', () => this.closeModal('docModal'));
+        const closeDocModal = document.getElementById('closeDocModal');
+        if (closeDocModal) {
+            closeDocModal.addEventListener('click', () => this.closeModal('docModal'));
+        }
         
         // Оплата
-        document.getElementById('checkoutBtn').addEventListener('click', () => this.showPayment());
-        document.getElementById('closePaymentModal').addEventListener('click', () => this.closeModal('paymentModal'));
-        document.getElementById('payBtn').addEventListener('click', () => this.processPayment());
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', () => this.showPayment());
+        }
+        
+        const closePaymentModal = document.getElementById('closePaymentModal');
+        if (closePaymentModal) {
+            closePaymentModal.addEventListener('click', () => this.closeModal('paymentModal'));
+        }
+        
+        const payBtn = document.getElementById('payBtn');
+        if (payBtn) {
+            payBtn.addEventListener('click', () => this.processPayment());
+        }
         
         // Успешная оплата
-        document.getElementById('closeSuccessModal').addEventListener('click', () => this.closeModal('successModal'));
-        document.getElementById('continueBtn').addEventListener('click', () => {
-            this.closeModal('successModal');
-            this.cart = [];
-            this.updateCartCount();
-        });
+        const closeSuccessModal = document.getElementById('closeSuccessModal');
+        if (closeSuccessModal) {
+            closeSuccessModal.addEventListener('click', () => this.closeModal('successModal'));
+        }
+        
+        const continueBtn = document.getElementById('continueBtn');
+        if (continueBtn) {
+            continueBtn.addEventListener('click', () => {
+                this.closeModal('successModal');
+                this.cart = [];
+                this.updateCartCount();
+            });
+        }
         
         // Генерация нейросетью
-        document.getElementById('generateAiBtn').addEventListener('click', () => this.generateWithAI());
-        document.getElementById('copyAiResult').addEventListener('click', () => this.copyAIResult());
-        document.getElementById('downloadAiResult').addEventListener('click', () => this.downloadAIResult());
+        const generateAiBtn = document.getElementById('generateAiBtn');
+        if (generateAiBtn) {
+            generateAiBtn.addEventListener('click', () => this.generateWithAI());
+        }
+        
+        const copyAiResult = document.getElementById('copyAiResult');
+        if (copyAiResult) {
+            copyAiResult.addEventListener('click', () => this.copyAIResult());
+        }
+        
+        const downloadAiResult = document.getElementById('downloadAiResult');
+        if (downloadAiResult) {
+            downloadAiResult.addEventListener('click', () => this.downloadAIResult());
+        }
         
         // Тарифы
-        document.getElementById('tariffModal')?.addEventListener('click', (e) => {
-            if (e.target.id === 'closeTariffModal') this.closeModal('tariffModal');
-        });
-        document.getElementById('confirmTariffBtn')?.addEventListener('click', () => this.processTariffPayment());
+        const closeTariffModal = document.getElementById('closeTariffModal');
+        if (closeTariffModal) {
+            closeTariffModal.addEventListener('click', () => this.closeModal('tariffModal'));
+        }
+        
+        const confirmTariffBtn = document.getElementById('confirmTariffBtn');
+        if (confirmTariffBtn) {
+            confirmTariffBtn.addEventListener('click', () => this.processTariffPayment());
+        }
         
         // Вход
-        document.getElementById('loginBtn').addEventListener('click', () => this.showLoginModal());
+        const loginBtn = document.getElementById('loginBtn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', () => this.showLoginModal());
+        }
         
         // Закрытие по клику вне модалки
         window.addEventListener('click', (e) => {
@@ -323,6 +391,8 @@ class PreepDocs {
     
     displayDocuments(filteredDocs = null) {
         const container = document.getElementById('docsContainer');
+        if (!container) return;
+        
         const docs = filteredDocs || documentsCatalog;
         
         container.innerHTML = docs.map(doc => `
@@ -339,7 +409,6 @@ class PreepDocs {
     }
     
     displayPopular() {
-        const popular = documentsCatalog.filter(doc => doc.popular).slice(0, 3);
         // Можно добавить отдельный контейнер для популярных
     }
     
@@ -356,8 +425,11 @@ class PreepDocs {
     }
     
     searchDocuments() {
-        const searchText = document.getElementById('searchInput').value.toLowerCase();
-        const category = document.getElementById('categoryFilter').value;
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        
+        const searchText = searchInput ? searchInput.value.toLowerCase() : '';
+        const category = categoryFilter ? categoryFilter.value : 'all';
         
         const filtered = documentsCatalog.filter(doc => {
             const matchesSearch = doc.title.toLowerCase().includes(searchText) || 
@@ -368,8 +440,9 @@ class PreepDocs {
         
         this.displayDocuments(filtered);
         
-        if (filtered.length === 0) {
-            document.getElementById('docsContainer').innerHTML = `
+        const container = document.getElementById('docsContainer');
+        if (filtered.length === 0 && container) {
+            container.innerHTML = `
                 <div class="no-results">
                     <p>По вашему запросу ничего не найдено</p>
                     <button class="btn btn-outline" onclick="app.resetSearch()">Сбросить</button>
@@ -379,10 +452,16 @@ class PreepDocs {
     }
     
     resetSearch() {
-        document.getElementById('searchInput').value = '';
-        document.getElementById('categoryFilter').value = 'all';
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        
+        if (searchInput) searchInput.value = '';
+        if (categoryFilter) categoryFilter.value = 'all';
+        
         document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
-        document.querySelector('.category-chip[data-cat="all"]').classList.add('active');
+        const allChip = document.querySelector('.category-chip[data-cat="all"]');
+        if (allChip) allChip.classList.add('active');
+        
         this.displayDocuments();
     }
     
@@ -391,6 +470,8 @@ class PreepDocs {
         if (!doc) return;
         
         const modalContent = document.getElementById('docDetailContent');
+        if (!modalContent) return;
+        
         modalContent.innerHTML = `
             <div class="doc-detail">
                 <span class="doc-detail-category">${this.getCategoryName(doc.category)}</span>
@@ -427,6 +508,8 @@ class PreepDocs {
         const doc = documentsCatalog.find(d => d.id === id);
         if (!doc) return;
         
+        if (!this.cart) this.cart = [];
+        
         this.cart.push({
             id: doc.id,
             title: doc.title,
@@ -439,6 +522,7 @@ class PreepDocs {
     }
     
     removeFromCart(index) {
+        if (!this.cart) this.cart = [];
         this.cart.splice(index, 1);
         this.updateCartCount();
         this.showCart();
@@ -446,15 +530,21 @@ class PreepDocs {
     }
     
     updateCartCount() {
-        document.getElementById('cartCount').textContent = this.cart.length;
+        const cartCount = document.getElementById('cartCount');
+        if (cartCount) {
+            cartCount.textContent = this.cart && this.cart.length ? this.cart.length : 0;
+        }
     }
     
     showCart() {
         const cartItems = document.getElementById('cartItems');
+        const cartTotal = document.getElementById('cartTotal');
         
-        if (this.cart.length === 0) {
+        if (!cartItems || !cartTotal) return;
+        
+        if (!this.cart || this.cart.length === 0) {
             cartItems.innerHTML = '<p class="empty-cart">Корзина пуста</p>';
-            document.getElementById('cartTotal').textContent = 'Итого: 0 ₽';
+            cartTotal.textContent = 'Итого: 0 ₽';
         } else {
             cartItems.innerHTML = this.cart.map((item, index) => `
                 <div class="cart-item">
@@ -465,20 +555,24 @@ class PreepDocs {
             `).join('');
             
             const total = this.cart.reduce((sum, item) => sum + item.price, 0);
-            document.getElementById('cartTotal').textContent = `Итого: ${total} ₽`;
+            cartTotal.textContent = `Итого: ${total} ₽`;
         }
         
         this.openModal('cartModal');
     }
     
     showPayment() {
-        if (this.cart.length === 0) {
+        if (!this.cart || this.cart.length === 0) {
             this.closeModal('cartModal');
             this.showToast('Корзина пуста');
             return;
         }
         
         const summary = document.getElementById('orderSummary');
+        const payAmount = document.getElementById('payAmount');
+        
+        if (!summary || !payAmount) return;
+        
         const total = this.cart.reduce((sum, item) => sum + item.price, 0);
         
         summary.innerHTML = `
@@ -496,81 +590,96 @@ class PreepDocs {
             </div>
         `;
         
-        document.getElementById('payAmount').textContent = `${total} ₽`;
+        payAmount.textContent = `${total} ₽`;
         this.closeModal('cartModal');
         this.openModal('paymentModal');
     }
     
     processPayment() {
-        const email = document.getElementById('paymentEmail').value.trim();
+        const email = document.getElementById('paymentEmail');
+        if (!email) return;
         
-        if (!email || !email.includes('@')) {
+        const emailValue = email.value.trim();
+        
+        if (!emailValue || !emailValue.includes('@')) {
             this.showToast('Введите корректный email');
             return;
         }
         
         // Сохраняем email
-        currentUser.email = email;
-        localStorage.setItem('user_email', email);
-        localStorage.setItem('preep_user', JSON.stringify(currentUser));
+        this.currentUser.email = emailValue;
+        localStorage.setItem('user_email', emailValue);
+        localStorage.setItem('preep_user', JSON.stringify(this.currentUser));
         
         const total = this.cart.reduce((sum, item) => sum + item.price, 0);
         const orderId = Date.now();
         
-        // Формируем URL для оплаты через ЮMoney
+        // Формируем URL для оплаты через ЮMoney (БЕЗ test=1)
         const yoomoneyUrl = `https://yoomoney.ru/quickpay/confirm.xml?` +
             `receiver=${YOOMONEY_CLIENT_ID}&` +
             `quickpay-form=shop&` +
             `paymentType=AC&` +
             `sum=${total}&` +
             `label=${orderId}&` +
-            `successURL=${window.location.origin}/payment-success.html&` +
+            `successURL=${window.location.origin}/payment-success.html?email=${encodeURIComponent(emailValue)}&` +
             `targets=Оплата%20документов%20Preep`;
         
         // Сохраняем заказ
-        this.saveOrder(orderId, email, this.cart);
+        this.saveOrder(orderId, emailValue, this.cart);
         
         // Редирект на ЮMoney
         window.location.href = yoomoneyUrl;
     }
     
     saveOrder(orderId, email, items) {
-        const orders = JSON.parse(localStorage.getItem('preep_orders') || '{}');
-        orders[orderId] = {
-            email: email,
-            items: items,
-            status: 'pending',
-            date: new Date().toISOString()
-        };
-        localStorage.setItem('preep_orders', JSON.stringify(orders));
+        try {
+            const orders = JSON.parse(localStorage.getItem('preep_orders') || '{}');
+            orders[orderId] = {
+                email: email,
+                items: items,
+                status: 'pending',
+                date: new Date().toISOString()
+            };
+            localStorage.setItem('preep_orders', JSON.stringify(orders));
+        } catch (e) {
+            console.error('Error saving order', e);
+        }
     }
     
     // ===== Нейросеть =====
     
     async generateWithAI() {
         // Проверка тарифа
-        if (currentUser.tariff === 'free') {
+        if (this.currentUser.tariff === 'free') {
             this.showToast('Генерация доступна только в PRO тарифе');
             this.showTariffModal();
             return;
         }
         
-        if (currentUser.aiGenerationsLeft <= 0) {
+        if (!this.currentUser.aiGenerationsLeft || this.currentUser.aiGenerationsLeft <= 0) {
             this.showToast('Закончились генерации. Пополните лимит');
             this.showTariffModal();
             return;
         }
         
-        const prompt = document.getElementById('aiPrompt').value.trim();
-        if (!prompt) {
+        const prompt = document.getElementById('aiPrompt');
+        if (!prompt) return;
+        
+        const promptValue = prompt.value.trim();
+        if (!promptValue) {
             this.showToast('Опишите, какой документ вам нужен');
             return;
         }
         
         // Показываем загрузку
-        document.getElementById('aiResult').style.display = 'none';
-        document.getElementById('generateAiBtn').disabled = true;
-        document.getElementById('generateAiBtn').innerHTML = '<span>⏳ Генерация...</span>';
+        const aiResult = document.getElementById('aiResult');
+        const generateBtn = document.getElementById('generateAiBtn');
+        
+        if (aiResult) aiResult.style.display = 'none';
+        if (generateBtn) {
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<span>⏳ Генерация...</span>';
+        }
         
         try {
             // Вызов API (через Vercel)
@@ -578,9 +687,9 @@ class PreepDocs {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    prompt: prompt,
-                    type: document.getElementById('aiDocType').value,
-                    style: document.getElementById('aiStyle').value
+                    prompt: promptValue,
+                    type: document.getElementById('aiDocType')?.value || 'auto',
+                    style: document.getElementById('aiStyle')?.value || 'official'
                 })
             });
             
@@ -588,13 +697,16 @@ class PreepDocs {
             
             if (data.success) {
                 // Уменьшаем счетчик
-                currentUser.aiGenerationsLeft--;
-                localStorage.setItem('preep_user', JSON.stringify(currentUser));
+                this.currentUser.aiGenerationsLeft--;
+                localStorage.setItem('preep_user', JSON.stringify(this.currentUser));
                 this.updateAILimit();
                 
                 // Показываем результат
-                document.getElementById('aiResultContent').textContent = data.document;
-                document.getElementById('aiResult').style.display = 'block';
+                const resultContent = document.getElementById('aiResultContent');
+                if (resultContent) {
+                    resultContent.textContent = data.document;
+                }
+                if (aiResult) aiResult.style.display = 'block';
                 
                 this.showToast('Документ создан!');
             } else {
@@ -606,24 +718,37 @@ class PreepDocs {
             this.showToast('Ошибка при генерации. Попробуйте еще раз');
             
             // Для теста - показываем тестовый документ
-            document.getElementById('aiResultContent').textContent = this.getTestDocument(prompt);
-            document.getElementById('aiResult').style.display = 'block';
+            const resultContent = document.getElementById('aiResultContent');
+            if (resultContent) {
+                resultContent.textContent = this.getTestDocument(promptValue);
+            }
+            if (aiResult) aiResult.style.display = 'block';
             
         } finally {
-            document.getElementById('generateAiBtn').disabled = false;
-            document.getElementById('generateAiBtn').innerHTML = '<span>🔮 Сгенерировать документ</span>';
+            if (generateBtn) {
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '<span>🔮 Сгенерировать документ</span>';
+            }
         }
     }
     
     copyAIResult() {
-        const text = document.getElementById('aiResultContent').textContent;
+        const resultContent = document.getElementById('aiResultContent');
+        if (!resultContent) return;
+        
+        const text = resultContent.textContent;
         navigator.clipboard.writeText(text).then(() => {
             this.showToast('Документ скопирован');
+        }).catch(() => {
+            this.showToast('Ошибка копирования');
         });
     }
     
     downloadAIResult() {
-        const text = document.getElementById('aiResultContent').textContent;
+        const resultContent = document.getElementById('aiResultContent');
+        if (!resultContent) return;
+        
+        const text = resultContent.textContent;
         const blob = new Blob([text], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -635,13 +760,19 @@ class PreepDocs {
     }
     
     getTestDocument(prompt) {
-        return `ДОГОВОР АРЕНДЫ КВАРТИРЫ
+        return `ДОГОВОР НА ОСНОВАНИИ ВАШЕГО ЗАПРОСА
+
+Запрос: "${prompt}"
+
+ДОГОВОР АРЕНДЫ КВАРТИРЫ
 
 г. Москва                                          «${new Date().getDate()}» ${new Date().toLocaleString('ru', { month: 'long' })} ${new Date().getFullYear()} г.
 
 Гражданин РФ Иванов Иван Иванович, ... (договор сгенерирован нейросетью)
 
-... (полный текст договора) ...`;
+... (полный текст договора) ...
+
+(Это тестовый режим. Для реальной генерации подключите API)`;
     }
     
     // ===== Тарифы =====
@@ -651,15 +782,15 @@ class PreepDocs {
     }
     
     selectTariff(tariff) {
-        currentUser.selectedTariff = tariff;
+        this.currentUser.selectedTariff = tariff;
     }
     
     processTariffPayment() {
-        const tariff = currentUser.selectedTariff || 'pro';
-        const price = TARIFFS[tariff].price;
+        const tariff = this.currentUser.selectedTariff || 'pro';
+        const price = TARIFFS[tariff]?.price || 499;
         const orderId = `tariff_${Date.now()}`;
         
-        // Формируем URL для оплаты
+        // Формируем URL для оплаты (БЕЗ test=1)
         const yoomoneyUrl = `https://yoomoney.ru/quickpay/confirm.xml?` +
             `receiver=${YOOMONEY_CLIENT_ID}&` +
             `quickpay-form=shop&` +
@@ -667,16 +798,20 @@ class PreepDocs {
             `sum=${price}&` +
             `label=${orderId}&` +
             `successURL=${window.location.origin}/payment-success.html&` +
-            `targets=Тариф%20${TARIFFS[tariff].name}`;
+            `targets=Тариф%20${TARIFFS[tariff]?.name || 'PRO'}`;
         
         // Сохраняем заказ на тариф
-        const orders = JSON.parse(localStorage.getItem('preep_tariff_orders') || '{}');
-        orders[orderId] = {
-            tariff: tariff,
-            status: 'pending',
-            date: new Date().toISOString()
-        };
-        localStorage.setItem('preep_tariff_orders', JSON.stringify(orders));
+        try {
+            const orders = JSON.parse(localStorage.getItem('preep_tariff_orders') || '{}');
+            orders[orderId] = {
+                tariff: tariff,
+                status: 'pending',
+                date: new Date().toISOString()
+            };
+            localStorage.setItem('preep_tariff_orders', JSON.stringify(orders));
+        } catch (e) {
+            console.error('Error saving tariff order', e);
+        }
         
         window.location.href = yoomoneyUrl;
     }
@@ -684,12 +819,11 @@ class PreepDocs {
     // ===== Вход =====
     
     showLoginModal() {
-        // Простая заглушка - запрашиваем email
         const email = prompt('Введите ваш email для входа:');
         if (email && email.includes('@')) {
-            currentUser.email = email;
+            this.currentUser.email = email;
             localStorage.setItem('user_email', email);
-            localStorage.setItem('preep_user', JSON.stringify(currentUser));
+            localStorage.setItem('preep_user', JSON.stringify(this.currentUser));
             this.updateUserInterface();
             this.showToast('Вы вошли как ' + email);
         }
@@ -698,15 +832,28 @@ class PreepDocs {
     // ===== Вспомогательные =====
     
     openModal(modalId) {
-        document.getElementById(modalId).classList.add('show');
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('show');
+        }
     }
     
     closeModal(modalId) {
-        document.getElementById(modalId).classList.remove('show');
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('show');
+        }
     }
     
     showToast(message) {
-        const toast = document.getElementById('toast');
+        let toast = document.getElementById('toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = 'toast';
+            document.body.appendChild(toast);
+        }
+        
         toast.textContent = message;
         toast.classList.add('show');
         
@@ -717,4 +864,8 @@ class PreepDocs {
 }
 
 // Инициализация
-const app = new PreepDocs();
+let app;
+document.addEventListener('DOMContentLoaded', () => {
+    app = new PreepDocs();
+    window.app = app; // Делаем app глобальным для вызовов из HTML
+});
