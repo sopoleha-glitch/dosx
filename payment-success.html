@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оплата прошла успешно — Preep Docs</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .success-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+        }
+        
+        .success-card {
+            background: white;
+            border-radius: 32px;
+            padding: 60px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+        
+        .success-card h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--gray-900);
+        }
+        
+        .success-card p {
+            color: var(--gray-600);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .success-email {
+            background: var(--gray-50);
+            padding: 15px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 30px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--gray-200);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .redirect-message {
+            color: var(--gray-400);
+            font-size: 0.9rem;
+        }
+    </style>
+    <meta http-equiv="refresh" content="5;url=/" />
+</head>
+<body>
+    <div class="success-page">
+        <div class="success-card">
+            <div class="success-icon">✅</div>
+            <h1>Оплата прошла успешно!</h1>
+            <p>Спасибо за покупку на Preep Docs</p>
+            
+            <div class="success-email" id="emailDisplay">
+                Документы отправлены на вашу почту
+            </div>
+            
+            <div class="loader"></div>
+            <p class="redirect-message">Через 5 секунд вы будете перенаправлены на главную</p>
+            
+            <div style="margin-top: 30px">
+                <a href="/" class="btn btn-primary">Перейти сейчас</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Показываем email из URL или localStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email') || localStorage.getItem('user_email');
+        if (email) {
+            document.getElementById('emailDisplay').textContent = `Документы отправлены на ${email}`;
+        }
+        
+        // Отмечаем успешные платежи
+        localStorage.setItem('last_payment_success', 'true');
+    </script>
+</body>
+</html>
