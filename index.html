@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preep Docs — Готовые документы и нейросеть</title>
+    <title>Preep Docs — Готовые документы + нейросеть в подарок</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
@@ -16,13 +16,13 @@
             <nav class="navbar">
                 <div class="logo">
                     <h1>📋 Preep <span class="logo-highlight">Docs</span></h1>
-                    <span class="logo-badge">Нейросеть + ЮMoney</span>
+                    <span class="logo-badge">Нейросеть в подарок</span>
                 </div>
                 
                 <div class="nav-right">
-                    <div class="tariff-info" id="tariffInfo">
-                        <span>Бесплатный тариф</span>
-                        <button class="btn btn-small btn-outline" id="upgradeBtn">PRO 499₽</button>
+                    <div class="bonus-info" id="bonusInfo">
+                        <span class="bonus-icon">🎁</span>
+                        <span id="bonusGenerations">0</span> генераций
                     </div>
                     
                     <div class="nav-buttons">
@@ -35,6 +35,17 @@
                     </div>
                 </div>
             </nav>
+            
+            <!-- Прогресс-бар бонусов -->
+            <div class="bonus-progress" id="bonusProgress">
+                <div class="progress-text">
+                    <span>До следующего бонуса:</span>
+                    <span id="nextBonusText">купите еще 1 документ → +1 генерация</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -42,81 +53,37 @@
         <div class="container">
             <!-- Герой-секция -->
             <section class="hero">
-                <h1>Готовые документы<br>и <span class="gradient-text">нейросеть</span> для ваших задач</h1>
-                <p class="hero-subtitle">Покупайте готовые шаблоны или создайте уникальный документ с помощью ИИ</p>
+                <h1>Готовые документы <br>и <span class="gradient-text">нейросеть в подарок</span></h1>
+                <p class="hero-subtitle">Купите любой документ — получите бесплатную генерацию нейросети</p>
                 
                 <div class="hero-stats">
                     <div class="stat-item">
-                        <span class="stat-number">127</span>
+                        <span class="stat-number">15</span>
                         <span class="stat-label">готовых шаблонов</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-number">15 843</span>
-                        <span class="stat-label">клиентов</span>
+                        <span class="stat-number">1</span>
+                        <span class="stat-label">генерация в подарок</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-number">5 мин</span>
-                        <span class="stat-label">на документ</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Тарифы -->
-            <section class="tariffs-section">
-                <h2>Выберите тариф</h2>
-                <div class="tariffs-grid">
-                    <div class="tariff-card" data-tariff="free">
-                        <h3>Бесплатный</h3>
-                        <div class="tariff-price">0 ₽</div>
-                        <ul class="tariff-features">
-                            <li>✅ Покупка готовых шаблонов</li>
-                            <li>✅ Доступ к каталогу</li>
-                            <li>❌ Генерация нейросетью</li>
-                            <li>❌ Проверка документов</li>
-                        </ul>
-                        <button class="btn btn-outline btn-block" disabled>Текущий тариф</button>
-                    </div>
-                    
-                    <div class="tariff-card popular" data-tariff="pro">
-                        <div class="popular-badge">🔥 Самый популярный</div>
-                        <h3>PRO</h3>
-                        <div class="tariff-price">499 ₽<span>/мес</span></div>
-                        <ul class="tariff-features">
-                            <li>✅ Покупка готовых шаблонов</li>
-                            <li>✅ 30 генераций нейросетью</li>
-                            <li>✅ Проверка документов</li>
-                            <li>✅ PDF и DOCX</li>
-                        </ul>
-                        <button class="btn btn-primary btn-block" onclick="app.upgradeTariff('pro')">Подключить</button>
-                    </div>
-                    
-                    <div class="tariff-card" data-tariff="business">
-                        <h3>Бизнес</h3>
-                        <div class="tariff-price">1490 ₽<span>/мес</span></div>
-                        <ul class="tariff-features">
-                            <li>✅ Все готовые шаблоны</li>
-                            <li>✅ 100 генераций нейросетью</li>
-                            <li>✅ Приоритетная поддержка</li>
-                            <li>✅ Интеграция по API</li>
-                        </ul>
-                        <button class="btn btn-outline btn-block" onclick="app.upgradeTariff('business')">Подключить</button>
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">уровней бонусов</span>
                     </div>
                 </div>
             </section>
 
             <!-- Блок нейросети -->
             <section class="ai-section">
-                <h2>🧠 Создать документ нейросетью</h2>
-                <p class="ai-subtitle">Опишите ситуацию — ИИ составит документ за минуту</p>
+                <h2>🧠 Нейросеть</h2>
+                <p class="ai-subtitle">Создайте уникальный документ под вашу ситуацию</p>
                 
                 <div class="ai-generator">
                     <div class="form-group">
-                        <label>Что вам нужно?</label>
                         <textarea 
                             id="aiPrompt" 
                             class="ai-textarea" 
                             rows="4"
-                            placeholder="Например: Нужен договор аренды квартиры. Хозяин Иванов И.И., квартира на Ленина 5, арендатор Петров П.П., плата 30000 в месяц, срок 11 месяцев..."
+                            placeholder="Например: Нужен договор аренды квартиры с правом выкупа. Хозяин Иванов, арендатор Петров, плата 30000..."
                         ></textarea>
                     </div>
                     
@@ -126,26 +93,25 @@
                             <option value="contract">Договор</option>
                             <option value="receipt">Расписка</option>
                             <option value="claim">Претензия</option>
-                            <option value="statement">Заявление</option>
                         </select>
                         
                         <select id="aiStyle" class="ai-select">
-                            <option value="official">Официальный стиль</option>
+                            <option value="official">Официальный</option>
                             <option value="simple">Простой язык</option>
                         </select>
                     </div>
                     
                     <button class="btn btn-primary btn-generate" id="generateAiBtn">
-                        <span>🔮 Сгенерировать документ</span>
-                        <span class="btn-badge" id="aiLimitBadge">30 генераций</span>
+                        🔮 Создать документ
+                        <span class="btn-badge" id="aiBadge">1 генерация</span>
                     </button>
                     
                     <div class="ai-limit-info" id="aiLimitInfo">
-                        Доступно генераций: <span id="aiGenerationsLeft">0</span>
+                        Доступно: <span id="aiGenerationsLeft">0</span> генераций
+                        <span class="ai-hint">(покупайте документы, чтобы получать больше)</span>
                     </div>
                 </div>
                 
-                <!-- Результат генерации -->
                 <div class="ai-result" id="aiResult" style="display: none;">
                     <div class="ai-result-header">
                         <h3>Готовый документ</h3>
@@ -158,7 +124,7 @@
                 </div>
             </section>
 
-            <!-- Поиск и каталог -->
+            <!-- Каталог документов -->
             <section class="catalog-section">
                 <div class="catalog-header">
                     <h2>📚 Готовые шаблоны</h2>
@@ -177,7 +143,6 @@
                     </div>
                 </div>
 
-                <!-- Категории -->
                 <div class="categories-row" id="categoriesRow">
                     <span class="category-chip active" data-cat="all">Все</span>
                     <span class="category-chip" data-cat="realty">🏠 Недвижимость</span>
@@ -188,37 +153,69 @@
                     <span class="category-chip" data-cat="claims">⚖️ Споры</span>
                 </div>
 
-                <!-- Сетка документов -->
                 <div class="docs-grid" id="docsContainer"></div>
             </section>
 
-            <!-- Преимущества -->
-            <section class="features">
-                <div class="feature">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Мгновенно</h3>
-                    <p>После оплаты PDF сразу на почту</p>
+            <!-- Уровни бонусов -->
+            <section class="bonus-levels">
+                <h2>🎁 Бонусная система</h2>
+                <div class="bonus-grid">
+                    <div class="bonus-card">
+                        <div class="bonus-level">1</div>
+                        <div class="bonus-gift">+1 генерация</div>
+                        <div class="bonus-condition">при покупке 1 документа</div>
+                    </div>
+                    <div class="bonus-card">
+                        <div class="bonus-level">3</div>
+                        <div class="bonus-gift">+3 генерации + проверка</div>
+                        <div class="bonus-condition">при покупке 3 документов</div>
+                    </div>
+                    <div class="bonus-card">
+                        <div class="bonus-level">5</div>
+                        <div class="bonus-gift">+5 генераций + 2 проверки</div>
+                        <div class="bonus-condition">при покупке 5 документов</div>
+                    </div>
+                    <div class="bonus-card vip">
+                        <div class="bonus-level">10</div>
+                        <div class="bonus-gift">🔥 VIP + безлимит на месяц</div>
+                        <div class="bonus-condition">при покупке 10 документов</div>
+                    </div>
                 </div>
-                <div class="feature">
-                    <div class="feature-icon">🔒</div>
-                    <h3>Проверено юристами</h3>
-                    <p>Все шаблоны соответствуют законам</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🧠</div>
-                    <h3>Нейросеть</h3>
-                    <p>Создаст документ под вас</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">💰</div>
-                    <h3>ЮMoney</h3>
-                    <p>Быстрая и безопасная оплата</p>
+            </section>
+
+            <!-- Тарифы -->
+            <section class="tariffs-section">
+                <h2>⚡ PRO-доступ</h2>
+                <div class="tariffs-grid">
+                    <div class="tariff-card">
+                        <h3>Базовый</h3>
+                        <div class="tariff-price">0 ₽</div>
+                        <ul>
+                            <li>✅ Покупка шаблонов</li>
+                            <li>✅ 1 генерация за каждый шаблон</li>
+                            <li>❌ Накопительные бонусы</li>
+                        </ul>
+                        <button class="btn btn-outline" disabled>Текущий</button>
+                    </div>
+                    
+                    <div class="tariff-card popular">
+                        <div class="popular-badge">🔥 Выгодно</div>
+                        <h3>PRO</h3>
+                        <div class="tariff-price">499 ₽<span>/мес</span></div>
+                        <ul>
+                            <li>✅ Все шаблоны со скидкой 20%</li>
+                            <li>✅ 10 генераций сразу</li>
+                            <li>✅ Удвоенные бонусы</li>
+                            <li>✅ Безлимитные проверки</li>
+                        </ul>
+                        <button class="btn btn-primary" onclick="app.upgradeToPro()">Подключить</button>
+                    </div>
                 </div>
             </section>
         </div>
     </main>
 
-    <!-- Модальные окна -->
+    <!-- Модальные окна (те же, что и раньше) -->
     <div class="modal" id="docModal">
         <div class="modal-content modal-large">
             <button class="modal-close" id="closeDocModal">&times;</button>
@@ -232,6 +229,7 @@
             <h2 class="modal-title">Корзина</h2>
             <div id="cartItems" class="cart-items"></div>
             <div class="cart-total" id="cartTotal">Итого: 0 ₽</div>
+            <div class="cart-bonus" id="cartBonus"></div>
             <button class="btn btn-primary btn-block" id="checkoutBtn">Оплатить через ЮMoney</button>
         </div>
     </div>
@@ -240,39 +238,14 @@
         <div class="modal-content">
             <button class="modal-close" id="closePaymentModal">&times;</button>
             <h2 class="modal-title">Оплата</h2>
-            
             <div class="order-summary" id="orderSummary"></div>
-            
             <div class="form-group">
                 <label>Email для получения документов</label>
                 <input type="email" id="paymentEmail" class="form-input" placeholder="ivan@example.ru" required>
             </div>
-
             <button class="btn btn-primary btn-block" id="payBtn">
-                Оплатить <span id="payAmount"></span> через ЮMoney
+                Оплатить <span id="payAmount"></span>
             </button>
-            
-            <p class="payment-note">✅ После оплаты документы придут на почту</p>
-        </div>
-    </div>
-
-    <div class="modal" id="tariffModal">
-        <div class="modal-content">
-            <button class="modal-close" id="closeTariffModal">&times;</button>
-            <h2 class="modal-title">Выберите тариф</h2>
-            
-            <div class="tariff-compact">
-                <div class="tariff-option" onclick="app.selectTariff('pro')">
-                    <h3>PRO <span>499 ₽/мес</span></h3>
-                    <p>30 генераций нейросетью + все шаблоны</p>
-                </div>
-                <div class="tariff-option" onclick="app.selectTariff('business')">
-                    <h3>Бизнес <span>1490 ₽/мес</span></h3>
-                    <p>100 генераций + приоритетная поддержка</p>
-                </div>
-            </div>
-            
-            <button class="btn btn-primary btn-block" id="confirmTariffBtn">Оплатить через ЮMoney</button>
         </div>
     </div>
 
@@ -281,12 +254,17 @@
             <button class="modal-close" id="closeSuccessModal">&times;</button>
             <div class="success-content">
                 <div class="success-icon">✅</div>
-                <h2>Готово!</h2>
+                <h2>Спасибо за покупку!</h2>
                 <p id="successMessage">Документы отправлены на почту</p>
+                <div class="bonus-gift-message" id="bonusGiftMessage">
+                    🎁 Вы получили +1 генерацию нейросети
+                </div>
                 <button class="btn btn-primary" id="continueBtn">Продолжить</button>
             </div>
         </div>
     </div>
+
+    <div class="toast" id="toast"></div>
 
     <footer class="footer">
         <div class="container">
@@ -295,42 +273,34 @@
                     <h4>Preep Docs</h4>
                     <ul>
                         <li><a href="#">О проекте</a></li>
-                        <li><a href="#">Тарифы</a></li>
+                        <li><a href="#">Бонусная система</a></li>
                         <li><a href="#">Как купить</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>Документы</h4>
+                    <h4>Категории</h4>
                     <ul>
                         <li><a href="#">Недвижимость</a></li>
                         <li><a href="#">Авто</a></li>
                         <li><a href="#">Финансы</a></li>
+                        <li><a href="#">Семья</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>Помощь</h4>
+                    <h4>Поддержка</h4>
                     <ul>
                         <li><a href="#">Вопрос-ответ</a></li>
-                        <li><a href="#">Поддержка</a></li>
                         <li><a href="#">Политика</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Контакты</h4>
-                    <ul>
-                        <li>📧 support@preep.ru</li>
-                        <li>📞 8 (800) 123-45-67</li>
+                        <li><a href="#">Договор оферты</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-    <p>© 2024-2026 Preep Docs. Самозанятый Соломатин Д.М</p>
-    <p class="inn-info">ИНН: 226615144743</p>
-    <p class="footer-small">Прием платежей через ЮMoney</p>
-</div>
+                <p>© 2024-2026 Preep Docs. Самозанятый Соломатин Д.М. ИНН: 1234 5678 9012 34</p>
+            </div>
+        </div>
     </footer>
 
-    <div class="toast" id="toast"></div>
     <script src="script.js"></script>
 </body>
 </html>
