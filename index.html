@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preep Docs — Готовые документы для жизни и бизнеса</title>
+    <title>Preep Docs — Готовые документы и нейросеть</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
@@ -16,16 +16,23 @@
             <nav class="navbar">
                 <div class="logo">
                     <h1>📋 Preep <span class="logo-highlight">Docs</span></h1>
-                    <span class="logo-badge">Готовые шаблоны</span>
+                    <span class="logo-badge">Нейросеть + ЮMoney</span>
                 </div>
                 
-                <div class="nav-buttons">
-                    <button class="btn btn-outline" id="cartBtn">
-                        🛒 Корзина <span class="cart-count" id="cartCount">0</span>
-                    </button>
-                    <button class="btn btn-primary" id="loginBtn">
-                        👤 Войти
-                    </button>
+                <div class="nav-right">
+                    <div class="tariff-info" id="tariffInfo">
+                        <span>Бесплатный тариф</span>
+                        <button class="btn btn-small btn-outline" id="upgradeBtn">PRO 499₽</button>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button class="btn btn-outline" id="cartBtn">
+                            🛒 <span id="cartCount">0</span>
+                        </button>
+                        <button class="btn btn-primary" id="loginBtn">
+                            👤 Войти
+                        </button>
+                    </div>
                 </div>
             </nav>
         </div>
@@ -35,8 +42,8 @@
         <div class="container">
             <!-- Герой-секция -->
             <section class="hero">
-                <h1>Готовые юридические документы</h1>
-                <p class="hero-subtitle">Профессиональные шаблоны, составленные юристами. Скачайте и используйте сразу.</p>
+                <h1>Готовые документы<br>и <span class="gradient-text">нейросеть</span> для ваших задач</h1>
+                <p class="hero-subtitle">Покупайте готовые шаблоны или создайте уникальный документ с помощью ИИ</p>
                 
                 <div class="hero-stats">
                     <div class="stat-item">
@@ -45,104 +52,173 @@
                     </div>
                     <div class="stat-item">
                         <span class="stat-number">15 843</span>
-                        <span class="stat-label">довольных клиентов</span>
+                        <span class="stat-label">клиентов</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-number">5 мин</span>
-                        <span class="stat-label">после оплаты</span>
+                        <span class="stat-label">на документ</span>
                     </div>
                 </div>
             </section>
 
-            <!-- Поиск и фильтры -->
-            <section class="search-section">
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Поиск документов..." class="search-input">
-                    <select id="categoryFilter" class="filter-select">
-                        <option value="all">Все категории</option>
-                        <option value="realty">🏠 Недвижимость</option>
-                        <option value="auto">🚗 Авто</option>
-                        <option value="finance">💰 Финансы</option>
-                        <option value="family">👨‍👩‍👧 Семья</option>
-                        <option value="business">💼 Бизнес</option>
-                        <option value="claims">⚖️ Споры</option>
-                    </select>
-                    <button id="searchBtn" class="btn btn-primary">Найти</button>
+            <!-- Тарифы -->
+            <section class="tariffs-section">
+                <h2>Выберите тариф</h2>
+                <div class="tariffs-grid">
+                    <div class="tariff-card" data-tariff="free">
+                        <h3>Бесплатный</h3>
+                        <div class="tariff-price">0 ₽</div>
+                        <ul class="tariff-features">
+                            <li>✅ Покупка готовых шаблонов</li>
+                            <li>✅ Доступ к каталогу</li>
+                            <li>❌ Генерация нейросетью</li>
+                            <li>❌ Проверка документов</li>
+                        </ul>
+                        <button class="btn btn-outline btn-block" disabled>Текущий тариф</button>
+                    </div>
+                    
+                    <div class="tariff-card popular" data-tariff="pro">
+                        <div class="popular-badge">🔥 Самый популярный</div>
+                        <h3>PRO</h3>
+                        <div class="tariff-price">499 ₽<span>/мес</span></div>
+                        <ul class="tariff-features">
+                            <li>✅ Покупка готовых шаблонов</li>
+                            <li>✅ 30 генераций нейросетью</li>
+                            <li>✅ Проверка документов</li>
+                            <li>✅ PDF и DOCX</li>
+                        </ul>
+                        <button class="btn btn-primary btn-block" onclick="app.upgradeTariff('pro')">Подключить</button>
+                    </div>
+                    
+                    <div class="tariff-card" data-tariff="business">
+                        <h3>Бизнес</h3>
+                        <div class="tariff-price">1490 ₽<span>/мес</span></div>
+                        <ul class="tariff-features">
+                            <li>✅ Все готовые шаблоны</li>
+                            <li>✅ 100 генераций нейросетью</li>
+                            <li>✅ Приоритетная поддержка</li>
+                            <li>✅ Интеграция по API</li>
+                        </ul>
+                        <button class="btn btn-outline btn-block" onclick="app.upgradeTariff('business')">Подключить</button>
+                    </div>
                 </div>
             </section>
 
-            <!-- Категории (иконки) -->
-            <section class="categories-section">
-                <div class="category-icon" data-cat="realty">🏠 Недвижимость</div>
-                <div class="category-icon" data-cat="auto">🚗 Авто</div>
-                <div class="category-icon" data-cat="finance">💰 Финансы</div>
-                <div class="category-icon" data-cat="family">👨‍👩‍👧 Семья</div>
-                <div class="category-icon" data-cat="business">💼 Бизнес</div>
-                <div class="category-icon" data-cat="claims">⚖️ Споры</div>
+            <!-- Блок нейросети -->
+            <section class="ai-section">
+                <h2>🧠 Создать документ нейросетью</h2>
+                <p class="ai-subtitle">Опишите ситуацию — ИИ составит документ за минуту</p>
+                
+                <div class="ai-generator">
+                    <div class="form-group">
+                        <label>Что вам нужно?</label>
+                        <textarea 
+                            id="aiPrompt" 
+                            class="ai-textarea" 
+                            rows="4"
+                            placeholder="Например: Нужен договор аренды квартиры. Хозяин Иванов И.И., квартира на Ленина 5, арендатор Петров П.П., плата 30000 в месяц, срок 11 месяцев..."
+                        ></textarea>
+                    </div>
+                    
+                    <div class="ai-options">
+                        <select id="aiDocType" class="ai-select">
+                            <option value="auto">Автоматически определить</option>
+                            <option value="contract">Договор</option>
+                            <option value="receipt">Расписка</option>
+                            <option value="claim">Претензия</option>
+                            <option value="statement">Заявление</option>
+                        </select>
+                        
+                        <select id="aiStyle" class="ai-select">
+                            <option value="official">Официальный стиль</option>
+                            <option value="simple">Простой язык</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-generate" id="generateAiBtn">
+                        <span>🔮 Сгенерировать документ</span>
+                        <span class="btn-badge" id="aiLimitBadge">30 генераций</span>
+                    </button>
+                    
+                    <div class="ai-limit-info" id="aiLimitInfo">
+                        Доступно генераций: <span id="aiGenerationsLeft">0</span>
+                    </div>
+                </div>
+                
+                <!-- Результат генерации -->
+                <div class="ai-result" id="aiResult" style="display: none;">
+                    <div class="ai-result-header">
+                        <h3>Готовый документ</h3>
+                        <div class="ai-result-actions">
+                            <button class="btn btn-outline" id="copyAiResult">📋 Копировать</button>
+                            <button class="btn btn-outline" id="downloadAiResult">📄 Скачать</button>
+                        </div>
+                    </div>
+                    <div class="ai-result-content" id="aiResultContent"></div>
+                </div>
             </section>
 
-            <!-- Сетка документов -->
-            <section class="docs-grid" id="docsContainer">
-                <!-- Документы загружаются из JS -->
+            <!-- Поиск и каталог -->
+            <section class="catalog-section">
+                <div class="catalog-header">
+                    <h2>📚 Готовые шаблоны</h2>
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Поиск документов..." class="search-input">
+                        <select id="categoryFilter" class="filter-select">
+                            <option value="all">Все категории</option>
+                            <option value="realty">🏠 Недвижимость</option>
+                            <option value="auto">🚗 Авто</option>
+                            <option value="finance">💰 Финансы</option>
+                            <option value="family">👨‍👩‍👧 Семья</option>
+                            <option value="business">💼 Бизнес</option>
+                            <option value="claims">⚖️ Споры</option>
+                        </select>
+                        <button id="searchBtn" class="btn btn-primary">Найти</button>
+                    </div>
+                </div>
+
+                <!-- Категории -->
+                <div class="categories-row" id="categoriesRow">
+                    <span class="category-chip active" data-cat="all">Все</span>
+                    <span class="category-chip" data-cat="realty">🏠 Недвижимость</span>
+                    <span class="category-chip" data-cat="auto">🚗 Авто</span>
+                    <span class="category-chip" data-cat="finance">💰 Финансы</span>
+                    <span class="category-chip" data-cat="family">👨‍👩‍👧 Семья</span>
+                    <span class="category-chip" data-cat="business">💼 Бизнес</span>
+                    <span class="category-chip" data-cat="claims">⚖️ Споры</span>
+                </div>
+
+                <!-- Сетка документов -->
+                <div class="docs-grid" id="docsContainer"></div>
             </section>
 
             <!-- Преимущества -->
             <section class="features">
                 <div class="feature">
                     <div class="feature-icon">⚡</div>
-                    <h3>Мгновенное скачивание</h3>
-                    <p>После оплаты PDF сразу придет на почту</p>
+                    <h3>Мгновенно</h3>
+                    <p>После оплаты PDF сразу на почту</p>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">🔒</div>
                     <h3>Проверено юристами</h3>
-                    <p>Все документы соответствуют законам РФ</p>
+                    <p>Все шаблоны соответствуют законам</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">📝</div>
-                    <h3>Редактируемые файлы</h3>
-                    <p>DOCX формат — меняйте под себя</p>
+                    <div class="feature-icon">🧠</div>
+                    <h3>Нейросеть</h3>
+                    <p>Создаст документ под вас</p>
                 </div>
                 <div class="feature">
-                    <div class="feature-icon">🔄</div>
-                    <h3>Обновления бесплатно</h3>
-                    <p>При изменении законов вышлем новую версию</p>
-                </div>
-            </section>
-
-            <!-- Популярные документы -->
-            <section class="popular-section">
-                <h2>🔥 Популярные документы</h2>
-                <div class="popular-grid" id="popularContainer">
-                    <!-- Загружаются из JS -->
-                </div>
-            </section>
-
-            <!-- Отзывы -->
-            <section class="reviews">
-                <h2>Что говорят клиенты</h2>
-                <div class="reviews-grid">
-                    <div class="review-card">
-                        <div class="review-stars">★★★★★</div>
-                        <p>"Купил договор аренды. Все грамотно составлено, уже сдал квартиру. Спасибо!"</p>
-                        <div class="review-author">— Алексей, Москва</div>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-stars">★★★★★</div>
-                        <p>"Расписка помогла вернуть долг. В суде приняли без вопросов."</p>
-                        <div class="review-author">— Елена, СПб</div>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-stars">★★★★☆</div>
-                        <p>"Претензия в магазин сработала, деньги вернули. Удобно, что уже готовый текст."</p>
-                        <div class="review-author">— Дмитрий, Казань</div>
-                    </div>
+                    <div class="feature-icon">💰</div>
+                    <h3>ЮMoney</h3>
+                    <p>Быстрая и безопасная оплата</p>
                 </div>
             </section>
         </div>
     </main>
 
-    <!-- Модальное окно документа -->
+    <!-- Модальные окна -->
     <div class="modal" id="docModal">
         <div class="modal-content modal-large">
             <button class="modal-close" id="closeDocModal">&times;</button>
@@ -150,69 +226,67 @@
         </div>
     </div>
 
-    <!-- Модальное окно корзины -->
     <div class="modal" id="cartModal">
         <div class="modal-content">
             <button class="modal-close" id="closeCartModal">&times;</button>
-            <h2 class="modal-title">Ваша корзина</h2>
+            <h2 class="modal-title">Корзина</h2>
             <div id="cartItems" class="cart-items"></div>
             <div class="cart-total" id="cartTotal">Итого: 0 ₽</div>
-            <button class="btn btn-primary btn-block" id="checkoutBtn">Перейти к оплате</button>
+            <button class="btn btn-primary btn-block" id="checkoutBtn">Оплатить через ЮMoney</button>
         </div>
     </div>
 
-    <!-- Модальное окно оплаты -->
     <div class="modal" id="paymentModal">
         <div class="modal-content">
             <button class="modal-close" id="closePaymentModal">&times;</button>
-            <h2 class="modal-title">Оплата заказа</h2>
+            <h2 class="modal-title">Оплата</h2>
             
             <div class="order-summary" id="orderSummary"></div>
             
             <div class="form-group">
                 <label>Email для получения документов</label>
                 <input type="email" id="paymentEmail" class="form-input" placeholder="ivan@example.ru" required>
-                <small class="form-hint">На этот email придут файлы после оплаты</small>
-            </div>
-
-            <div class="payment-methods">
-                <label class="payment-method">
-                    <input type="radio" name="payment" value="card" checked> 💳 Банковская карта
-                </label>
-                <label class="payment-method">
-                    <input type="radio" name="payment" value="sbp"> 📱 СБП (СПБ)
-                </label>
-                <label class="payment-method">
-                    <input type="radio" name="payment" value="yoomoney"> 🔵 ЮMoney
-                </label>
             </div>
 
             <button class="btn btn-primary btn-block" id="payBtn">
-                Оплатить <span id="payAmount"></span>
+                Оплатить <span id="payAmount"></span> через ЮMoney
             </button>
             
-            <p class="payment-note">✅ Документы придут на почту сразу после оплаты</p>
-            <p class="payment-note small">🛡️ Платежи защищены. Мы не храним данные карт.</p>
+            <p class="payment-note">✅ После оплаты документы придут на почту</p>
         </div>
     </div>
 
-    <!-- Модальное окно успешной оплаты -->
+    <div class="modal" id="tariffModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeTariffModal">&times;</button>
+            <h2 class="modal-title">Выберите тариф</h2>
+            
+            <div class="tariff-compact">
+                <div class="tariff-option" onclick="app.selectTariff('pro')">
+                    <h3>PRO <span>499 ₽/мес</span></h3>
+                    <p>30 генераций нейросетью + все шаблоны</p>
+                </div>
+                <div class="tariff-option" onclick="app.selectTariff('business')">
+                    <h3>Бизнес <span>1490 ₽/мес</span></h3>
+                    <p>100 генераций + приоритетная поддержка</p>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary btn-block" id="confirmTariffBtn">Оплатить через ЮMoney</button>
+        </div>
+    </div>
+
     <div class="modal" id="successModal">
         <div class="modal-content modal-small">
             <button class="modal-close" id="closeSuccessModal">&times;</button>
             <div class="success-content">
                 <div class="success-icon">✅</div>
-                <h2>Спасибо за покупку!</h2>
-                <p>Документы отправлены на почту</p>
-                <p class="success-email" id="successEmail"></p>
-                <p class="success-note">Если письмо не пришло в течение 5 минут, проверьте папку "Спам"</p>
-                <button class="btn btn-primary" id="continueBtn">Продолжить покупки</button>
+                <h2>Готово!</h2>
+                <p id="successMessage">Документы отправлены на почту</p>
+                <button class="btn btn-primary" id="continueBtn">Продолжить</button>
             </div>
         </div>
     </div>
-
-    <!-- Уведомления -->
-    <div class="toast" id="toast"></div>
 
     <footer class="footer">
         <div class="container">
@@ -221,18 +295,16 @@
                     <h4>Preep Docs</h4>
                     <ul>
                         <li><a href="#">О проекте</a></li>
+                        <li><a href="#">Тарифы</a></li>
                         <li><a href="#">Как купить</a></li>
-                        <li><a href="#">Гарантии</a></li>
-                        <li><a href="#">Возврат</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>Категории</h4>
+                    <h4>Документы</h4>
                     <ul>
                         <li><a href="#">Недвижимость</a></li>
                         <li><a href="#">Авто</a></li>
                         <li><a href="#">Финансы</a></li>
-                        <li><a href="#">Семья</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -240,26 +312,24 @@
                     <ul>
                         <li><a href="#">Вопрос-ответ</a></li>
                         <li><a href="#">Поддержка</a></li>
-                        <li><a href="#">Пользовательское соглашение</a></li>
-                        <li><a href="#">Политика конфиденциальности</a></li>
+                        <li><a href="#">Политика</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h4>Контакты</h4>
                     <ul>
-                        <li>📧 support@preep-docs.ru</li>
+                        <li>📧 support@preep.ru</li>
                         <li>📞 8 (800) 123-45-67</li>
-                        <li>📱 Telegram: @preep_docs</li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2024-2026 Preep Docs. Все права защищены.</p>
-                <p class="footer-small">ИНН: 1234567890 | ОГРН: 1234567890123</p>
+                <p>© 2024-2026 Preep Docs. Прием платежей через ЮMoney</p>
             </div>
         </div>
     </footer>
 
+    <div class="toast" id="toast"></div>
     <script src="script.js"></script>
 </body>
 </html>
