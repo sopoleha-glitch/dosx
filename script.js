@@ -1,48 +1,224 @@
-// Конфигурация API DeepSeek
-const DEEPSEEK_API_KEY = 'sk-b0cd3404db484031bb40542ac5db480f';
-const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+// Каталог документов
+const documentsCatalog = [
+    {
+        id: 1,
+        title: "Договор аренды квартиры",
+        category: "realty",
+        price: 249,
+        description: "Полноценный договор найма жилого помещения. Подходит для сдачи квартиры, комнаты или дома.",
+        fullDescription: "Договор составлен с учетом всех требований ГК РФ. Включает: предмет договора, права и обязанности сторон, порядок расчетов, ответственность, форс-мажор, порядок расторжения. Есть возможность указать дополнительное имущество.",
+        features: [
+            "Защита прав арендодателя",
+            "Прописаны все риски",
+            "Возможность указать залог",
+            "Кто платит коммуналку"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: true,
+        downloads: 1543
+    },
+    {
+        id: 2,
+        title: "Расписка о получении денег",
+        category: "finance",
+        price: 149,
+        description: "Простая, но юридически значимая расписка. Идеально для займов между физлицами.",
+        fullDescription: "Расписка составлена так, чтобы иметь доказательную силу в суде. Включает: ФИО сторон, паспортные данные, сумму цифрами и прописью, дату возврата, проценты, штрафные санкции.",
+        features: [
+            "Помогает вернуть долг через суд",
+            "Учитывает проценты",
+            "Штраф за просрочку",
+            "Можно указать поручителя"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: true,
+        downloads: 2341
+    },
+    {
+        id: 3,
+        title: "Договор купли-продажи автомобиля",
+        category: "auto",
+        price: 299,
+        description: "Официальный договор для продажи авто. Помогает избежать проблем с ГИБДД.",
+        fullDescription: "Соответствует требованиям ГИБДД. Включает: полные характеристики авто, паспортные данные сторон, цену, порядок передачи, ответственность за скрученный пробег.",
+        features: [
+            "Для ГИБДД подходит",
+            "Учитывает техсостояние",
+            "Акт приема-передачи",
+            "Без риска обмана"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: true,
+        downloads: 1876
+    },
+    {
+        id: 4,
+        title: "Претензия на возврат товара",
+        category: "claims",
+        price: 199,
+        description: "Юридически грамотная претензия в магазин. Помогает вернуть деньги за бракованный товар.",
+        fullDescription: "Составлена по ЗоЗПП. Включает: ссылки на статьи закона, требования о возврате или замене, сроки ответа, предупреждение о суде.",
+        features: [
+            "Работает по Закону о защите прав потребителей",
+            "Помогает без суда",
+            "Срок ответа 10 дней",
+            "Можно приложить чек"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: false,
+        downloads: 987
+    },
+    {
+        id: 5,
+        title: "Трудовой договор",
+        category: "business",
+        price: 349,
+        description: "Полноценный трудовой договор для официального оформления сотрудника.",
+        fullDescription: "Соответствует ТК РФ. Включает: режим работы, оплату, обязанности, ответственность, соцпакет, испытательный срок.",
+        features: [
+            "Для ИП и ООО",
+            "Учитывает все нюансы ТК",
+            "Испытательный срок",
+            "Материальная ответственность"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: false,
+        downloads: 654
+    },
+    {
+        id: 6,
+        title: "Договор дарения",
+        category: "realty",
+        price: 279,
+        description: "Договор дарения недвижимости или движимого имущества между близкими.",
+        fullDescription: "Составлен с учетом рисков оспаривания. Подходит для дарения квартиры, машины, денег. Учитывает налоговые последствия.",
+        features: [
+            "Между родственниками",
+            "Без налога",
+            "Регистрация в Росреестре",
+            "Защита от оспаривания"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: false,
+        downloads: 543
+    },
+    {
+        id: 7,
+        title: "Договор займа между физлицами",
+        category: "finance",
+        price: 199,
+        description: "Официальный договор займа с процентами или без. Для крупных сумм.",
+        fullDescription: "Позволяет дать в долг без риска. Включает: график платежей, проценты, штрафы, залог, поручительство.",
+        features: [
+            "С процентами или без",
+            "Можно с залогом",
+            "Пени за просрочку",
+            "Досудебный порядок"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: true,
+        downloads: 1432
+    },
+    {
+        id: 8,
+        title: "Соглашение о детях при разводе",
+        category: "family",
+        price: 399,
+        description: "Соглашение о месте жительства детей и порядке общения с ними после развода.",
+        fullDescription: "Помогает избежать споров в суде. Учитывает интересы ребенка, график встреч, алименты, участие в расходах.",
+        features: [
+            "Утверждается судом",
+            "Защита прав ребенка",
+            "Четкий график",
+            "Алименты"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: false,
+        downloads: 432
+    },
+    {
+        id: 9,
+        title: "Завещание",
+        category: "family",
+        price: 299,
+        description: "Простое завещание на случай смерти. Можно указать наследников и доли.",
+        fullDescription: "Составлено по требованиям нотариата. Включает: назначение наследников, распределение долей, подназначение наследников.",
+        features: [
+            "Можно без нотариуса",
+            "Закрытое завещание",
+            "Подназначение наследников",
+            "Завещательный отказ"
+        ],
+        formats: ["PDF", "DOCX"],
+        popular: false,
+        downloads: 876
+    }
+];
 
-// Класс для управления сайтом
-class DocumentMaster {
+// Корзина
+let cart = [];
+
+// Основной класс приложения
+class PreepDocs {
     constructor() {
-        this.currentUser = null;
-        this.generatedDoc = null;
+        this.cart = [];
         this.init();
     }
     
     init() {
+        this.displayDocuments();
+        this.displayPopular();
         this.setupEventListeners();
-        this.updateStats();
+        this.updateCartCount();
     }
     
     setupEventListeners() {
-        // Генерация документа
-        document.getElementById('generateBtn').addEventListener('click', () => this.generateDocument());
-        
-        // Проверка документа
-        document.getElementById('checkBtn').addEventListener('click', () => this.checkDocument());
-        
-        // Копирование и скачивание
-        document.getElementById('copyBtn').addEventListener('click', () => this.copyDocument());
-        document.getElementById('downloadTxtBtn').addEventListener('click', () => this.downloadAsTxt());
-        document.getElementById('downloadPdfBtn').addEventListener('click', () => this.downloadAsPdf());
-        
-        // Новый документ
-        document.getElementById('newDocBtn').addEventListener('click', () => this.resetForm());
-        
-        // Табы
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.switchTab(e));
+        // Поиск
+        document.getElementById('searchBtn').addEventListener('click', () => this.searchDocuments());
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.searchDocuments();
         });
         
-        // Шаблоны
-        document.querySelectorAll('.template-card').forEach(card => {
-            card.addEventListener('click', (e) => this.loadTemplate(e));
+        // Фильтр по категориям
+        document.getElementById('categoryFilter').addEventListener('change', () => this.searchDocuments());
+        
+        // Категории-иконки
+        document.querySelectorAll('.category-icon').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const cat = e.target.dataset.cat;
+                document.getElementById('categoryFilter').value = cat;
+                this.searchDocuments();
+                
+                // Подсветка активной категории
+                document.querySelectorAll('.category-icon').forEach(icon => icon.classList.remove('active'));
+                e.target.classList.add('active');
+            });
         });
         
-        // Модальное окно тарифов
-        document.getElementById('tariffBtn').addEventListener('click', () => this.openModal('tariffModal'));
-        document.getElementById('closeTariffModal').addEventListener('click', () => this.closeModal('tariffModal'));
+        // Корзина
+        document.getElementById('cartBtn').addEventListener('click', () => this.showCart());
+        document.getElementById('closeCartModal').addEventListener('click', () => this.closeModal('cartModal'));
+        
+        // Модалки документов
+        document.getElementById('closeDocModal').addEventListener('click', () => this.closeModal('docModal'));
+        
+        // Оплата
+        document.getElementById('checkoutBtn').addEventListener('click', () => this.showPayment());
+        document.getElementById('closePaymentModal').addEventListener('click', () => this.closeModal('paymentModal'));
+        document.getElementById('payBtn').addEventListener('click', () => this.processPayment());
+        
+        // Успешная оплата
+        document.getElementById('closeSuccessModal').addEventListener('click', () => this.closeModal('successModal'));
+        document.getElementById('continueBtn').addEventListener('click', () => {
+            this.closeModal('successModal');
+            this.cart = [];
+            this.updateCartCount();
+        });
+        
+        // Вход (заглушка)
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            this.showToast('Функция входа появится скоро');
+        });
         
         // Закрытие по клику вне модалки
         window.addEventListener('click', (e) => {
@@ -50,451 +226,239 @@ class DocumentMaster {
                 e.target.classList.remove('show');
             }
         });
-        
-        // О проекте
-        document.getElementById('aboutBtn').addEventListener('click', () => {
-            this.showToast('ДокументМастер PRO - сервис для создания документов с помощью нейросети DeepSeek');
-        });
     }
     
-    // Переключение табов
-    switchTab(e) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        e.target.classList.add('active');
+    displayDocuments(filteredDocs = null) {
+        const container = document.getElementById('docsContainer');
+        const docs = filteredDocs || documentsCatalog;
         
-        const tabId = e.target.dataset.tab;
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        container.innerHTML = docs.map(doc => `
+            <div class="doc-card ${doc.popular ? 'popular' : ''}" onclick="app.showDocument(${doc.id})">
+                <span class="doc-category">${this.getCategoryName(doc.category)}</span>
+                <h3 class="doc-title">${doc.title}</h3>
+                <p class="doc-description">${doc.description}</p>
+                <div class="doc-footer">
+                    <span class="doc-price">${doc.price} ₽</span>
+                    <span class="doc-format">📄 ${doc.formats.join(' + ')}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    displayPopular() {
+        const popular = documentsCatalog.filter(doc => doc.popular).slice(0, 3);
+        const container = document.getElementById('popularContainer');
         
-        if (tabId === 'ai') {
-            document.getElementById('aiTab').classList.add('active');
-        } else if (tabId === 'templates') {
-            document.getElementById('templatesTab').classList.add('active');
-        } else if (tabId === 'check') {
-            document.getElementById('checkTab').classList.add('active');
+        container.innerHTML = popular.map(doc => `
+            <div class="doc-card" onclick="app.showDocument(${doc.id})">
+                <span class="doc-category">${this.getCategoryName(doc.category)}</span>
+                <h3 class="doc-title">${doc.title}</h3>
+                <p class="doc-description">${doc.description}</p>
+                <div class="doc-footer">
+                    <span class="doc-price">${doc.price} ₽</span>
+                    <span class="doc-format">📥 ${doc.downloads} скачиваний</span>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    searchDocuments() {
+        const searchText = document.getElementById('searchInput').value.toLowerCase();
+        const category = document.getElementById('categoryFilter').value;
+        
+        const filtered = documentsCatalog.filter(doc => {
+            const matchesSearch = doc.title.toLowerCase().includes(searchText) || 
+                                 doc.description.toLowerCase().includes(searchText);
+            const matchesCategory = category === 'all' || doc.category === category;
+            return matchesSearch && matchesCategory;
+        });
+        
+        this.displayDocuments(filtered);
+        
+        if (filtered.length === 0) {
+            document.getElementById('docsContainer').innerHTML = `
+                <div class="no-results">
+                    <p>По вашему запросу ничего не найдено</p>
+                    <button class="btn btn-outline" onclick="app.resetSearch()">Сбросить фильтры</button>
+                </div>
+            `;
         }
     }
     
-    // Загрузка шаблона
-    loadTemplate(e) {
-        const template = e.currentTarget.dataset.template;
-        let prompt = '';
-        
-        switch(template) {
-            case 'rent':
-                prompt = 'Составь договор аренды квартиры. Шаблон должен включать: предмет договора (квартира), стороны (арендодатель и арендатор), срок аренды, размер арендной платы, порядок расчетов, права и обязанности сторон, ответственность сторон, порядок расторжения, подписи.';
-                break;
-            case 'car':
-                prompt = 'Составь договор купли-продажи автомобиля. Шаблон должен включать: предмет договора (автомобиль с характеристиками), стороны (продавец и покупатель), цена, порядок расчетов, передача автомобиля, ответственность сторон, подписи.';
-                break;
-            case 'loan':
-                prompt = 'Составь расписку о получении денег в долг. Шаблон должен включать: ФИО займодавца и заемщика, сумма долга цифрами и прописью, срок возврата, процентная ставка (если есть), ответственность за просрочку, подписи, дата.';
-                break;
-            default:
-                prompt = 'Составь юридически грамотный документ по шаблону';
-        }
-        
-        document.getElementById('userRequest').value = prompt;
-        this.switchToAITab();
+    resetSearch() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('categoryFilter').value = 'all';
+        document.querySelectorAll('.category-icon').forEach(icon => icon.classList.remove('active'));
+        this.displayDocuments();
     }
     
-    // Переключение на вкладку AI
-    switchToAITab() {
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.dataset.tab === 'ai') {
-                btn.classList.add('active');
-            }
+    showDocument(id) {
+        const doc = documentsCatalog.find(d => d.id === id);
+        if (!doc) return;
+        
+        const modalContent = document.getElementById('docDetailContent');
+        modalContent.innerHTML = `
+            <div class="doc-detail">
+                <span class="doc-detail-category">${this.getCategoryName(doc.category)}</span>
+                <h2 class="doc-detail-title">${doc.title}</h2>
+                <div class="doc-detail-price">${doc.price} ₽</div>
+                
+                <div class="doc-detail-description">
+                    <p>${doc.fullDescription}</p>
+                </div>
+                
+                <div class="doc-detail-features">
+                    <h3>Что входит в документ:</h3>
+                    <ul>
+                        ${doc.features.map(f => `<li>${f}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="doc-detail-formats">
+                    ${doc.formats.map(f => `<span class="format-badge">📄 ${f}</span>`).join('')}
+                </div>
+                
+                <button class="btn btn-primary btn-block" onclick="app.addToCart(${doc.id})">
+                    🛒 Добавить в корзину
+                </button>
+            </div>
+        `;
+        
+        this.openModal('docModal');
+    }
+    
+    addToCart(id) {
+        const doc = documentsCatalog.find(d => d.id === id);
+        if (!doc) return;
+        
+        this.cart.push({
+            id: doc.id,
+            title: doc.title,
+            price: doc.price
         });
         
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        document.getElementById('aiTab').classList.add('active');
+        this.updateCartCount();
+        this.closeModal('docModal');
+        this.showToast(`${doc.title} добавлен в корзину`);
     }
     
-    // Генерация документа через DeepSeek
-    async generateDocument() {
-        const request = document.getElementById('userRequest').value.trim();
+    removeFromCart(index) {
+        this.cart.splice(index, 1);
+        this.updateCartCount();
+        this.showCart();
+        this.showToast('Товар удален из корзины');
+    }
+    
+    showCart() {
+        const cartItems = document.getElementById('cartItems');
         
-        if (!request) {
-            this.showToast('Пожалуйста, опишите, какой документ вам нужен');
+        if (this.cart.length === 0) {
+            cartItems.innerHTML = '<p style="text-align: center; color: var(--gray-400); padding: 30px;">Корзина пуста</p>';
+            document.getElementById('cartTotal').textContent = 'Итого: 0 ₽';
+        } else {
+            cartItems.innerHTML = this.cart.map((item, index) => `
+                <div class="cart-item">
+                    <span class="cart-item-title">${item.title}</span>
+                    <span class="cart-item-price">${item.price} ₽</span>
+                    <span class="cart-item-remove" onclick="app.removeFromCart(${index})">✕</span>
+                </div>
+            `).join('');
+            
+            const total = this.cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('cartTotal').textContent = `Итого: ${total} ₽`;
+        }
+        
+        this.openModal('cartModal');
+    }
+    
+    showPayment() {
+        if (this.cart.length === 0) {
+            this.closeModal('cartModal');
+            this.showToast('Корзина пуста');
             return;
         }
         
-        // Показываем загрузку
-        document.getElementById('loadingIndicator').style.display = 'block';
-        document.getElementById('resultSection').style.display = 'none';
+        const summary = document.getElementById('orderSummary');
+        const total = this.cart.reduce((sum, item) => sum + item.price, 0);
         
-        try {
-            const docType = document.getElementById('docType').value;
-            const docStyle = document.getElementById('docStyle').value;
-            
-            let systemPrompt = 'Ты - профессиональный юрист и помощник по созданию юридических документов. ';
-            
-            if (docType !== 'auto') {
-                const typeNames = {
-                    contract: 'договор',
-                    application: 'заявление',
-                    receipt: 'расписка',
-                    claim: 'претензия',
-                    complaint: 'жалоба',
-                    agreement: 'соглашение'
-                };
-                systemPrompt += `Создай ${typeNames[docType]}. `;
-            }
-            
-            if (docStyle === 'official') {
-                systemPrompt += 'Используй официальный юридический стиль, со всеми необходимыми статьями и ссылками на законы. ';
-            } else if (docStyle === 'simple') {
-                systemPrompt += 'Напиши простым и понятным языком, но с сохранением юридической силы. ';
-            } else if (docStyle === 'detailed') {
-                systemPrompt += 'Сделай максимально подробный документ, включи все возможные нюансы. ';
-            }
-            
-            systemPrompt += 'Оформи документ красиво, с заголовками, разделами и подписями.';
-            
-            const response = await fetch(DEEPSEEK_API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
-                },
-                body: JSON.stringify({
-                    model: 'deepseek-chat',
-                    messages: [
-                        {
-                            role: 'system',
-                            content: systemPrompt
-                        },
-                        {
-                            role: 'user',
-                            content: request
-                        }
-                    ],
-                    temperature: 0.7,
-                    max_tokens: 4000
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (data.choices && data.choices[0]) {
-                this.generatedDoc = data.choices[0].message.content;
-                this.displayResult(this.generatedDoc);
-            } else {
-                throw new Error('Не удалось получить ответ от нейросети');
-            }
-            
-        } catch (error) {
-            console.error('Ошибка:', error);
-            this.showToast('Произошла ошибка при генерации документа. Попробуйте еще раз.');
-            
-            // Для теста, если API не работает
-            this.generatedDoc = this.getTestDocument(request);
-            this.displayResult(this.generatedDoc);
-            
-        } finally {
-            document.getElementById('loadingIndicator').style.display = 'none';
-        }
+        summary.innerHTML = `
+            <div class="order-items">
+                ${this.cart.map(item => `
+                    <div class="order-item">
+                        <span>${item.title}</span>
+                        <span>${item.price} ₽</span>
+                    </div>
+                `).join('')}
+                <div class="order-total">
+                    <span>Итого:</span>
+                    <span>${total} ₽</span>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('payAmount').textContent = `${total} ₽`;
+        this.closeModal('cartModal');
+        this.openModal('paymentModal');
     }
     
-    // Проверка документа
-    async checkDocument() {
-        const docText = document.getElementById('docToCheck').value.trim();
+    processPayment() {
+        const email = document.getElementById('paymentEmail').value.trim();
         
-        if (!docText) {
-            this.showToast('Вставьте текст документа для проверки');
+        if (!email || !email.includes('@')) {
+            this.showToast('Введите корректный email');
             return;
         }
         
-        document.getElementById('loadingIndicator').style.display = 'block';
+        const total = this.cart.reduce((sum, item) => sum + item.price, 0);
         
-        try {
-            const response = await fetch(DEEPSEEK_API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
-                },
-                body: JSON.stringify({
-                    model: 'deepseek-chat',
-                    messages: [
-                        {
-                            role: 'system',
-                            content: 'Ты - профессиональный юрист. Проверь документ на юридические ошибки, укажи на слабые места, предложи улучшения. Ответ напиши в формате: 1) Общая оценка 2) Найденные проблемы 3) Рекомендации по улучшению'
-                        },
-                        {
-                            role: 'user',
-                            content: docText
-                        }
-                    ],
-                    temperature: 0.5,
-                    max_tokens: 2000
-                })
-            });
+        // Здесь будет интеграция с платежной системой
+        // Пока имитируем успешную оплату
+        
+        setTimeout(() => {
+            this.closeModal('paymentModal');
+            document.getElementById('successEmail').textContent = email;
+            this.openModal('successModal');
             
-            const data = await response.json();
-            
-            if (data.choices && data.choices[0]) {
-                this.generatedDoc = data.choices[0].message.content;
-                this.displayResult(this.generatedDoc);
-            }
-            
-        } catch (error) {
-            this.showToast('Ошибка при проверке документа');
-        } finally {
-            document.getElementById('loadingIndicator').style.display = 'none';
-        }
+            // Очищаем корзину
+            this.cart = [];
+            this.updateCartCount();
+        }, 1500);
     }
     
-    // Отображение результата
-    displayResult(content) {
-        document.getElementById('resultContent').textContent = content;
-        document.getElementById('resultSection').style.display = 'block';
-        
-        // Прокрутка к результату
-        document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+    getCategoryName(cat) {
+        const names = {
+            'realty': '🏠 Недвижимость',
+            'auto': '🚗 Авто',
+            'finance': '💰 Финансы',
+            'family': '👨‍👩‍👧 Семья',
+            'business': '💼 Бизнес',
+            'claims': '⚖️ Споры'
+        };
+        return names[cat] || cat;
     }
     
-    // Копирование в буфер обмена
-    copyDocument() {
-        if (!this.generatedDoc) return;
-        
-        navigator.clipboard.writeText(this.generatedDoc).then(() => {
-            this.showToast('Документ скопирован в буфер обмена');
-        });
+    updateCartCount() {
+        document.getElementById('cartCount').textContent = this.cart.length;
     }
     
-    // Скачать как TXT
-    downloadAsTxt() {
-        if (!this.generatedDoc) return;
-        
-        const blob = new Blob([this.generatedDoc], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `document_${Date.now()}.txt`;
-        a.click();
-        URL.revokeObjectURL(url);
-        
-        this.showToast('Файл скачан');
-    }
-    
-    // Скачать как PDF (имитация)
-    downloadAsPdf() {
-        if (!this.generatedDoc) return;
-        
-        this.showToast('PDF версия будет доступна в PRO-тарифе');
-        
-        // В реальности здесь должна быть генерация PDF через библиотеку
-        // Например, через jsPDF или отправка на сервер
-    }
-    
-    // Сброс формы
-    resetForm() {
-        document.getElementById('userRequest').value = '';
-        document.getElementById('resultSection').style.display = 'none';
-        this.generatedDoc = null;
-    }
-    
-    // Обновление статистики
-    updateStats() {
-        // Можно получать с сервера
-        document.getElementById('totalDocs').textContent = '157';
-    }
-    
-    // Открыть модальное окно
     openModal(modalId) {
         document.getElementById(modalId).classList.add('show');
     }
     
-    // Закрыть модальное окно
     closeModal(modalId) {
         document.getElementById(modalId).classList.remove('show');
     }
     
-    // Показать уведомление
     showToast(message) {
-        // Создаем уведомление, если его нет
-        let toast = document.getElementById('toast');
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'toast';
-            toast.style.cssText = `
-                position: fixed;
-                bottom: 30px;
-                right: 30px;
-                background: var(--gray-900);
-                color: white;
-                padding: 15px 25px;
-                border-radius: var(--radius-md);
-                font-size: 0.95rem;
-                box-shadow: var(--shadow-lg);
-                z-index: 1100;
-                display: none;
-            `;
-            document.body.appendChild(toast);
-        }
-        
+        const toast = document.getElementById('toast');
         toast.textContent = message;
-        toast.style.display = 'block';
+        toast.classList.add('show');
         
         setTimeout(() => {
-            toast.style.display = 'none';
+            toast.classList.remove('show');
         }, 3000);
     }
-    
-    // Тестовый документ (если API не работает)
-    getTestDocument(request) {
-        return `ДОГОВОР АРЕНДЫ КВАРТИРЫ
-
-г. Москва                                          «${new Date().getDate()}» ${new Date().toLocaleString('ru', { month: 'long' })} ${new Date().getFullYear()} г.
-
-Гражданин РФ Иванов Иван Иванович, ${new Date().getFullYear() - 30} года рождения, паспорт серия 1234 № 567890, выдан ОУФМС России по г. Москве в районе Хамовники 15.05.2010, зарегистрированный по адресу: г. Москва, ул. Ленина, д. 1, кв. 1, именуемый в дальнейшем "Арендодатель", с одной стороны, и
-
-Гражданин РФ Петров Петр Петрович, ${new Date().getFullYear() - 25} года рождения, паспорт серия 4321 № 098765, выдан ОУФМС России по г. Москве в районе Арбат 20.03.2015, зарегистрированный по адресу: г. Москва, ул. Тверская, д. 2, кв. 2, именуемый в дальнейшем "Арендатор", с другой стороны, совместно именуемые "Стороны", заключили настоящий Договор о нижеследующем:
-
-1. ПРЕДМЕТ ДОГОВОРА
-
-1.1. Арендодатель передает, а Арендатор принимает во временное владение и пользование (аренду) квартиру, расположенную по адресу: г. Москва, ул. Ленина, д. 1, кв. 5 (далее - "Квартира"), для проживания.
-
-1.2. Квартира принадлежит Арендодателю на праве собственности, что подтверждается Свидетельством о государственной регистрации права серия 77-АБ № 123456, выданным Управлением Росреестра по г. Москве 10.01.2015.
-
-1.3. Характеристики Квартиры:
-- общая площадь: 45 кв. м;
-- количество комнат: 2;
-- этаж: 5;
-- состояние: с отделкой, меблирована, оборудована необходимой техникой.
-
-1.4. Квартира передается в аренду вместе с имуществом согласно Приложению № 1 к настоящему Договору (Опись имущества).
-
-2. СРОК АРЕНДЫ
-
-2.1. Срок аренды устанавливается с «01» апреля 2026 г. по «28» февраля 2027 г. (11 месяцев).
-
-2.2. По истечении срока действия Договора Арендатор обязан освободить Квартиру и передать ее Арендодателю по Акту приема-передачи.
-
-2.3. Если за 30 дней до окончания срока действия Договора ни одна из Сторон не заявит о своем намерении его расторгнуть, Договор считается продленным на тех же условиях на следующие 11 месяцев.
-
-3. АРЕНДНАЯ ПЛАТА И ПОРЯДОК РАСЧЕТОВ
-
-3.1. Арендная плата за пользование Квартирой устанавливается в размере 30 000 (Тридцать тысяч) рублей в месяц.
-
-3.2. Оплата производится ежемесячно путем перечисления денежных средств на банковскую карту Арендодателя или наличными денежными средствами не позднее 5-го числа текущего месяца.
-
-3.3. В обеспечение исполнения обязательств по настоящему Договору Арендатор уплачивает Арендодателю гарантийный депозит в размере 10 000 (Десять тысяч) рублей, который вносится до подписания Акта приема-передачи Квартиры.
-
-3.4. Гарантийный депозит подлежит возврату Арендатору при освобождении Квартиры за вычетом:
-- суммы ущерба, причиненного Квартире или имуществу (при наличии);
-- суммы задолженности по арендной плате и коммунальным услугам.
-
-3.5. Коммунальные услуги (электроэнергия, водоснабжение, отопление, вывоз мусора) оплачиваются Арендатором отдельно на основании показаний приборов учета и выставленных счетов.
-
-4. ПРАВА И ОБЯЗАННОСТИ СТОРОН
-
-4.1. Арендодатель обязуется:
-4.1.1. Передать Квартиру Арендатору в состоянии, пригодном для проживания, по Акту приема-передачи в течение 3 дней с момента подписания настоящего Договора.
-4.1.2. Обеспечить свободный доступ Арендатора в Квартиру и передать ключи.
-4.1.3. Не чинить препятствий Арендатору в пользовании Квартирой.
-4.1.4. Производить капитальный ремонт Квартиры за свой счет (при необходимости).
-
-4.2. Арендатор обязуется:
-4.2.1. Использовать Квартиру исключительно для проживания.
-4.2.2. Своевременно вносить арендную плату и оплачивать коммунальные услуги.
-4.2.3. Обеспечивать сохранность Квартиры и находящегося в ней имущества.
-4.2.4. Поддерживать Квартиру в надлежащем состоянии, производить текущий ремонт за свой счет.
-4.2.5. Не производить перепланировку и переоборудование Квартиры без письменного согласия Арендодателя.
-4.2.6. Не сдавать Квартиру в поднаем без письменного согласия Арендодателя.
-4.2.7. Обеспечивать доступ Арендодателя в Квартиру для осмотра ее состояния не чаще одного раза в месяц с предварительным уведомлением не менее чем за 24 часа.
-4.2.8. При освобождении Квартиры передать ее Арендодателю по Акту приема-возврата в том же состоянии, с учетом нормального износа.
-
-5. ОТВЕТСТВЕННОСТЬ СТОРОН
-
-5.1. За просрочку внесения арендной платы Арендатор уплачивает пеню в размере 0,5% от суммы задолженности за каждый день просрочки.
-
-5.2. В случае досрочного расторжения Договора по инициативе Арендатора без уважительных причин, гарантийный депозит не возвращается.
-
-5.3. Арендатор несет полную материальную ответственность за ущерб, причиненный Квартире или имуществу, произошедший по его вине.
-
-6. ФОРС-МАЖОР
-
-6.1. Стороны освобождаются от ответственности за частичное или полное неисполнение обязательств по настоящему Договору, если это неисполнение явилось следствием обстоятельств непреодолимой силы (пожар, наводнение, землетрясение, военные действия, изменения законодательства и т.п.), возникших после заключения Договора и непосредственно повлиявших на возможность исполнения обязательств.
-
-7. РАСТОРЖЕНИЕ ДОГОВОРА
-
-7.1. Договор может быть расторгнут досрочно:
-7.1.1. По соглашению Сторон.
-7.1.2. В одностороннем порядке по инициативе Арендодателя в случаях:
-- невнесения арендной платы более 2 месяцев подряд;
-- использования Квартиры не по назначению;
-- умышленного ухудшения состояния Квартиры;
-- нарушения иных существенных условий Договора.
-7.1.3. В одностороннем порядке по инициативе Арендатора с обязательным письменным уведомлением Арендодателя не менее чем за 30 дней.
-
-8. ЗАКЛЮЧИТЕЛЬНЫЕ ПОЛОЖЕНИЯ
-
-8.1. Все изменения и дополнения к настоящему Договору действительны только в том случае, если они совершены в письменной форме и подписаны обеими Сторонами.
-
-8.2. Споры и разногласия, возникающие между Сторонами, разрешаются путем переговоров. При недостижении согласия споры передаются на рассмотрение в суд в соответствии с законодательством РФ.
-
-8.3. Настоящий Договор составлен в двух экземплярах, имеющих одинаковую юридическую силу, по одному для каждой из Сторон.
-
-9. АДРЕСА, РЕКВИЗИТЫ И ПОДПИСИ СТОРОН
-
-АРЕНДОДАТЕЛЬ:
-Иванов Иван Иванович
-Паспорт: 1234 567890, выдан ОУФМС России по г. Москве в районе Хамовники 15.05.2010
-Адрес: г. Москва, ул. Ленина, д. 1, кв. 1
-Телефон: +7 (999) 123-45-67
-Email: ivanov@mail.ru
-
-_____________ /Иванов И.И./
-
-АРЕНДАТОР:
-Петров Петр Петрович
-Паспорт: 4321 098765, выдан ОУФМС России по г. Москве в районе Арбат 20.03.2015
-Адрес: г. Москва, ул. Тверская, д. 2, кв. 2
-Телефон: +7 (999) 234-56-78
-Email: petrov@mail.ru
-
-_____________ /Петров П.П./
-
-Приложение № 1
-ОПИСЬ ИМУЩЕСТВА
-
-1. Кухонный гарнитур - 1 шт.
-2. Холодильник Samsung - 1 шт.
-3. Газовая плита Gefest - 1 шт.
-4. Стиральная машина LG - 1 шт.
-5. Диван-кровать - 1 шт.
-6. Кровать двуспальная - 1 шт.
-7. Шкаф-купе - 2 шт.
-8. Стол обеденный - 1 шт.
-9. Стулья - 4 шт.
-10. Телевизор LG - 1 шт.
-11. Микроволновая печь - 1 шт.
-12. Посуда (набор) - 1 компл.
-
-Арендодатель: _____________ /Иванов И.И./
-Арендатор: _____________ /Петров П.П./
-
-Дата составления описи: «${new Date().getDate()}» ${new Date().toLocaleString('ru', { month: 'long' })} ${new Date().getFullYear()} г.`;
-    }
 }
 
-// Инициализация приложения
-const app = new DocumentMaster();
-
-// Глобальные функции для тарифов
-function startFree() {
-    app.closeModal('tariffModal');
-    app.showToast('Вы выбрали бесплатный тариф. Доступно 3 документа в день.');
-}
-
-function selectPro() {
-    app.closeModal('tariffModal');
-    app.showToast('Тариф PRO подключен! Теперь вам доступно 50 документов в день и PDF.');
-}
-
-function selectBusiness() {
-    app.closeModal('tariffModal');
-    app.showToast('Бизнес-тариф активирован. С вами свяжется менеджер.');
-}
+// Инициализация
+const app = new PreepDocs();
