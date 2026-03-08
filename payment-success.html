@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Оплата прошла успешно — Preep Docs</title>
+    <title>Оплата успешна — Preep Docs</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .success-page {
@@ -34,19 +34,13 @@
             color: var(--gray-900);
         }
         
-        .success-card p {
-            color: var(--gray-600);
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-        
-        .success-email {
-            background: var(--gray-50);
-            padding: 15px;
+        .bonus-message {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            color: white;
+            padding: 20px;
             border-radius: var(--radius-lg);
-            margin-bottom: 30px;
-            font-weight: 500;
-            color: var(--primary);
+            margin: 25px 0;
+            font-weight: 600;
         }
         
         .loader {
@@ -62,11 +56,6 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        
-        .redirect-message {
-            color: var(--gray-400);
-            font-size: 0.9rem;
-        }
     </style>
     <meta http-equiv="refresh" content="5;url=/" />
 </head>
@@ -75,31 +64,29 @@
         <div class="success-card">
             <div class="success-icon">✅</div>
             <h1>Оплата прошла успешно!</h1>
-            <p>Спасибо за покупку на Preep Docs</p>
+            <p>Документы отправлены на вашу почту</p>
             
-            <div class="success-email" id="emailDisplay">
-                Документы отправлены на вашу почту
+            <div class="bonus-message" id="bonusMessage">
+                🎁 Бонусные генерации начислены!
             </div>
             
             <div class="loader"></div>
-            <p class="redirect-message">Через 5 секунд вы будете перенаправлены на главную</p>
+            <p style="color: var(--gray-400);">Через 5 секунд вы будете перенаправлены...</p>
             
-            <div style="margin-top: 30px">
-                <a href="/" class="btn btn-primary">Перейти сейчас</a>
-            </div>
+            <a href="/" class="btn btn-primary" style="margin-top: 20px;">Вернуться на главную</a>
         </div>
     </div>
     
     <script>
-        // Показываем email из URL или localStorage
-        const urlParams = new URLSearchParams(window.location.search);
-        const email = urlParams.get('email') || localStorage.getItem('user_email');
-        if (email) {
-            document.getElementById('emailDisplay').textContent = `Документы отправлены на ${email}`;
-        }
-        
-        // Отмечаем успешные платежи
+        // Отмечаем успешный платеж
         localStorage.setItem('last_payment_success', 'true');
+        
+        // Если это PRO-тариф
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('pro')) {
+            document.getElementById('bonusMessage').innerHTML = 
+                '🎉 PRO-тариф активирован! Вам доступны скидки и удвоенные бонусы.';
+        }
     </script>
 </body>
 </html>
