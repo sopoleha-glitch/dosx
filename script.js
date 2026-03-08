@@ -2,10 +2,33 @@
 const YOOMONEY_CLIENT_ID = 'F7642ED1CA446A7CB47557510D5A8638B35B180125A793FCF6A2EB8F98BBBAC9';
 
 // ============================================
-// КАТАЛОГ ДОКУМЕНТОВ (15 штук с новыми ценами)
+// РЕЖИМ РАЗРАБОТЧИКА
+// ============================================
+const DEV_MODE = true; // true = режим разработчика (эмуляция покупок)
+
+// Тестовые файлы для разработчика
+const DEV_FILES = {
+    1: { docx: 'test-docs/dogovor-arendy.docx', pdf: 'test-docs/dogovor-arendy.pdf' },
+    2: { docx: 'test-docs/raspiska.docx', pdf: 'test-docs/raspiska.pdf' },
+    3: { docx: 'test-docs/dogovor-avto.docx', pdf: 'test-docs/dogovor-avto.pdf' },
+    4: { docx: 'test-docs/pretenzii.docx', pdf: 'test-docs/pretenzii.pdf' },
+    5: { docx: 'test-docs/trudovoy.docx', pdf: 'test-docs/trudovoy.pdf' },
+    6: { docx: 'test-docs/darenie.docx', pdf: 'test-docs/darenie.pdf' },
+    7: { docx: 'test-docs/zaym.docx', pdf: 'test-docs/zaym.pdf' },
+    8: { docx: 'test-docs/soglashenie-o-detyah.docx', pdf: 'test-docs/soglashenie-o-detyah.pdf' },
+    9: { docx: 'test-docs/zaveshaniya.docx', pdf: 'test-docs/zaveshaniya.pdf' },
+    10: { docx: 'test-docs/schet.docx', pdf: 'test-docs/schet.pdf' },
+    11: { docx: 'test-docs/uslugi.docx', pdf: 'test-docs/uslugi.pdf' },
+    12: { docx: 'test-docs/kuplia-prodazha.docx', pdf: 'test-docs/kuplia-prodazha.pdf' },
+    13: { docx: 'test-docs/akt.docx', pdf: 'test-docs/akt.pdf' },
+    14: { docx: 'test-docs/doverennosti.docx', pdf: 'test-docs/doverennosti.pdf' },
+    15: { docx: 'test-docs/podryad.docx', pdf: 'test-docs/podryad.pdf' }
+};
+
+// ============================================
+// КАТАЛОГ ДОКУМЕНТОВ (15 штук)
 // ============================================
 const documentsCatalog = [
-    // 1. Договор аренды квартиры
     {
         id: 1,
         title: "Договор аренды квартиры",
@@ -24,8 +47,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 1543
     },
-    
-    // 2. Расписка о получении денег
     {
         id: 2,
         title: "Расписка о получении денег",
@@ -44,8 +65,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 2341
     },
-    
-    // 3. Договор купли-продажи автомобиля
     {
         id: 3,
         title: "Договор купли-продажи автомобиля",
@@ -64,8 +83,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 1876
     },
-    
-    // 4. Сборник претензий (6 образцов)
     {
         id: 4,
         title: "Сборник претензий (6 образцов)",
@@ -85,8 +102,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 987
     },
-    
-    // 5. Трудовой договор
     {
         id: 5,
         title: "Трудовой договор",
@@ -107,8 +122,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 654
     },
-    
-    // 6. Договор дарения
     {
         id: 6,
         title: "Договор дарения (с актом)",
@@ -127,8 +140,6 @@ const documentsCatalog = [
         popular: false,
         downloads: 543
     },
-    
-    // 7. Договор займа
     {
         id: 7,
         title: "Договор займа (с процентами)",
@@ -148,8 +159,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 1432
     },
-    
-    // 8. Соглашение о детях при разводе
     {
         id: 8,
         title: "Соглашение о детях и разделе имущества",
@@ -168,8 +177,6 @@ const documentsCatalog = [
         popular: false,
         downloads: 432
     },
-    
-    // 9. Сборник завещаний (4 вида)
     {
         id: 9,
         title: "Сборник завещаний (4 вида)",
@@ -188,8 +195,6 @@ const documentsCatalog = [
         popular: false,
         downloads: 876
     },
-    
-    // 10. Счет на оплату
     {
         id: 10,
         title: "Счет на оплату (бланк)",
@@ -208,8 +213,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 2345
     },
-    
-    // 11. Договор оказания услуг
     {
         id: 11,
         title: "Договор оказания услуг (универсальный)",
@@ -228,8 +231,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 1543
     },
-    
-    // 12. Договор купли-продажи товара
     {
         id: 12,
         title: "Договор купли-продажи товара (с актом)",
@@ -248,8 +249,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 876
     },
-    
-    // 13. Акт выполненных работ
     {
         id: 13,
         title: "Акт выполненных работ (оказанных услуг)",
@@ -268,8 +267,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 1654
     },
-    
-    // 14. Сборник доверенностей (5 видов)
     {
         id: 14,
         title: "Сборник доверенностей (5 видов)",
@@ -288,8 +285,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 765
     },
-    
-    // 15. Договор подряда
     {
         id: 15,
         title: "Договор подряда (с ТЗ и календарным планом)",
@@ -331,9 +326,9 @@ const TARIFFS = {
     pro: {
         name: "PRO",
         price: 499,
-        discount: 0.2, // 20% скидка на все шаблоны
+        discount: 0.2, // 20% скидка
         bonusMultiplier: 2, // удвоенные бонусы
-        aiGenerations: 10 // сразу 10 генераций
+        aiGenerations: 10
     }
 };
 
@@ -341,17 +336,16 @@ const TARIFFS = {
 let cart = [];
 let currentUser = {
     tariff: 'free',
-    aiGenerationsLeft: 0,
+    aiGenerationsLeft: DEV_MODE ? 5 : 0, // В режиме разработчика сразу 5 генераций
     checksLeft: 0,
-    purchases: [], // история покупок (id документов)
-    email: null,
-    isAuthenticated: false
+    purchases: DEV_MODE ? [1, 2, 3, 4, 5] : [], // В режиме разработчика уже есть покупки
+    email: DEV_MODE ? 'dev@preep.ru' : null,
+    isAuthenticated: DEV_MODE ? true : false
 };
 
 // ============================================
 // СИСТЕМА ВХОДА ПО EMAIL
 // ============================================
-
 class EmailAuth {
     constructor() {
         this.verificationCode = null;
@@ -360,21 +354,130 @@ class EmailAuth {
         this.timeLeft = 60;
     }
     
-    // Показать модалку входа
     showLoginModal() {
-        // Удаляем старую модалку если есть
         const oldModal = document.getElementById('authModal');
         if (oldModal) oldModal.remove();
         
         const modal = document.createElement('div');
         modal.className = 'modal show';
         modal.id = 'authModal';
+        
+        // Если режим разработчика — показываем упрощенный вход
+        if (DEV_MODE) {
+            modal.innerHTML = `
+                <div class="modal-content modal-small">
+                    <button class="modal-close" onclick="auth.closeModal()">&times;</button>
+                    <h2 class="modal-title">🔐 Режим разработчика</h2>
+                    
+                    <p style="color: var(--gray-600); margin-bottom: 20px; text-align: center;">
+                        Войдите с тестовым аккаунтом
+                    </p>
+                    
+                    <button class="btn btn-primary btn-block" onclick="auth.devLogin()">
+                        🚀 Войти как разработчик
+                    </button>
+                    
+                    <button class="btn btn-outline btn-block" onclick="auth.showRealLogin()" style="margin-top: 10px;">
+                        Реальный вход по email
+                    </button>
+                </div>
+            `;
+        } else {
+            modal.innerHTML = `
+                <div class="modal-content modal-small">
+                    <button class="modal-close" onclick="auth.closeModal()">&times;</button>
+                    <h2 class="modal-title">🔐 Вход / Регистрация</h2>
+                    
+                    <div id="authStep1">
+                        <p style="color: var(--gray-600); margin-bottom: 20px;">
+                            Введите email — мы отправим код для входа
+                        </p>
+                        
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="authEmail" class="form-input" 
+                                   placeholder="ivan@example.ru" 
+                                   value="${this.getLastEmail() || ''}">
+                        </div>
+                        
+                        <button class="btn btn-primary btn-block" onclick="auth.sendCode()">
+                            Получить код
+                        </button>
+                        
+                        <p style="text-align: center; margin-top: 20px; color: var(--gray-400); font-size: 0.9rem;">
+                            Бесплатно. Без паролей.
+                        </p>
+                    </div>
+                    
+                    <div id="authStep2" style="display: none;">
+                        <p style="color: var(--gray-600); margin-bottom: 20px;">
+                            Введите код из письма
+                        </p>
+                        
+                        <div class="code-inputs">
+                            <input type="text" maxlength="1" class="code-digit" id="code1" autofocus>
+                            <input type="text" maxlength="1" class="code-digit" id="code2">
+                            <input type="text" maxlength="1" class="code-digit" id="code3">
+                            <input type="text" maxlength="1" class="code-digit" id="code4">
+                            <input type="text" maxlength="1" class="code-digit" id="code5">
+                            <input type="text" maxlength="1" class="code-digit" id="code6">
+                        </div>
+                        
+                        <div class="email-display" id="emailDisplay"></div>
+                        
+                        <div class="timer" id="timerDisplay">
+                            Отправить повторно через <span id="timerSeconds">60</span> сек
+                        </div>
+                        
+                        <button class="btn btn-primary btn-block" onclick="auth.verifyCode()">
+                            Подтвердить и войти
+                        </button>
+                        
+                        <button class="btn btn-outline btn-block" onclick="auth.backToEmail()" style="margin-top: 10px;">
+                            ← Изменить email
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        document.body.appendChild(modal);
+        this.addCodeInputStyles();
+        
+        if (!DEV_MODE) {
+            setTimeout(() => this.setupCodeInputs(), 100);
+        }
+    }
+    
+    devLogin() {
+        // Быстрый вход в режиме разработчика
+        currentUser = {
+            tariff: 'free',
+            aiGenerationsLeft: 5,
+            checksLeft: 3,
+            purchases: [1, 2, 3, 4, 5],
+            email: 'dev@preep.ru',
+            isAuthenticated: true
+        };
+        
+        localStorage.setItem('preep_user', JSON.stringify(currentUser));
+        localStorage.setItem('preep_auth', JSON.stringify({ email: 'dev@preep.ru', dev: true }));
+        
+        this.closeModal();
+        app.updateUserInterface();
+        app.updateBonusInfo();
+        app.updateAIInfo();
+        app.showToast('✅ Режим разработчика активирован');
+    }
+    
+    showRealLogin() {
+        // Показываем реальную форму входа
+        const modal = document.getElementById('authModal');
         modal.innerHTML = `
             <div class="modal-content modal-small">
                 <button class="modal-close" onclick="auth.closeModal()">&times;</button>
-                <h2 class="modal-title">🔐 Вход / Регистрация</h2>
+                <h2 class="modal-title">🔐 Вход по email</h2>
                 
-                <!-- Этап 1: Ввод email -->
                 <div id="authStep1">
                     <p style="color: var(--gray-600); margin-bottom: 20px;">
                         Введите email — мы отправим код для входа
@@ -390,13 +493,8 @@ class EmailAuth {
                     <button class="btn btn-primary btn-block" onclick="auth.sendCode()">
                         Получить код
                     </button>
-                    
-                    <p style="text-align: center; margin-top: 20px; color: var(--gray-400); font-size: 0.9rem;">
-                        Бесплатно. Без паролей.
-                    </p>
                 </div>
                 
-                <!-- Этап 2: Ввод кода -->
                 <div id="authStep2" style="display: none;">
                     <p style="color: var(--gray-600); margin-bottom: 20px;">
                         Введите код из письма
@@ -428,17 +526,11 @@ class EmailAuth {
             </div>
         `;
         
-        document.body.appendChild(modal);
-        
-        // Добавляем стили для code-inputs
         this.addCodeInputStyles();
-        
-        // Настраиваем автопереход между полями
         setTimeout(() => this.setupCodeInputs(), 100);
     }
     
     addCodeInputStyles() {
-        // Проверяем, не добавлены ли уже стили
         if (document.getElementById('authStyles')) return;
         
         const style = document.createElement('style');
@@ -519,7 +611,6 @@ class EmailAuth {
                 }
             });
             
-            // Разрешаем только цифры
             input.addEventListener('keypress', (e) => {
                 if (!/[0-9]/.test(e.key)) {
                     e.preventDefault();
@@ -533,11 +624,9 @@ class EmailAuth {
         return saved || '';
     }
     
-    // Отправка кода
     async sendCode() {
         const email = document.getElementById('authEmail').value.trim();
         
-        // Валидация email
         if (!email || !email.includes('@') || !email.includes('.')) {
             app.showToast('Введите корректный email');
             return;
@@ -546,28 +635,41 @@ class EmailAuth {
         this.userEmail = email;
         localStorage.setItem('preep_last_email', email);
         
-        // Генерируем 6-значный код
         this.verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
         
-        // Показываем этап ввода кода
         document.getElementById('authStep1').style.display = 'none';
         document.getElementById('authStep2').style.display = 'block';
-        
-        // Показываем email
         document.getElementById('emailDisplay').textContent = email;
         
-        // Запускаем таймер
         this.startTimer();
         
-        // В реальном проекте здесь будет отправка письма через API
-        console.log(`Код для ${email}: ${this.verificationCode}`);
-        app.showToast(`Код отправлен на ${email}`);
-        
-        // TODO: Добавить реальную отправку через email API
-        // await this.sendEmailCode(email, this.verificationCode);
+        try {
+            const response = await fetch('/api/send-email-code', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: email,
+                    code: this.verificationCode
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                app.showToast(`✅ Код отправлен на ${email}`);
+                console.log(`Код для отладки: ${this.verificationCode}`);
+            } else {
+                console.error('Ошибка отправки:', data);
+                app.showToast('⚠️ Ошибка отправки. Код в консоли (F12)');
+                console.log(`Ваш код: ${this.verificationCode}`);
+            }
+        } catch (error) {
+            console.error('Ошибка сети:', error);
+            app.showToast('⚠️ Ошибка соединения. Код в консоли (F12)');
+            console.log(`Ваш код: ${this.verificationCode}`);
+        }
     }
     
-    // Таймер для повторной отправки
     startTimer() {
         this.timeLeft = 60;
         document.getElementById('timerSeconds').textContent = this.timeLeft;
@@ -584,7 +686,6 @@ class EmailAuth {
         }, 1000);
     }
     
-    // Повторная отправка кода
     resendCode() {
         clearInterval(this.timer);
         this.verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -593,7 +694,6 @@ class EmailAuth {
         this.startTimer();
     }
     
-    // Проверка кода
     verifyCode() {
         const code1 = document.getElementById('code1').value;
         const code2 = document.getElementById('code2').value;
@@ -605,7 +705,6 @@ class EmailAuth {
         const enteredCode = code1 + code2 + code3 + code4 + code5 + code6;
         
         if (enteredCode === this.verificationCode) {
-            // Успешный вход
             const user = {
                 email: this.userEmail,
                 verified: true,
@@ -614,25 +713,24 @@ class EmailAuth {
             
             localStorage.setItem('preep_auth', JSON.stringify(user));
             
-            // Обновляем данные пользователя в основном приложении
-            app.currentUser = {
-                ...app.currentUser,
+            currentUser = {
+                ...currentUser,
                 email: this.userEmail,
                 isAuthenticated: true
             };
             
-            // Сохраняем пользователя
-            localStorage.setItem('preep_user', JSON.stringify(app.currentUser));
+            localStorage.setItem('preep_user', JSON.stringify(currentUser));
             
             this.closeModal();
             app.updateUserInterface();
+            app.updateBonusInfo();
+            app.updateAIInfo();
             app.showToast(`✅ Добро пожаловать, ${this.userEmail.split('@')[0]}!`);
         } else {
             app.showToast('Неверный код. Попробуйте снова.');
         }
     }
     
-    // Вернуться к вводу email
     backToEmail() {
         clearInterval(this.timer);
         document.getElementById('authStep1').style.display = 'block';
@@ -647,23 +745,21 @@ class EmailAuth {
         }
     }
     
-    // Выход
     logout() {
         localStorage.removeItem('preep_auth');
-        app.currentUser.isAuthenticated = false;
-        app.currentUser.email = null;
-        localStorage.setItem('preep_user', JSON.stringify(app.currentUser));
+        currentUser.isAuthenticated = false;
+        currentUser.email = null;
+        localStorage.setItem('preep_user', JSON.stringify(currentUser));
         app.updateUserInterface();
         app.showToast('👋 Вы вышли из аккаунта');
     }
     
-    // Проверка авторизации
     checkAuth() {
         const saved = localStorage.getItem('preep_auth');
         if (saved) {
             const user = JSON.parse(saved);
-            app.currentUser.email = user.email;
-            app.currentUser.isAuthenticated = true;
+            currentUser.email = user.email;
+            currentUser.isAuthenticated = true;
             return true;
         }
         return false;
@@ -693,8 +789,19 @@ class PreepDocs {
             }
         }
         
-        // Проверяем авторизацию
         auth.checkAuth();
+        
+        // Если режим разработчика и нет авторизации, включаем тестовый режим
+        if (DEV_MODE && !currentUser.isAuthenticated) {
+            currentUser = {
+                tariff: 'free',
+                aiGenerationsLeft: 5,
+                checksLeft: 3,
+                purchases: [1, 2, 3, 4, 5],
+                email: 'dev@preep.ru',
+                isAuthenticated: true
+            };
+        }
     }
     
     saveUserData() {
@@ -708,19 +815,24 @@ class PreepDocs {
         this.updateBonusInfo();
         this.updateAIInfo();
         this.updateUserInterface();
+        
+        // В режиме разработчика показываем подсказку
+        if (DEV_MODE && !localStorage.getItem('dev_hint_shown')) {
+            setTimeout(() => {
+                this.showToast('🚀 Режим разработчика: покупки эмулируются');
+                localStorage.setItem('dev_hint_shown', 'true');
+            }, 1000);
+        }
     }
     
     setupEventListeners() {
-        // Поиск
         document.getElementById('searchBtn').addEventListener('click', () => this.searchDocuments());
         document.getElementById('searchInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.searchDocuments();
         });
         
-        // Фильтр категорий
         document.getElementById('categoryFilter').addEventListener('change', () => this.searchDocuments());
         
-        // Категории-чипсы
         document.querySelectorAll('.category-chip').forEach(el => {
             el.addEventListener('click', (e) => {
                 document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
@@ -731,11 +843,9 @@ class PreepDocs {
             });
         });
         
-        // Корзина
         document.getElementById('cartBtn').addEventListener('click', () => this.showCart());
         document.getElementById('closeCartModal').addEventListener('click', () => this.closeModal('cartModal'));
         
-        // Модалки
         document.getElementById('closeDocModal').addEventListener('click', () => this.closeModal('docModal'));
         document.getElementById('closePaymentModal').addEventListener('click', () => this.closeModal('paymentModal'));
         document.getElementById('closeSuccessModal').addEventListener('click', () => this.closeModal('successModal'));
@@ -745,16 +855,13 @@ class PreepDocs {
             this.updateCartCount();
         });
         
-        // Оплата
         document.getElementById('checkoutBtn').addEventListener('click', () => this.showPayment());
         document.getElementById('payBtn').addEventListener('click', () => this.processPayment());
         
-        // Нейросеть
         document.getElementById('generateAiBtn').addEventListener('click', () => this.generateWithAI());
         document.getElementById('copyAiResult').addEventListener('click', () => this.copyAIResult());
         document.getElementById('downloadAiResult').addEventListener('click', () => this.downloadAIResult());
         
-        // Вход
         document.getElementById('loginBtn').addEventListener('click', () => {
             if (currentUser.isAuthenticated) {
                 this.toggleUserMenu();
@@ -763,7 +870,6 @@ class PreepDocs {
             }
         });
         
-        // Закрытие по клику вне модалки
         window.addEventListener('click', (e) => {
             if (e.target.classList.contains('modal')) {
                 e.target.classList.remove('show');
@@ -771,17 +877,15 @@ class PreepDocs {
         });
     }
     
-    // ===== ПОЛЬЗОВАТЕЛЬ =====
-    
     updateUserInterface() {
         const loginBtn = document.getElementById('loginBtn');
         
         if (currentUser.isAuthenticated && currentUser.email) {
-            const emailPrefix = currentUser.email.split('@')[0];
-            const shortName = emailPrefix.length > 10 ? emailPrefix.substring(0, 8) + '...' : emailPrefix;
+            const displayName = currentUser.email === 'dev@preep.ru' ? '🧪 Разработчик' : currentUser.email.split('@')[0];
+            const shortName = displayName.length > 10 ? displayName.substring(0, 8) + '...' : displayName;
             
             loginBtn.innerHTML = `
-                <span>📧 ${shortName}</span>
+                <span>${currentUser.email === 'dev@preep.ru' ? '🧪' : '📧'} ${shortName}</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M6 9l6 6 6-6"/>
                 </svg>
@@ -792,29 +896,58 @@ class PreepDocs {
     }
     
     toggleUserMenu() {
-        // Удаляем старое меню если есть
         const oldMenu = document.getElementById('userMenu');
         if (oldMenu) oldMenu.remove();
         
         const menu = document.createElement('div');
         menu.id = 'userMenu';
         menu.className = 'user-menu';
+        
+        const purchaseCount = currentUser.purchases.length;
+        const purchasedDocs = purchaseCount > 0 
+            ? documentsCatalog.filter(d => currentUser.purchases.includes(d.id))
+            : [];
+        
         menu.innerHTML = `
             <div class="user-menu-header">
-                <strong>${currentUser.email}</strong>
+                <strong>${currentUser.email === 'dev@preep.ru' ? '🧪 Режим разработчика' : currentUser.email}</strong>
+                ${DEV_MODE ? '<span style="color: #f59e0b; font-size: 0.8rem; margin-left: 5px;">(тестовый)</span>' : ''}
             </div>
             <div class="user-menu-item" onclick="app.showProfile()">
                 👤 Профиль
             </div>
             <div class="user-menu-item" onclick="app.showPurchases()">
-                📦 Мои покупки (${currentUser.purchases.length})
+                📦 Мои покупки (${purchaseCount})
             </div>
+            ${purchaseCount > 0 ? `
+                <div class="user-menu-divider"></div>
+                <div class="user-menu-subheader">Ваши документы:</div>
+                ${purchasedDocs.slice(0, 3).map(doc => `
+                    <div class="user-menu-doc" onclick="app.downloadDevFile(${doc.id})">
+                        📄 ${doc.title} (${doc.formats.join('/')})
+                    </div>
+                `).join('')}
+                ${purchaseCount > 3 ? '<div class="user-menu-more">и еще ' + (purchaseCount - 3) + ' документов...</div>' : ''}
+            ` : ''}
+            ${DEV_MODE ? `
+                <div class="user-menu-divider"></div>
+                <div class="user-menu-subheader">🧪 Тестовые действия:</div>
+                <div class="user-menu-item" onclick="app.devAddGenerations(5)">
+                    ✨ +5 генераций
+                </div>
+                <div class="user-menu-item" onclick="app.devAddDocument()">
+                    📝 Добавить тестовый документ в покупки
+                </div>
+                <div class="user-menu-item" onclick="app.devReset()">
+                    🔄 Сбросить тестовые данные
+                </div>
+            ` : ''}
+            <div class="user-menu-divider"></div>
             <div class="user-menu-item" onclick="auth.logout()">
                 🚪 Выйти
             </div>
         `;
         
-        // Позиционируем меню под кнопкой
         const btn = document.getElementById('loginBtn');
         const rect = btn.getBoundingClientRect();
         
@@ -824,11 +957,8 @@ class PreepDocs {
         menu.style.zIndex = '1000';
         
         document.body.appendChild(menu);
-        
-        // Добавляем стили для меню
         this.addUserMenuStyles();
         
-        // Закрытие по клику вне меню
         setTimeout(() => {
             document.addEventListener('click', function closeMenu(e) {
                 if (!menu.contains(e.target) && e.target.id !== 'loginBtn') {
@@ -850,7 +980,7 @@ class PreepDocs {
                 border: 1px solid var(--gray-200);
                 border-radius: var(--radius-lg);
                 box-shadow: var(--shadow-lg);
-                min-width: 200px;
+                min-width: 240px;
                 overflow: hidden;
                 animation: fadeIn 0.2s ease;
             }
@@ -860,6 +990,14 @@ class PreepDocs {
                 background: var(--gray-50);
                 border-bottom: 1px solid var(--gray-200);
                 font-size: 0.9rem;
+                font-weight: 500;
+            }
+            
+            .user-menu-subheader {
+                padding: 8px 16px 4px;
+                font-size: 0.8rem;
+                color: var(--gray-500);
+                font-weight: 600;
             }
             
             .user-menu-item {
@@ -870,6 +1008,31 @@ class PreepDocs {
             
             .user-menu-item:hover {
                 background: var(--gray-100);
+            }
+            
+            .user-menu-doc {
+                padding: 8px 16px 8px 32px;
+                cursor: pointer;
+                transition: background 0.2s;
+                font-size: 0.9rem;
+                color: var(--primary);
+            }
+            
+            .user-menu-doc:hover {
+                background: var(--gray-100);
+                text-decoration: underline;
+            }
+            
+            .user-menu-more {
+                padding: 8px 16px;
+                font-size: 0.8rem;
+                color: var(--gray-400);
+            }
+            
+            .user-menu-divider {
+                height: 1px;
+                background: var(--gray-200);
+                margin: 8px 0;
             }
             
             @keyframes fadeIn {
@@ -886,26 +1049,67 @@ class PreepDocs {
         document.head.appendChild(style);
     }
     
-    showProfile() {
-        document.getElementById('userMenu')?.remove();
-        app.showToast('👤 Функция профиля появится скоро');
+    // ===== МЕТОДЫ РАЗРАБОТЧИКА =====
+    
+    downloadDevFile(id) {
+        if (!DEV_MODE) return;
+        
+        const doc = documentsCatalog.find(d => d.id === id);
+        if (!doc) return;
+        
+        // Создаем тестовый файл
+        const content = `Это тестовый файл для документа "${doc.title}".
+        
+В режиме разработчика файлы не хранятся реально.
+Для настоящей работы загрузите реальные PDF/DOCX в папку /docs.
+
+Дата генерации: ${new Date().toLocaleString('ru-RU')}`;
+        
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `test-${doc.title.toLowerCase().replace(/\s+/g, '-')}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        this.showToast(`📄 Тестовый файл "${doc.title}" скачан`);
     }
     
-    showPurchases() {
-        document.getElementById('userMenu')?.remove();
+    devAddGenerations(count) {
+        if (!DEV_MODE) return;
         
-        if (currentUser.purchases.length === 0) {
-            app.showToast('У вас пока нет покупок');
-            return;
+        currentUser.aiGenerationsLeft += count;
+        this.saveUserData();
+        this.updateAIInfo();
+        this.showToast(`✨ Добавлено ${count} генераций`);
+    }
+    
+    devAddDocument() {
+        if (!DEV_MODE) return;
+        
+        const randomDoc = documentsCatalog[Math.floor(Math.random() * documentsCatalog.length)];
+        if (!currentUser.purchases.includes(randomDoc.id)) {
+            currentUser.purchases.push(randomDoc.id);
+            currentUser.aiGenerationsLeft += 1;
+            this.saveUserData();
+            this.updateBonusInfo();
+            this.showToast(`📝 Добавлен документ: ${randomDoc.title}`);
+        } else {
+            this.showToast('Этот документ уже есть в покупках');
         }
+    }
+    
+    devReset() {
+        if (!DEV_MODE) return;
         
-        // Показываем список купленных документов
-        const purchases = currentUser.purchases.map(id => {
-            const doc = documentsCatalog.find(d => d.id === id);
-            return doc ? doc.title : 'Неизвестный документ';
-        }).join('\n• ');
-        
-        app.showToast(`Ваши покупки:\n• ${purchases}`);
+        currentUser.purchases = [1, 2, 3, 4, 5];
+        currentUser.aiGenerationsLeft = 5;
+        currentUser.checksLeft = 3;
+        this.saveUserData();
+        this.updateBonusInfo();
+        this.updateAIInfo();
+        this.showToast('🔄 Тестовые данные сброшены');
     }
     
     // ===== КАТАЛОГ =====
@@ -914,13 +1118,14 @@ class PreepDocs {
         const container = document.getElementById('docsContainer');
         const docs = filteredDocs || documentsCatalog;
         
-        // Применяем скидку для PRO-тарифа
         const discount = currentUser.tariff === 'pro' ? TARIFFS.pro.discount : 0;
         
         container.innerHTML = docs.map(doc => {
             const finalPrice = discount ? Math.round(doc.price * (1 - discount)) : doc.price;
+            const isPurchased = currentUser.purchases.includes(doc.id);
+            
             return `
-            <div class="doc-card ${doc.popular ? 'popular' : ''}" onclick="app.showDocument(${doc.id})">
+            <div class="doc-card ${doc.popular ? 'popular' : ''} ${isPurchased ? 'purchased' : ''}" onclick="app.showDocument(${doc.id})">
                 <span class="doc-category">${this.getCategoryName(doc.category)}</span>
                 <h3 class="doc-title">${doc.title}</h3>
                 <p class="doc-description">${doc.description}</p>
@@ -931,7 +1136,7 @@ class PreepDocs {
                     </div>
                     <span class="doc-format">📄 ${doc.formats.join(' + ')}</span>
                 </div>
-                <div class="doc-bonus">🎁 +1 генерация</div>
+                <div class="doc-bonus">${isPurchased ? '✅ Уже куплено' : '🎁 +1 генерация'}</div>
             </div>
         `}).join('');
     }
@@ -985,6 +1190,7 @@ class PreepDocs {
         
         const discount = currentUser.tariff === 'pro' ? TARIFFS.pro.discount : 0;
         const finalPrice = discount ? Math.round(doc.price * (1 - discount)) : doc.price;
+        const isPurchased = currentUser.purchases.includes(doc.id);
         
         const modalContent = document.getElementById('docDetailContent');
         modalContent.innerHTML = `
@@ -1012,12 +1218,23 @@ class PreepDocs {
                 </div>
                 
                 <div class="doc-detail-bonus">
-                    🎁 При покупке вы получите +1 бесплатную генерацию нейросети
+                    ${isPurchased 
+                        ? '✅ Вы уже купили этот документ. Скачайте его в профиле.'
+                        : '🎁 При покупке вы получите +1 бесплатную генерацию нейросети'
+                    }
                 </div>
                 
-                <button class="btn btn-primary btn-block" onclick="app.addToCart(${doc.id})">
-                    🛒 Добавить в корзину
-                </button>
+                ${isPurchased && DEV_MODE ? `
+                    <button class="btn btn-outline btn-block" onclick="app.downloadDevFile(${doc.id})" style="margin-top: 10px;">
+                        📥 Скачать тестовый файл
+                    </button>
+                ` : ''}
+                
+                ${!isPurchased ? `
+                    <button class="btn btn-primary btn-block" onclick="app.addToCart(${doc.id})">
+                        🛒 Добавить в корзину
+                    </button>
+                ` : ''}
             </div>
         `;
         
@@ -1079,7 +1296,6 @@ class PreepDocs {
             const total = this.cart.reduce((sum, item) => sum + item.price, 0);
             document.getElementById('cartTotal').textContent = `Итого: ${total} ₽`;
             
-            // Показываем бонусы за эту покупку
             if (cartBonus) {
                 const bonus = this.calculateCartBonus();
                 cartBonus.innerHTML = `
@@ -1098,7 +1314,6 @@ class PreepDocs {
         const count = this.cart.length;
         const multiplier = currentUser.tariff === 'pro' ? TARIFFS.pro.bonusMultiplier : 1;
         
-        // Ищем ближайший уровень
         const levels = Object.keys(BONUS_LEVELS).map(Number).sort((a, b) => a - b);
         let bonus = { generations: 0, checks: 0 };
         
@@ -1112,7 +1327,6 @@ class PreepDocs {
             }
         }
         
-        // Минимум 1 генерация за каждый документ
         if (bonus.generations === 0) {
             bonus.generations = count;
         }
@@ -1128,10 +1342,8 @@ class PreepDocs {
             bonusSpan.textContent = currentUser.aiGenerationsLeft;
         }
         
-        // Считаем общее количество покупок
         const totalPurchases = currentUser.purchases.length;
         
-        // Находим следующий уровень
         const levels = Object.keys(BONUS_LEVELS).map(Number).sort((a, b) => a - b);
         let nextLevel = null;
         let needed = 0;
@@ -1167,9 +1379,10 @@ class PreepDocs {
         currentUser.aiGenerationsLeft += bonus.generations;
         currentUser.checksLeft += bonus.checks;
         
-        // Добавляем купленные документы в историю
         this.cart.forEach(item => {
-            currentUser.purchases.push(item.id);
+            if (!currentUser.purchases.includes(item.id)) {
+                currentUser.purchases.push(item.id);
+            }
         });
         
         if (bonus.vip) {
@@ -1180,11 +1393,13 @@ class PreepDocs {
         this.updateBonusInfo();
         this.updateAIInfo();
         
-        // Показываем сообщение о бонусе
         const bonusMessage = document.getElementById('bonusGiftMessage');
         if (bonusMessage) {
             bonusMessage.innerHTML = `🎁 Вы получили +${bonus.generations} генераций нейросети!`;
         }
+        
+        this.cart = [];
+        this.updateCartCount();
     }
     
     // ===== НЕЙРОСЕТЬ =====
@@ -1229,7 +1444,6 @@ class PreepDocs {
             return;
         }
         
-        // Показываем загрузку
         document.getElementById('aiResult').style.display = 'none';
         document.getElementById('generateAiBtn').disabled = true;
         document.getElementById('generateAiBtn').innerHTML = '⏳ Генерация...';
@@ -1248,7 +1462,6 @@ class PreepDocs {
             const data = await response.json();
             
             if (data.success) {
-                // Списываем генерацию
                 currentUser.aiGenerationsLeft--;
                 this.saveUserData();
                 this.updateAIInfo();
@@ -1262,9 +1475,8 @@ class PreepDocs {
             
         } catch (error) {
             console.error('AI Error:', error);
-            this.showToast('Ошибка генерации. Попробуйте еще раз');
+            this.showToast('Ошибка генерации. Используем тестовый режим');
             
-            // Тестовый режим
             document.getElementById('aiResultContent').textContent = this.getTestDocument(prompt);
             document.getElementById('aiResult').style.display = 'block';
             
@@ -1356,17 +1568,36 @@ class PreepDocs {
             return;
         }
         
-        // Если пользователь не авторизован, сохраняем email
         if (!currentUser.isAuthenticated) {
             currentUser.email = email;
         }
         
         localStorage.setItem('user_email', email);
         
+        if (DEV_MODE) {
+            // В режиме разработчика — эмулируем успешную покупку
+            this.applyBonusAfterPurchase();
+            this.closeModal('paymentModal');
+            this.showToast('✅ Тестовая покупка совершена! Документы доступны в профиле.');
+            
+            const bonusMessage = document.getElementById('bonusGiftMessage');
+            if (bonusMessage) {
+                bonusMessage.innerHTML = `🎁 Тестовая покупка! +${this.calculateCartBonus().generations} генераций`;
+            }
+            
+            this.openModal('successModal');
+            
+            setTimeout(() => {
+                this.closeModal('successModal');
+            }, 3000);
+            
+            return;
+        }
+        
+        // Реальная оплата через ЮMoney
         const total = this.cart.reduce((sum, item) => sum + item.price, 0);
         const orderId = Date.now();
         
-        // Формируем URL для ЮMoney
         const yoomoneyUrl = `https://yoomoney.ru/quickpay/confirm.xml?` +
             `receiver=${YOOMONEY_CLIENT_ID}&` +
             `quickpay-form=shop&` +
@@ -1375,10 +1606,7 @@ class PreepDocs {
             `label=${orderId}&` +
             `successURL=${window.location.origin}/payment-success.html?email=${encodeURIComponent(email)}`;
         
-        // Сохраняем заказ
         this.saveOrder(orderId, email, this.cart);
-        
-        // Применяем бонусы
         this.applyBonusAfterPurchase();
         
         window.location.href = yoomoneyUrl;
@@ -1398,6 +1626,16 @@ class PreepDocs {
     // ===== ТАРИФЫ =====
     
     upgradeToPro() {
+        if (DEV_MODE) {
+            currentUser.tariff = 'pro';
+            currentUser.aiGenerationsLeft += 10;
+            this.saveUserData();
+            this.updateUserInterface();
+            this.updateAIInfo();
+            this.showToast('✅ Тестовый PRO-тариф активирован');
+            return;
+        }
+        
         const orderId = `pro_${Date.now()}`;
         const yoomoneyUrl = `https://yoomoney.ru/quickpay/confirm.xml?` +
             `receiver=${YOOMONEY_CLIENT_ID}&` +
@@ -1407,7 +1645,6 @@ class PreepDocs {
             `label=${orderId}&` +
             `successURL=${window.location.origin}/payment-success.html?pro=1`;
         
-        // Сохраняем заказ на PRO
         const orders = JSON.parse(localStorage.getItem('preep_pro_orders') || '{}');
         orders[orderId] = {
             type: 'pro',
@@ -1419,7 +1656,30 @@ class PreepDocs {
         window.location.href = yoomoneyUrl;
     }
     
-    // ===== ВСПОМОГАТЕЛЬНЫЕ =====
+    showProfile() {
+        document.getElementById('userMenu')?.remove();
+        this.showToast('👤 Функция профиля появится скоро');
+    }
+    
+    showPurchases() {
+        document.getElementById('userMenu')?.remove();
+        
+        if (currentUser.purchases.length === 0) {
+            this.showToast('У вас пока нет покупок');
+            return;
+        }
+        
+        const purchases = currentUser.purchases.map(id => {
+            const doc = documentsCatalog.find(d => d.id === id);
+            return doc ? doc.title : 'Неизвестный документ';
+        }).join('\n• ');
+        
+        if (DEV_MODE) {
+            this.showToast(`📦 Ваши покупки (тестовые):\n• ${purchases}`);
+        } else {
+            this.showToast(`📦 Ваши покупки:\n• ${purchases}`);
+        }
+    }
     
     openModal(modalId) {
         const modal = document.getElementById(modalId);
@@ -1459,5 +1719,5 @@ class PreepDocs {
 let app;
 document.addEventListener('DOMContentLoaded', () => {
     app = new PreepDocs();
-    window.app = app; // Делаем app глобальным для вызовов из HTML
+    window.app = app;
 });
