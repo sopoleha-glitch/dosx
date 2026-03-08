@@ -344,8 +344,334 @@ let currentUser = {
     aiGenerationsLeft: 0,
     checksLeft: 0,
     purchases: [], // история покупок (id документов)
-    email: localStorage.getItem('user_email') || null
+    email: null,
+    isAuthenticated: false
 };
+
+// ============================================
+// СИСТЕМА ВХОДА ПО EMAIL
+// ============================================
+
+class EmailAuth {
+    constructor() {
+        this.verificationCode = null;
+        this.userEmail = null;
+        this.timer = null;
+        this.timeLeft = 60;
+    }
+    
+    // Показать модалку входа
+    showLoginModal() {
+        // Удаляем старую модалку если есть
+        const oldModal = document.getElementById('authModal');
+        if (oldModal) oldModal.remove();
+        
+        const modal = document.createElement('div');
+        modal.className = 'modal show';
+        modal.id = 'authModal';
+        modal.innerHTML = `
+            <div class="modal-content modal-small">
+                <button class="modal-close" onclick="auth.closeModal()">&times;</button>
+                <h2 class="modal-title">🔐 Вход / Регистрация</h2>
+                
+                <!-- Этап 1: Ввод email -->
+                <div id="authStep1">
+                    <p style="color: var(--gray-600); margin-bottom: 20px;">
+                        Введите email — мы отправим код для входа
+                    </p>
+                    
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="authEmail" class="form-input" 
+                               placeholder="ivan@example.ru" 
+                               value="${this.getLastEmail() || ''}">
+                    </div>
+                    
+                    <button class="btn btn-primary btn-block" onclick="auth.sendCode()">
+                        Получить код
+                    </button>
+                    
+                    <p style="text-align: center; margin-top: 20px; color: var(--gray-400); font-size: 0.9rem;">
+                        Бесплатно. Без паролей.
+                    </p>
+                </div>
+                
+                <!-- Этап 2: Ввод кода -->
+                <div id="authStep2" style="display: none;">
+                    <p style="color: var(--gray-600); margin-bottom: 20px;">
+                        Введите код из письма
+                    </p>
+                    
+                    <div class="code-inputs">
+                        <input type="text" maxlength="1" class="code-digit" id="code1" autofocus>
+                        <input type="text" maxlength="1" class="code-digit" id="code2">
+                        <input type="text" maxlength="1" class="code-digit" id="code3">
+                        <input type="text" maxlength="1" class="code-digit" id="code4">
+                        <input type="text" maxlength="1" class="code-digit" id="code5">
+                        <input type="text" maxlength="1" class="code-digit" id="code6">
+                    </div>
+                    
+                    <div class="email-display" id="emailDisplay"></div>
+                    
+                    <div class="timer" id="timerDisplay">
+                        Отправить повторно через <span id="timerSeconds">60</span> сек
+                    </div>
+                    
+                    <button class="btn btn-primary btn-block" onclick="auth.verifyCode()">
+                        Подтвердить и войти
+                    </button>
+                    
+                    <button class="btn btn-outline btn-block" onclick="auth.backToEmail()" style="margin-top: 10px;">
+                        ← Изменить email
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Добавляем стили для code-inputs
+        this.addCodeInputStyles();
+        
+        // Настраиваем автопереход между полями
+        setTimeout(() => this.setupCodeInputs(), 100);
+    }
+    
+    addCodeInputStyles() {
+        // Проверяем, не добавлены ли уже стили
+        if (document.getElementById('authStyles')) return;
+        
+        const style = document.createElement('style');
+        style.id = 'authStyles';
+        style.textContent = `
+            .code-inputs {
+                display: flex;
+                gap: 8px;
+                justify-content: center;
+                margin: 20px 0;
+            }
+            
+            .code-digit {
+                width: 45px;
+                height: 55px;
+                text-align: center;
+                font-size: 1.8rem;
+                font-weight: 600;
+                border: 2px solid var(--gray-200);
+                border-radius: var(--radius-md);
+                transition: all 0.2s;
+            }
+            
+            .code-digit:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+            }
+            
+            .timer {
+                text-align: center;
+                color: var(--gray-500);
+                font-size: 0.9rem;
+                margin: 15px 0;
+            }
+            
+            #timerSeconds {
+                font-weight: 600;
+                color: var(--primary);
+            }
+            
+            .email-display {
+                text-align: center;
+                font-weight: 500;
+                color: var(--primary);
+                margin: 10px 0;
+                padding: 8px;
+                background: var(--gray-50);
+                border-radius: var(--radius-md);
+            }
+            
+            .btn-link {
+                background: none;
+                border: none;
+                color: var(--primary);
+                text-decoration: underline;
+                cursor: pointer;
+                font-size: 0.9rem;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    setupCodeInputs() {
+        const inputs = document.querySelectorAll('.code-digit');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1) {
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                }
+            });
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+            
+            // Разрешаем только цифры
+            input.addEventListener('keypress', (e) => {
+                if (!/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                }
+            });
+        });
+    }
+    
+    getLastEmail() {
+        const saved = localStorage.getItem('preep_last_email');
+        return saved || '';
+    }
+    
+    // Отправка кода
+    async sendCode() {
+        const email = document.getElementById('authEmail').value.trim();
+        
+        // Валидация email
+        if (!email || !email.includes('@') || !email.includes('.')) {
+            app.showToast('Введите корректный email');
+            return;
+        }
+        
+        this.userEmail = email;
+        localStorage.setItem('preep_last_email', email);
+        
+        // Генерируем 6-значный код
+        this.verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        // Показываем этап ввода кода
+        document.getElementById('authStep1').style.display = 'none';
+        document.getElementById('authStep2').style.display = 'block';
+        
+        // Показываем email
+        document.getElementById('emailDisplay').textContent = email;
+        
+        // Запускаем таймер
+        this.startTimer();
+        
+        // В реальном проекте здесь будет отправка письма через API
+        console.log(`Код для ${email}: ${this.verificationCode}`);
+        app.showToast(`Код отправлен на ${email}`);
+        
+        // TODO: Добавить реальную отправку через email API
+        // await this.sendEmailCode(email, this.verificationCode);
+    }
+    
+    // Таймер для повторной отправки
+    startTimer() {
+        this.timeLeft = 60;
+        document.getElementById('timerSeconds').textContent = this.timeLeft;
+        
+        this.timer = setInterval(() => {
+            this.timeLeft--;
+            document.getElementById('timerSeconds').textContent = this.timeLeft;
+            
+            if (this.timeLeft <= 0) {
+                clearInterval(this.timer);
+                document.querySelector('.timer').innerHTML = 
+                    '<button class="btn-link" onclick="auth.resendCode()">Отправить код повторно</button>';
+            }
+        }, 1000);
+    }
+    
+    // Повторная отправка кода
+    resendCode() {
+        clearInterval(this.timer);
+        this.verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+        console.log(`Новый код: ${this.verificationCode}`);
+        app.showToast('Код отправлен повторно');
+        this.startTimer();
+    }
+    
+    // Проверка кода
+    verifyCode() {
+        const code1 = document.getElementById('code1').value;
+        const code2 = document.getElementById('code2').value;
+        const code3 = document.getElementById('code3').value;
+        const code4 = document.getElementById('code4').value;
+        const code5 = document.getElementById('code5').value;
+        const code6 = document.getElementById('code6').value;
+        
+        const enteredCode = code1 + code2 + code3 + code4 + code5 + code6;
+        
+        if (enteredCode === this.verificationCode) {
+            // Успешный вход
+            const user = {
+                email: this.userEmail,
+                verified: true,
+                lastLogin: new Date().toISOString()
+            };
+            
+            localStorage.setItem('preep_auth', JSON.stringify(user));
+            
+            // Обновляем данные пользователя в основном приложении
+            app.currentUser = {
+                ...app.currentUser,
+                email: this.userEmail,
+                isAuthenticated: true
+            };
+            
+            // Сохраняем пользователя
+            localStorage.setItem('preep_user', JSON.stringify(app.currentUser));
+            
+            this.closeModal();
+            app.updateUserInterface();
+            app.showToast(`✅ Добро пожаловать, ${this.userEmail.split('@')[0]}!`);
+        } else {
+            app.showToast('Неверный код. Попробуйте снова.');
+        }
+    }
+    
+    // Вернуться к вводу email
+    backToEmail() {
+        clearInterval(this.timer);
+        document.getElementById('authStep1').style.display = 'block';
+        document.getElementById('authStep2').style.display = 'none';
+    }
+    
+    closeModal() {
+        const modal = document.getElementById('authModal');
+        if (modal) {
+            modal.remove();
+            clearInterval(this.timer);
+        }
+    }
+    
+    // Выход
+    logout() {
+        localStorage.removeItem('preep_auth');
+        app.currentUser.isAuthenticated = false;
+        app.currentUser.email = null;
+        localStorage.setItem('preep_user', JSON.stringify(app.currentUser));
+        app.updateUserInterface();
+        app.showToast('👋 Вы вышли из аккаунта');
+    }
+    
+    // Проверка авторизации
+    checkAuth() {
+        const saved = localStorage.getItem('preep_auth');
+        if (saved) {
+            const user = JSON.parse(saved);
+            app.currentUser.email = user.email;
+            app.currentUser.isAuthenticated = true;
+            return true;
+        }
+        return false;
+    }
+}
+
+// Создаем глобальный экземпляр
+const auth = new EmailAuth();
 
 // ============================================
 // ОСНОВНОЙ КЛАСС
@@ -366,6 +692,9 @@ class PreepDocs {
                 console.error('Error loading user data');
             }
         }
+        
+        // Проверяем авторизацию
+        auth.checkAuth();
     }
     
     saveUserData() {
@@ -378,6 +707,7 @@ class PreepDocs {
         this.updateCartCount();
         this.updateBonusInfo();
         this.updateAIInfo();
+        this.updateUserInterface();
     }
     
     setupEventListeners() {
@@ -425,7 +755,13 @@ class PreepDocs {
         document.getElementById('downloadAiResult').addEventListener('click', () => this.downloadAIResult());
         
         // Вход
-        document.getElementById('loginBtn').addEventListener('click', () => this.showLoginModal());
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            if (currentUser.isAuthenticated) {
+                this.toggleUserMenu();
+            } else {
+                auth.showLoginModal();
+            }
+        });
         
         // Закрытие по клику вне модалки
         window.addEventListener('click', (e) => {
@@ -433,6 +769,143 @@ class PreepDocs {
                 e.target.classList.remove('show');
             }
         });
+    }
+    
+    // ===== ПОЛЬЗОВАТЕЛЬ =====
+    
+    updateUserInterface() {
+        const loginBtn = document.getElementById('loginBtn');
+        
+        if (currentUser.isAuthenticated && currentUser.email) {
+            const emailPrefix = currentUser.email.split('@')[0];
+            const shortName = emailPrefix.length > 10 ? emailPrefix.substring(0, 8) + '...' : emailPrefix;
+            
+            loginBtn.innerHTML = `
+                <span>📧 ${shortName}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 9l6 6 6-6"/>
+                </svg>
+            `;
+        } else {
+            loginBtn.innerHTML = '👤 Войти';
+        }
+    }
+    
+    toggleUserMenu() {
+        // Удаляем старое меню если есть
+        const oldMenu = document.getElementById('userMenu');
+        if (oldMenu) oldMenu.remove();
+        
+        const menu = document.createElement('div');
+        menu.id = 'userMenu';
+        menu.className = 'user-menu';
+        menu.innerHTML = `
+            <div class="user-menu-header">
+                <strong>${currentUser.email}</strong>
+            </div>
+            <div class="user-menu-item" onclick="app.showProfile()">
+                👤 Профиль
+            </div>
+            <div class="user-menu-item" onclick="app.showPurchases()">
+                📦 Мои покупки (${currentUser.purchases.length})
+            </div>
+            <div class="user-menu-item" onclick="auth.logout()">
+                🚪 Выйти
+            </div>
+        `;
+        
+        // Позиционируем меню под кнопкой
+        const btn = document.getElementById('loginBtn');
+        const rect = btn.getBoundingClientRect();
+        
+        menu.style.position = 'absolute';
+        menu.style.top = (rect.bottom + 5) + 'px';
+        menu.style.right = (window.innerWidth - rect.right) + 'px';
+        menu.style.zIndex = '1000';
+        
+        document.body.appendChild(menu);
+        
+        // Добавляем стили для меню
+        this.addUserMenuStyles();
+        
+        // Закрытие по клику вне меню
+        setTimeout(() => {
+            document.addEventListener('click', function closeMenu(e) {
+                if (!menu.contains(e.target) && e.target.id !== 'loginBtn') {
+                    menu.remove();
+                    document.removeEventListener('click', closeMenu);
+                }
+            });
+        }, 100);
+    }
+    
+    addUserMenuStyles() {
+        if (document.getElementById('userMenuStyles')) return;
+        
+        const style = document.createElement('style');
+        style.id = 'userMenuStyles';
+        style.textContent = `
+            .user-menu {
+                background: white;
+                border: 1px solid var(--gray-200);
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-lg);
+                min-width: 200px;
+                overflow: hidden;
+                animation: fadeIn 0.2s ease;
+            }
+            
+            .user-menu-header {
+                padding: 12px 16px;
+                background: var(--gray-50);
+                border-bottom: 1px solid var(--gray-200);
+                font-size: 0.9rem;
+            }
+            
+            .user-menu-item {
+                padding: 10px 16px;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+            
+            .user-menu-item:hover {
+                background: var(--gray-100);
+            }
+            
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    showProfile() {
+        document.getElementById('userMenu')?.remove();
+        app.showToast('👤 Функция профиля появится скоро');
+    }
+    
+    showPurchases() {
+        document.getElementById('userMenu')?.remove();
+        
+        if (currentUser.purchases.length === 0) {
+            app.showToast('У вас пока нет покупок');
+            return;
+        }
+        
+        // Показываем список купленных документов
+        const purchases = currentUser.purchases.map(id => {
+            const doc = documentsCatalog.find(d => d.id === id);
+            return doc ? doc.title : 'Неизвестный документ';
+        }).join('\n• ');
+        
+        app.showToast(`Ваши покупки:\n• ${purchases}`);
     }
     
     // ===== КАТАЛОГ =====
@@ -576,10 +1049,14 @@ class PreepDocs {
         this.cart.splice(index, 1);
         this.updateCartCount();
         this.showCart();
+        this.showToast('Товар удален из корзины');
     }
     
     updateCartCount() {
-        document.getElementById('cartCount').textContent = this.cart.length;
+        const cartCount = document.getElementById('cartCount');
+        if (cartCount) {
+            cartCount.textContent = this.cart.length;
+        }
     }
     
     showCart() {
@@ -588,7 +1065,7 @@ class PreepDocs {
         
         if (this.cart.length === 0) {
             cartItems.innerHTML = '<p class="empty-cart">Корзина пуста</p>';
-            cartBonus.innerHTML = '';
+            if (cartBonus) cartBonus.innerHTML = '';
             document.getElementById('cartTotal').textContent = 'Итого: 0 ₽';
         } else {
             cartItems.innerHTML = this.cart.map((item, index) => `
@@ -603,13 +1080,15 @@ class PreepDocs {
             document.getElementById('cartTotal').textContent = `Итого: ${total} ₽`;
             
             // Показываем бонусы за эту покупку
-            const bonus = this.calculateCartBonus();
-            cartBonus.innerHTML = `
-                <h4>🎁 Бонус за эту покупку:</h4>
-                <p>+${bonus.generations} генераций нейросети</p>
-                ${bonus.checks ? `<p>+${bonus.checks} проверок документов</p>` : ''}
-                ${bonus.vip ? '<p>🔥 VIP статус на месяц</p>' : ''}
-            `;
+            if (cartBonus) {
+                const bonus = this.calculateCartBonus();
+                cartBonus.innerHTML = `
+                    <h4>🎁 Бонус за эту покупку:</h4>
+                    <p>+${bonus.generations} генераций нейросети</p>
+                    ${bonus.checks ? `<p>+${bonus.checks} проверок документов</p>` : ''}
+                    ${bonus.vip ? '<p>🔥 VIP статус на месяц</p>' : ''}
+                `;
+            }
         }
         
         this.openModal('cartModal');
@@ -633,13 +1112,21 @@ class PreepDocs {
             }
         }
         
+        // Минимум 1 генерация за каждый документ
+        if (bonus.generations === 0) {
+            bonus.generations = count;
+        }
+        
         return bonus;
     }
     
     // ===== БОНУСЫ =====
     
     updateBonusInfo() {
-        document.getElementById('bonusGenerations').textContent = currentUser.aiGenerationsLeft;
+        const bonusSpan = document.getElementById('bonusGenerations');
+        if (bonusSpan) {
+            bonusSpan.textContent = currentUser.aiGenerationsLeft;
+        }
         
         // Считаем общее количество покупок
         const totalPurchases = currentUser.purchases.length;
@@ -657,15 +1144,20 @@ class PreepDocs {
             }
         }
         
-        if (nextLevel) {
-            document.getElementById('nextBonusText').textContent = 
-                `купите еще ${needed} документ${needed > 1 ? 'ов' : ''} → +${BONUS_LEVELS[nextLevel].generations} генераций`;
-            
-            const progress = (totalPurchases / nextLevel) * 100;
-            document.getElementById('progressFill').style.width = `${Math.min(progress, 100)}%`;
-        } else {
-            document.getElementById('nextBonusText').textContent = '🔥 VIP уровень достигнут!';
-            document.getElementById('progressFill').style.width = '100%';
+        const nextBonusText = document.getElementById('nextBonusText');
+        const progressFill = document.getElementById('progressFill');
+        
+        if (nextBonusText && progressFill) {
+            if (nextLevel) {
+                nextBonusText.textContent = 
+                    `купите еще ${needed} документ${needed > 1 ? 'ов' : ''} → +${BONUS_LEVELS[nextLevel].generations} генераций`;
+                
+                const progress = (totalPurchases / nextLevel) * 100;
+                progressFill.style.width = `${Math.min(progress, 100)}%`;
+            } else {
+                nextBonusText.textContent = '🔥 VIP уровень достигнут!';
+                progressFill.style.width = '100%';
+            }
         }
     }
     
@@ -690,22 +1182,38 @@ class PreepDocs {
         
         // Показываем сообщение о бонусе
         const bonusMessage = document.getElementById('bonusGiftMessage');
-        bonusMessage.innerHTML = `🎁 Вы получили +${bonus.generations} генераций нейросети!`;
+        if (bonusMessage) {
+            bonusMessage.innerHTML = `🎁 Вы получили +${bonus.generations} генераций нейросети!`;
+        }
     }
     
     // ===== НЕЙРОСЕТЬ =====
     
     updateAIInfo() {
-        document.getElementById('aiGenerationsLeft').textContent = currentUser.aiGenerationsLeft;
-        document.getElementById('aiBadge').textContent = `${currentUser.aiGenerationsLeft} генераций`;
+        const aiLeftSpan = document.getElementById('aiGenerationsLeft');
+        const aiBadge = document.getElementById('aiBadge');
+        const generateBtn = document.getElementById('generateAiBtn');
         
-        if (currentUser.aiGenerationsLeft === 0) {
-            document.getElementById('generateAiBtn').disabled = true;
-            document.getElementById('aiLimitInfo').innerHTML = `
-                Нет доступных генераций. Купите документ, чтобы получить бонус!
-            `;
-        } else {
-            document.getElementById('generateAiBtn').disabled = false;
+        if (aiLeftSpan) {
+            aiLeftSpan.textContent = currentUser.aiGenerationsLeft;
+        }
+        
+        if (aiBadge) {
+            aiBadge.textContent = `${currentUser.aiGenerationsLeft} генераций`;
+        }
+        
+        if (generateBtn) {
+            if (currentUser.aiGenerationsLeft === 0) {
+                generateBtn.disabled = true;
+                const limitInfo = document.getElementById('aiLimitInfo');
+                if (limitInfo) {
+                    limitInfo.innerHTML = `
+                        Нет доступных генераций. Купите документ, чтобы получить бонус!
+                    `;
+                }
+            } else {
+                generateBtn.disabled = false;
+            }
         }
     }
     
@@ -748,9 +1256,12 @@ class PreepDocs {
                 document.getElementById('aiResultContent').textContent = data.document;
                 document.getElementById('aiResult').style.display = 'block';
                 this.showToast('Документ создан!');
+            } else {
+                throw new Error(data.error || 'Ошибка генерации');
             }
             
         } catch (error) {
+            console.error('AI Error:', error);
             this.showToast('Ошибка генерации. Попробуйте еще раз');
             
             // Тестовый режим
@@ -780,6 +1291,8 @@ class PreepDocs {
         const text = document.getElementById('aiResultContent').textContent;
         navigator.clipboard.writeText(text).then(() => {
             this.showToast('Документ скопирован');
+        }).catch(() => {
+            this.showToast('Ошибка копирования');
         });
     }
     
@@ -792,6 +1305,7 @@ class PreepDocs {
         a.download = `document_${Date.now()}.txt`;
         a.click();
         URL.revokeObjectURL(url);
+        this.showToast('Файл скачан');
     }
     
     // ===== ОПЛАТА =====
@@ -804,6 +1318,8 @@ class PreepDocs {
         }
         
         const summary = document.getElementById('orderSummary');
+        const payAmount = document.getElementById('payAmount');
+        
         const total = this.cart.reduce((sum, item) => sum + item.price, 0);
         
         summary.innerHTML = `
@@ -824,7 +1340,10 @@ class PreepDocs {
             </div>
         `;
         
-        document.getElementById('payAmount').textContent = `${total} ₽`;
+        if (payAmount) {
+            payAmount.textContent = `${total} ₽`;
+        }
+        
         this.closeModal('cartModal');
         this.openModal('paymentModal');
     }
@@ -837,7 +1356,11 @@ class PreepDocs {
             return;
         }
         
-        currentUser.email = email;
+        // Если пользователь не авторизован, сохраняем email
+        if (!currentUser.isAuthenticated) {
+            currentUser.email = email;
+        }
+        
         localStorage.setItem('user_email', email);
         
         const total = this.cart.reduce((sum, item) => sum + item.price, 0);
@@ -854,6 +1377,9 @@ class PreepDocs {
         
         // Сохраняем заказ
         this.saveOrder(orderId, email, this.cart);
+        
+        // Применяем бонусы
+        this.applyBonusAfterPurchase();
         
         window.location.href = yoomoneyUrl;
     }
@@ -895,26 +1421,29 @@ class PreepDocs {
     
     // ===== ВСПОМОГАТЕЛЬНЫЕ =====
     
-    showLoginModal() {
-        const email = prompt('Введите ваш email для входа:');
-        if (email && email.includes('@')) {
-            currentUser.email = email;
-            localStorage.setItem('user_email', email);
-            this.saveUserData();
-            this.showToast('Вы вошли как ' + email);
+    openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('show');
         }
     }
     
-    openModal(modalId) {
-        document.getElementById(modalId).classList.add('show');
-    }
-    
     closeModal(modalId) {
-        document.getElementById(modalId).classList.remove('show');
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('show');
+        }
     }
     
     showToast(message) {
-        const toast = document.getElementById('toast');
+        let toast = document.getElementById('toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = 'toast';
+            document.body.appendChild(toast);
+        }
+        
         toast.textContent = message;
         toast.classList.add('show');
         
@@ -924,5 +1453,11 @@ class PreepDocs {
     }
 }
 
-// Инициализация
-const app = new PreepDocs();
+// ============================================
+// ИНИЦИАЛИЗАЦИЯ
+// ============================================
+let app;
+document.addEventListener('DOMContentLoaded', () => {
+    app = new PreepDocs();
+    window.app = app; // Делаем app глобальным для вызовов из HTML
+});
