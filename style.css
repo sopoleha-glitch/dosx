@@ -1196,3 +1196,47 @@ body {
         display: none;
     }
 }
+/* Стили для загрузки файлов */
+.file-upload-area {
+    transition: all 0.2s;
+    background: white;
+}
+
+.file-upload-area:hover {
+    border-color: var(--primary) !important;
+    background: var(--gray-50) !important;
+}
+
+.file-upload-area svg {
+    transition: all 0.2s;
+}
+
+.file-upload-area:hover svg {
+    stroke: var(--primary);
+}
+
+/* Стили для вкладок AI */
+.ai-tab {
+    transition: all 0.2s;
+}
+
+.ai-tab:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Информация о файле */
+#fileInfo {
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
