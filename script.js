@@ -10,7 +10,7 @@ const YOOMONEY_CLIENT_ID = 'F7642ED1CA446A7CB47557510D5A8638B35B180125A793FCF6A2
 const DEV_MODE = true; // true = режим разработчика (эмуляция покупок)
 
 // ============================================
-// КАТАЛОГ ДОКУМЕНТОВ (15 штук) - ТОЛЬКО DOCX
+// КАТАЛОГ ДОКУМЕНТОВ (15 штук)
 // ============================================
 const documentsCatalog = [
     // 1. Договор аренды квартиры
@@ -1069,13 +1069,13 @@ class PreepDocs {
         // Ссылка на DOCX файл в папке docs
         const fileUrl = `https://sopoleha-glitch.github.io/dosx/docs/${id}.docx`;
         
-        // Открываем ссылку в новой вкладке (начнется скачивание)
+        // Открываем ссылку в новой вкладке
         window.open(fileUrl, '_blank');
         
         this.showToast(`📥 Скачивание "${doc.title}" начато`);
     }
     
-    // Для обратной совместимости с тестовым режимом
+    // Для обратной совместимости
     downloadDevFile(id) {
         this.downloadFile(id);
     }
@@ -1579,7 +1579,6 @@ class PreepDocs {
         localStorage.setItem('user_email', email);
         
         if (DEV_MODE) {
-            // В режиме разработчика — эмулируем успешную покупку
             this.applyBonusAfterPurchase();
             this.closeModal('paymentModal');
             this.showToast('✅ Тестовая покупка совершена! Документы доступны в профиле.');
@@ -1598,7 +1597,6 @@ class PreepDocs {
             return;
         }
         
-        // Реальная оплата через ЮMoney
         const total = this.cart.reduce((sum, item) => sum + item.price, 0);
         const orderId = Date.now();
         
@@ -1626,8 +1624,6 @@ class PreepDocs {
         };
         localStorage.setItem('preep_orders', JSON.stringify(orders));
     }
-    
-    // ===== ТАРИФЫ =====
     
     upgradeToPro() {
         if (DEV_MODE) {
