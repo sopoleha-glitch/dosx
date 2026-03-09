@@ -10,7 +10,7 @@ const YOOMONEY_CLIENT_ID = 'F7642ED1CA446A7CB47557510D5A8638B35B180125A793FCF6A2
 const DEV_MODE = true; // true = режим разработчика (эмуляция покупок)
 
 // ============================================
-// КАТАЛОГ ДОКУМЕНТОВ (15 штук)
+// КАТАЛОГ ДОКУМЕНТОВ (15 штук) - ТОЛЬКО DOCX
 // ============================================
 const documentsCatalog = [
     // 1. Договор аренды квартиры
@@ -934,7 +934,7 @@ class PreepDocs {
                 <div class="user-menu-divider"></div>
                 <div class="user-menu-subheader">Ваши документы:</div>
                 ${purchasedDocs.slice(0, 3).map(doc => `
-                    <div class="user-menu-doc" onclick="app.downloadDevFile(${doc.id})">
+                    <div class="user-menu-doc" onclick="app.downloadFile(${doc.id})">
                         📄 ${doc.title} (DOCX)
                     </div>
                 `).join('')}
@@ -1062,19 +1062,22 @@ class PreepDocs {
     
     // ===== МЕТОДЫ РАЗРАБОТЧИКА =====
     
-    downloadDevFile(id) {
-        if (!DEV_MODE) return;
-        
+    downloadFile(id) {
         const doc = documentsCatalog.find(d => d.id === id);
         if (!doc) return;
         
-        // Ссылка на DOCX файл
+        // Ссылка на DOCX файл в папке docs
         const fileUrl = `https://sopoleha-glitch.github.io/dosx/docs/${id}.docx`;
         
-        // Открываем ссылку в новой вкладке
+        // Открываем ссылку в новой вкладке (начнется скачивание)
         window.open(fileUrl, '_blank');
         
         this.showToast(`📥 Скачивание "${doc.title}" начато`);
+    }
+    
+    // Для обратной совместимости с тестовым режимом
+    downloadDevFile(id) {
+        this.downloadFile(id);
     }
     
     devAddGenerations(count) {
@@ -1226,7 +1229,7 @@ class PreepDocs {
                 </div>
                 
                 ${isPurchased && DEV_MODE ? `
-                    <button class="btn btn-outline btn-block" onclick="app.downloadDevFile(${doc.id})" style="margin-top: 10px;">
+                    <button class="btn btn-outline btn-block" onclick="app.downloadFile(${doc.id})" style="margin-top: 10px;">
                         📥 Скачать DOCX
                     </button>
                 ` : ''}
