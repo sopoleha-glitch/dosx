@@ -681,10 +681,9 @@ class EmailAuth {
         app.showToast('⏳ Отправка кода...');
         
         try {
-            // ВАЖНО: ЗАМЕНИ ЭТИ ЗНАЧЕНИЯ НА СВОИ!
-            // Их нужно взять из личного кабинета EmailJS
-            const SERVICE_ID = "service_9x8ehr5";  // ID сервиса (Email Services)
-            const TEMPLATE_ID = "template_abc123"; // ID шаблона (Email Templates)
+            
+            const SERVICE_ID = "service_kj3lh59";  
+            const TEMPLATE_ID = "template_s9gd3tg"; 
             
             const response = await emailjs.send(
                 SERVICE_ID,
