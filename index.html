@@ -90,18 +90,22 @@
                     </div>
                     
                     <div class="ai-options">
-                        <select id="aiDocType" class="ai-select">
-                            <option value="auto">Автоматически определить</option>
-                            <option value="contract">Договор</option>
-                            <option value="receipt">Расписка</option>
-                            <option value="claim">Претензия</option>
-                        </select>
-                        
-                        <select id="aiStyle" class="ai-select">
-                            <option value="official">Официальный</option>
-                            <option value="simple">Простой язык</option>
-                        </select>
-                    </div>
+    <select id="aiMode" class="ai-select">
+        <option value="generate">Создать новый документ</option>
+        <option value="fill">Заполнить шаблон</option>
+        <option value="check">Проверить документ</option>
+    </select>
+    <select id="aiDocType" class="ai-select">
+        <option value="auto">Автоматически определить</option>
+        <option value="contract">Договор</option>
+        <option value="receipt">Расписка</option>
+        <option value="claim">Претензия</option>
+    </select>
+    <select id="aiStyle" class="ai-select">
+        <option value="official">Официальный</option>
+        <option value="simple">Простой язык</option>
+    </select>
+</div>
                     
                     <button class="btn btn-primary btn-generate" id="generateAiBtn">
                         🔮 Создать документ
