@@ -9,25 +9,6 @@ const YOOMONEY_CLIENT_ID = 'F7642ED1CA446A7CB47557510D5A8638B35B180125A793FCF6A2
 // ============================================
 const DEV_MODE = true; // true = режим разработчика (эмуляция покупок)
 
-// Тестовые файлы для разработчика
-const DEV_FILES = {
-    1: { docx: 'test-docs/dogovor-arendy.docx', pdf: 'test-docs/dogovor-arendy.pdf' },
-    2: { docx: 'test-docs/raspiska.docx', pdf: 'test-docs/raspiska.pdf' },
-    3: { docx: 'test-docs/dogovor-avto.docx', pdf: 'test-docs/dogovor-avto.pdf' },
-    4: { docx: 'test-docs/pretenzii.docx', pdf: 'test-docs/pretenzii.pdf' },
-    5: { docx: 'test-docs/trudovoy.docx', pdf: 'test-docs/trudovoy.pdf' },
-    6: { docx: 'test-docs/darenie.docx', pdf: 'test-docs/darenie.pdf' },
-    7: { docx: 'test-docs/zaym.docx', pdf: 'test-docs/zaym.pdf' },
-    8: { docx: 'test-docs/soglashenie-o-detyah.docx', pdf: 'test-docs/soglashenie-o-detyah.pdf' },
-    9: { docx: 'test-docs/zaveshaniya.docx', pdf: 'test-docs/zaveshaniya.pdf' },
-    10: { docx: 'test-docs/schet.docx', pdf: 'test-docs/schet.pdf' },
-    11: { docx: 'test-docs/uslugi.docx', pdf: 'test-docs/uslugi.pdf' },
-    12: { docx: 'test-docs/kuplia-prodazha.docx', pdf: 'test-docs/kuplia-prodazha.pdf' },
-    13: { docx: 'test-docs/akt.docx', pdf: 'test-docs/akt.pdf' },
-    14: { docx: 'test-docs/doverennosti.docx', pdf: 'test-docs/doverennosti.pdf' },
-    15: { docx: 'test-docs/podryad.docx', pdf: 'test-docs/podryad.pdf' }
-};
-
 // ============================================
 // КАТАЛОГ ДОКУМЕНТОВ (15 штук)
 // ============================================
@@ -47,7 +28,7 @@ const documentsCatalog = [
             "Кто платит коммунальные услуги",
             "Права на проживание с животными"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"], // Только DOCX
         popular: true,
         downloads: 1543
     },
@@ -67,7 +48,7 @@ const documentsCatalog = [
             "Паспортные данные обеих сторон",
             "Сумма прописью и цифрами"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"],
         popular: true,
         downloads: 2341
     },
@@ -87,7 +68,7 @@ const documentsCatalog = [
             "Включает расписку о передаче денег",
             "Срок для перерегистрации 10 дней"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"],
         popular: true,
         downloads: 1876
     },
@@ -108,7 +89,7 @@ const documentsCatalog = [
             "Претензия по нарушению сроков",
             "Претензия по недостаткам услуг"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"],
         popular: true,
         downloads: 987
     },
@@ -130,7 +111,7 @@ const documentsCatalog = [
             "Ежегодный отпуск",
             "Социальное страхование"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"],
         popular: true,
         downloads: 654
     },
@@ -150,7 +131,7 @@ const documentsCatalog = [
             "Отмена дарения по закону",
             "Акт приема-передачи в комплекте"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"],
         popular: false,
         downloads: 543
     },
@@ -171,7 +152,7 @@ const documentsCatalog = [
             "Форс-мажорные обстоятельства",
             "Досудебный порядок"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"],
         popular: true,
         downloads: 1432
     },
@@ -191,7 +172,7 @@ const documentsCatalog = [
             "Раздел квартиры и имущества",
             "Юридическая сила без суда"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"],
         popular: false,
         downloads: 432
     },
@@ -211,7 +192,7 @@ const documentsCatalog = [
             "Для составления по месту лечения",
             "Соответствуют ГК РФ (ст. 1149)"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"],
         popular: false,
         downloads: 876
     },
@@ -231,7 +212,7 @@ const documentsCatalog = [
             "Расчет итоговой суммы",
             "Подписи руководителя и бухгалтера"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"],
         popular: true,
         downloads: 2345
     },
@@ -251,7 +232,7 @@ const documentsCatalog = [
             "Ответственность за просрочку",
             "Право заказчика проверять ход работ"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"],
         popular: true,
         downloads: 1543
     },
@@ -271,7 +252,7 @@ const documentsCatalog = [
             "Порядок приемки и проверки",
             "Акт приема-передачи в комплекте"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"],
         popular: true,
         downloads: 876
     },
@@ -291,7 +272,7 @@ const documentsCatalog = [
             "Итоговая сумма прописью",
             "Фраза об отсутствии претензий"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"],
         popular: true,
         downloads: 1654
     },
@@ -311,7 +292,7 @@ const documentsCatalog = [
             "Генеральная на автомобиль",
             "На ведение судебных дел"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"],
         popular: true,
         downloads: 765
     },
@@ -332,7 +313,7 @@ const documentsCatalog = [
             "Техническое задание",
             "Календарный план"
         ],
-        formats: ["PDF", "DOCX"],
+        formats: ["DOCX"],
         popular: true,
         downloads: 543
     }
@@ -368,9 +349,9 @@ const TARIFFS = {
 let cart = [];
 let currentUser = {
     tariff: 'free',
-    aiGenerationsLeft: DEV_MODE ? 5 : 0, // В режиме разработчика сразу 5 генераций
+    aiGenerationsLeft: DEV_MODE ? 5 : 0,
     checksLeft: 0,
-    purchases: DEV_MODE ? [1, 2, 3, 4, 5] : [], // В режиме разработчика уже есть покупки
+    purchases: DEV_MODE ? [1, 2, 3, 4, 5] : [],
     email: DEV_MODE ? 'dev@preep.ru' : null,
     isAuthenticated: DEV_MODE ? true : false
 };
@@ -394,7 +375,6 @@ class EmailAuth {
         modal.className = 'modal show';
         modal.id = 'authModal';
         
-        // Если режим разработчика — показываем упрощенный вход
         if (DEV_MODE) {
             modal.innerHTML = `
                 <div class="modal-content modal-small">
@@ -482,7 +462,6 @@ class EmailAuth {
     }
     
     devLogin() {
-        // Быстрый вход в режиме разработчика
         currentUser = {
             tariff: 'free',
             aiGenerationsLeft: 5,
@@ -503,7 +482,6 @@ class EmailAuth {
     }
     
     showRealLogin() {
-        // Показываем реальную форму входа
         const modal = document.getElementById('authModal');
         modal.innerHTML = `
             <div class="modal-content modal-small">
@@ -667,40 +645,42 @@ class EmailAuth {
         this.userEmail = email;
         localStorage.setItem('preep_last_email', email);
         
-        // Генерируем 6-значный код
         this.verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
         
-        // Показываем этап ввода кода
         document.getElementById('authStep1').style.display = 'none';
         document.getElementById('authStep2').style.display = 'block';
         document.getElementById('emailDisplay').textContent = email;
         
-        // Запускаем таймер
         this.startTimer();
         
         app.showToast('⏳ Отправка кода...');
         
         try {
+            const SERVICE_ID = "service_kj3lh59";
+            const TEMPLATE_ID = "template_s9gd3tg";
             
-            const SERVICE_ID = "service_kj3lh59";  
-            const TEMPLATE_ID = "template_s9gd3tg"; 
+            const templateParams = {
+                email: email,
+                code: this.verificationCode,
+                from_name: "Preep Docs",
+                reply_to: "appar.raprar@yandex.ru"
+            };
+            
+            console.log('Отправляем запрос с параметрами:', templateParams);
             
             const response = await emailjs.send(
                 SERVICE_ID,
                 TEMPLATE_ID,
-                {
-                    to_email: email,
-                    code: this.verificationCode
-                }
+                templateParams
             );
             
-            console.log('EmailJS ответ:', response);
+            console.log('✅ EmailJS ответ:', response);
             app.showToast(`✅ Код отправлен на ${email}`);
             
         } catch (error) {
-            console.error('Ошибка EmailJS:', error);
+            console.error('❌ Ошибка EmailJS:', error);
             app.showToast('⚠️ Ошибка отправки. Код в консоли');
-            console.log('🔐 Ваш код:', this.verificationCode);
+            console.log('🔐 Ваш код для входа:', this.verificationCode);
         }
     }
     
@@ -800,7 +780,6 @@ class EmailAuth {
     }
 }
 
-// Создаем глобальный экземпляр
 const auth = new EmailAuth();
 
 // ============================================
@@ -825,7 +804,6 @@ class PreepDocs {
         
         auth.checkAuth();
         
-        // Если режим разработчика и нет авторизации, включаем тестовый режим
         if (DEV_MODE && !currentUser.isAuthenticated) {
             currentUser = {
                 tariff: 'free',
@@ -850,7 +828,6 @@ class PreepDocs {
         this.updateAIInfo();
         this.updateUserInterface();
         
-        // В режиме разработчика показываем подсказку
         if (DEV_MODE && !localStorage.getItem('dev_hint_shown')) {
             setTimeout(() => {
                 this.showToast('🚀 Режим разработчика: покупки эмулируются');
@@ -958,7 +935,7 @@ class PreepDocs {
                 <div class="user-menu-subheader">Ваши документы:</div>
                 ${purchasedDocs.slice(0, 3).map(doc => `
                     <div class="user-menu-doc" onclick="app.downloadDevFile(${doc.id})">
-                        📄 ${doc.title} (${doc.formats.join('/')})
+                        📄 ${doc.title} (DOCX)
                     </div>
                 `).join('')}
                 ${purchaseCount > 3 ? '<div class="user-menu-more">и еще ' + (purchaseCount - 3) + ' документов...</div>' : ''}
@@ -1091,23 +1068,13 @@ class PreepDocs {
         const doc = documentsCatalog.find(d => d.id === id);
         if (!doc) return;
         
-        // Создаем тестовый файл
-        const content = `Это тестовый файл для документа "${doc.title}".
+        // Ссылка на DOCX файл
+        const fileUrl = `https://sopoleha-glitch.github.io/dosx/docs/${id}.docx`;
         
-В режиме разработчика файлы не хранятся реально.
-Для настоящей работы загрузите реальные PDF/DOCX в папку /docs.
-
-Дата генерации: ${new Date().toLocaleString('ru-RU')}`;
+        // Открываем ссылку в новой вкладке
+        window.open(fileUrl, '_blank');
         
-        const blob = new Blob([content], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `test-${doc.title.toLowerCase().replace(/\s+/g, '-')}.txt`;
-        a.click();
-        URL.revokeObjectURL(url);
-        
-        this.showToast(`📄 Тестовый файл "${doc.title}" скачан`);
+        this.showToast(`📥 Скачивание "${doc.title}" начато`);
     }
     
     devAddGenerations(count) {
@@ -1168,7 +1135,7 @@ class PreepDocs {
                         <span class="doc-price">${finalPrice} ₽</span>
                         ${discount ? `<span class="doc-old-price">${doc.price} ₽</span>` : ''}
                     </div>
-                    <span class="doc-format">📄 ${doc.formats.join(' + ')}</span>
+                    <span class="doc-format">📄 DOCX</span>
                 </div>
                 <div class="doc-bonus">${isPurchased ? '✅ Уже куплено' : '🎁 +1 генерация'}</div>
             </div>
@@ -1248,7 +1215,7 @@ class PreepDocs {
                 </div>
                 
                 <div class="doc-detail-formats">
-                    ${doc.formats.map(f => `<span class="format-badge">📄 ${f}</span>`).join('')}
+                    <span class="format-badge">📄 DOCX</span>
                 </div>
                 
                 <div class="doc-detail-bonus">
@@ -1260,7 +1227,7 @@ class PreepDocs {
                 
                 ${isPurchased && DEV_MODE ? `
                     <button class="btn btn-outline btn-block" onclick="app.downloadDevFile(${doc.id})" style="margin-top: 10px;">
-                        📥 Скачать тестовый файл
+                        📥 Скачать DOCX
                     </button>
                 ` : ''}
                 
