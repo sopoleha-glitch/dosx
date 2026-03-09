@@ -79,15 +79,83 @@
                 <h2>🧠 Нейросеть</h2>
                 <p class="ai-subtitle">Создайте уникальный документ под вашу ситуацию</p>
                 
-                <div class="ai-generator">
-                    <div class="form-group">
-                        <textarea 
-                            id="aiPrompt" 
-                            class="ai-textarea" 
-                            rows="4"
-                            placeholder="Например: Нужен договор аренды квартиры с правом выкупа. Хозяин Иванов, арендатор Петров, плата 30000..."
-                        ></textarea>
-                    </div>
+               <div class="ai-generator">
+    <!-- Вкладки для выбора режима работы нейросети -->
+    <div class="ai-tabs" style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--gray-200); padding-bottom: 10px;">
+        <button class="ai-tab active" data-mode="text" style="padding: 8px 16px; border: none; background: var(--primary); color: white; border-radius: var(--radius-md); cursor: pointer;">📝 Текст</button>
+        <button class="ai-tab" data-mode="file" style="padding: 8px 16px; border: 1px solid var(--gray-300); background: white; color: var(--gray-700); border-radius: var(--radius-md); cursor: pointer;">📎 Загрузить файл</button>
+    </div>
+    
+    <!-- Режим ввода текста -->
+    <div id="aiTextMode" class="ai-mode active">
+        <div class="form-group">
+            <label>Опишите ситуацию или вставьте текст документа</label>
+            <textarea 
+                id="aiPrompt" 
+                class="ai-textarea" 
+                rows="5"
+                placeholder="Например: Нужен договор аренды квартиры. Хозяин Иванов И.И., арендатор Петров П.П., плата 30000, срок 11 месяцев..."
+            ></textarea>
+        </div>
+    </div>
+    
+    <!-- Режим загрузки файла -->
+    <div id="aiFileMode" class="ai-mode" style="display: none;">
+        <div class="form-group">
+            <label>Загрузите документ (DOC, DOCX, TXT)</label>
+            <div class="file-upload-area" style="border: 2px dashed var(--gray-300); border-radius: var(--radius-lg); padding: 30px; text-align: center; cursor: pointer;" id="fileUploadArea">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="1.5">
+                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                    <polyline points="13 2 13 9 20 9"></polyline>
+                </svg>
+                <p style="margin-top: 10px; color: var(--gray-600);">Нажмите для выбора файла или перетащите его сюда</p>
+                <p style="font-size: 0.8rem; color: var(--gray-400); margin-top: 5px;">Поддерживаются .doc, .docx, .txt</p>
+                <input type="file" id="fileInput" accept=".doc,.docx,.txt" style="display: none;">
+            </div>
+            <div id="fileInfo" style="margin-top: 15px; padding: 10px; background: var(--gray-100); border-radius: var(--radius-md); display: none;">
+                <p><strong>Выбран файл:</strong> <span id="fileName"></span></p>
+                <p><strong>Размер:</strong> <span id="fileSize"></span></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Настройки режимов работы -->
+    <div class="ai-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
+        <select id="aiMode" class="ai-select">
+            <option value="generate">✨ Создать новый документ</option>
+            <option value="fill">📝 Заполнить шаблон</option>
+            <option value="check">🔍 Проверить документ</option>
+        </select>
+        
+        <select id="aiDocType" class="ai-select">
+            <option value="auto">Автоматически определить</option>
+            <option value="contract">Договор</option>
+            <option value="receipt">Расписка</option>
+            <option value="claim">Претензия</option>
+        </select>
+    </div>
+    
+    <button class="btn btn-primary btn-generate" id="generateAiBtn">
+        🔮 Создать документ
+        <span class="btn-badge" id="aiBadge">5 генераций</span>
+    </button>
+    
+    <div class="ai-limit-info" id="aiLimitInfo">
+        Доступно: <span id="aiGenerationsLeft">5</span> генераций
+        <span class="ai-hint">(покупайте документы, чтобы получать больше)</span>
+    </div>
+</div>
+
+<div class="ai-result" id="aiResult" style="display: none;">
+    <div class="ai-result-header">
+        <h3>Готовый документ</h3>
+        <div class="ai-result-actions">
+            <button class="btn btn-outline" id="copyAiResult">📋 Копировать</button>
+            <button class="btn btn-primary" id="downloadAiResult">📥 Скачать DOC</button>
+        </div>
+    </div>
+    <div class="ai-result-content" id="aiResultContent"></div>
+</div>
                     
                     <div class="ai-options">
     <select id="aiMode" class="ai-select">
