@@ -5,46 +5,58 @@ emailjs.init("JaUjXNKg7r2iZsTfq");
 const YOOMONEY_CLIENT_ID = 'F7642ED1CA446A7CB47557510D5A8638B35B180125A793FCF6A2EB8F98BBBAC9';
 
 // ============================================
-// БИБЛИОТЕКА ДЛЯ СОЗДАНИЯ DOCX
+// СОЗДАНИЕ WORD-ФАЙЛА (формат .doc, работает в любом Word)
 // ============================================
-function createDocxFromText(text, filename) {
-    // Простой HTML, который Word откроет как документ
-    const html = `<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <style>
-        body { 
-            font-family: 'Times New Roman', Times, serif; 
-            font-size: 12pt;
-            line-height: 1.5;
-            margin: 2cm;
-        }
-        h1 { color: #2563eb; font-size: 16pt; }
-        h2 { font-size: 14pt; }
-        .footer { 
-            margin-top: 50px; 
-            font-size: 10pt; 
-            color: #666;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    ${text.replace(/\n/g, '<br>')}
-    <div class="footer">
-        <p>Создано на Preep Docs • ${new Date().toLocaleDateString('ru-RU')}</p>
-    </div>
-</body>
-</html>`;
+function createWordDoc(text, filename) {
+    // RTF заголовок и структура
+    const rtfHeader = '{\\rtf1\\ansi\\deff0 {\\fonttbl {\\f0 Times New Roman;}} \\f0\\fs24 ';
     
-    const blob = new Blob([html], { type: 'application/msword' });
+    // Экранируем специальные символы и разбиваем на строки
+    const escapedText = text
+        .replace(/\\/g, '\\\\')
+        .replace(/{/g, '\\{')
+        .replace(/}/g, '\\}')
+        .replace(/\n/g, '\\par\n');
+    
+    const rtfFooter = '\\par }';
+    
+    const rtfContent = rtfHeader + escapedText + rtfFooter;
+    
+    const blob = new Blob([rtfContent], { type: 'application/rtf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = filename.endsWith('.docx') ? filename : filename + '.docx';
+    a.download = filename.endsWith('.doc') ? filename : filename + '.doc';
     a.click();
     URL.revokeObjectURL(url);
+}
+
+// ============================================
+// ЧТЕНИЕ ФАЙЛОВ
+// ============================================
+function readFileContent(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        const extension = file.name.split('.').pop().toLowerCase();
+        
+        if (extension === 'txt') {
+            reader.onload = (e) => resolve(e.target.result);
+            reader.readAsText(file, 'UTF-8');
+        } 
+        else if (extension === 'doc' || extension === 'docx') {
+            reader.onload = (e) => {
+                // Для Word-файлов получаем текст (упрощенно)
+                const content = e.target.result;
+                // Извлекаем текст из бинарных данных (упрощенно)
+                const text = content.replace(/[^\x20-\x7E\u0400-\u04FF]/g, ' ').replace(/\s+/g, ' ').trim();
+                resolve(`[Содержимое файла ${file.name}]\n\n${text.substring(0, 5000)}...`);
+            };
+            reader.readAsText(file, 'UTF-8');
+        }
+        else {
+            reject('Неподдерживаемый формат файла. Используйте .doc, .docx или .txt');
+        }
+    });
 }
 
 // ============================================
@@ -802,6 +814,7 @@ class PreepDocs {
         this.cart = [];
         this.loadUserData();
         this.init();
+        this.selectedFile = null;
     }
     
     loadUserData() {
@@ -839,6 +852,8 @@ class PreepDocs {
         this.updateBonusInfo();
         this.updateAIInfo();
         this.updateUserInterface();
+        this.setupFileUpload();
+        this.setupAITabs();
         
         if (DEV_MODE && !localStorage.getItem('dev_hint_shown')) {
             setTimeout(() => {
@@ -846,6 +861,100 @@ class PreepDocs {
                 localStorage.setItem('dev_hint_shown', 'true');
             }, 1000);
         }
+    }
+    
+    setupFileUpload() {
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('fileUploadArea');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        
+        if (!fileInput || !uploadArea) return;
+        
+        // Клик по области загрузки
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        // Drag & drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--primary)';
+            uploadArea.style.backgroundColor = 'var(--gray-50)';
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = 'var(--gray-300)';
+            uploadArea.style.backgroundColor = 'transparent';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--gray-300)';
+            uploadArea.style.backgroundColor = 'transparent';
+            
+            if (e.dataTransfer.files.length) {
+                this.handleFileSelect(e.dataTransfer.files[0]);
+            }
+        });
+        
+        // Выбор файла
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                this.handleFileSelect(e.target.files[0]);
+            }
+        });
+    }
+    
+    handleFileSelect(file) {
+        const validTypes = ['.doc', '.docx', '.txt'];
+        const extension = file.name.split('.').pop().toLowerCase();
+        
+        if (!validTypes.includes('.' + extension)) {
+            this.showToast('Пожалуйста, выберите файл формата .doc, .docx или .txt');
+            return;
+        }
+        
+        this.selectedFile = file;
+        
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const fileInfo = document.getElementById('fileInfo');
+        
+        if (fileName && fileSize && fileInfo) {
+            fileName.textContent = file.name;
+            fileSize.textContent = (file.size / 1024).toFixed(2) + ' KB';
+            fileInfo.style.display = 'block';
+        }
+        
+        this.showToast(`Файл "${file.name}" загружен`);
+    }
+    
+    setupAITabs() {
+        const tabs = document.querySelectorAll('.ai-tab');
+        if (!tabs.length) return;
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                // Убираем активный класс у всех
+                tabs.forEach(t => {
+                    t.style.background = 'white';
+                    t.style.color = 'var(--gray-700)';
+                    t.style.border = '1px solid var(--gray-300)';
+                });
+                
+                // Активируем текущую вкладку
+                e.target.style.background = 'var(--primary)';
+                e.target.style.color = 'white';
+                e.target.style.border = 'none';
+                
+                // Показываем соответствующий режим
+                const mode = e.target.dataset.mode;
+                document.getElementById('aiTextMode').style.display = mode === 'text' ? 'block' : 'none';
+                document.getElementById('aiFileMode').style.display = mode === 'file' ? 'block' : 'none';
+            });
+        });
     }
     
     setupEventListeners() {
@@ -1406,7 +1515,7 @@ class PreepDocs {
     }
     
     // ============================================
-    // НЕЙРОСЕТЬ — НОВАЯ ВЕРСИЯ
+    // НЕЙРОСЕТЬ — НОВАЯ ВЕРСИЯ С ФАЙЛАМИ
     // ============================================
     
     updateAIInfo() {
@@ -1443,37 +1552,55 @@ class PreepDocs {
             return;
         }
         
-        const prompt = document.getElementById('aiPrompt').value.trim();
-        if (!prompt) {
-            this.showToast('Опишите, какой документ вам нужен');
-            return;
+        // Определяем режим ввода (текст или файл)
+        const textMode = document.getElementById('aiTextMode').style.display !== 'none';
+        let input = '';
+        let sourceName = '';
+        
+        if (textMode) {
+            input = document.getElementById('aiPrompt').value.trim();
+            sourceName = 'текст';
+            
+            if (!input) {
+                this.showToast('Введите описание или текст документа');
+                return;
+            }
+        } else {
+            if (!this.selectedFile) {
+                this.showToast('Выберите файл для загрузки');
+                return;
+            }
+            
+            try {
+                this.showToast('⏳ Чтение файла...');
+                input = await readFileContent(this.selectedFile);
+                sourceName = this.selectedFile.name;
+            } catch (error) {
+                this.showToast('Ошибка чтения файла');
+                console.error(error);
+                return;
+            }
         }
         
-        const mode = document.getElementById('aiMode')?.value || 'generate';
+        const mode = document.getElementById('aiMode').value;
         
         document.getElementById('aiResult').style.display = 'none';
         document.getElementById('generateAiBtn').disabled = true;
-        document.getElementById('generateAiBtn').innerHTML = '⏳ Генерация...';
+        document.getElementById('generateAiBtn').innerHTML = '⏳ Обработка...';
         
         try {
-            // Здесь будет вызов реального API
-            // Пока используем тестовые данные
-            
+            // Имитация работы нейросети
             let result = '';
-            let filename = '';
             
             if (mode === 'generate') {
-                result = this.generateDocumentFromPrompt(prompt);
-                filename = 'generated-document.docx';
+                result = this.generateDocumentFromPrompt(input, sourceName);
             } else if (mode === 'fill') {
-                result = this.fillTemplate(prompt);
-                filename = 'filled-template.docx';
+                result = this.fillTemplate(input, sourceName);
             } else if (mode === 'check') {
-                result = this.checkDocument(prompt);
-                filename = 'document-check.docx';
+                result = this.checkDocument(input, sourceName);
             }
             
-            // Уменьшаем счетчик генераций
+            // Уменьшаем счетчик
             currentUser.aiGenerationsLeft--;
             this.saveUserData();
             this.updateAIInfo();
@@ -1481,14 +1608,6 @@ class PreepDocs {
             // Показываем результат
             document.getElementById('aiResultContent').textContent = result;
             document.getElementById('aiResult').style.display = 'block';
-            
-            // Добавляем кнопку скачивания DOCX
-            const downloadBtn = document.getElementById('downloadAiResult');
-            if (downloadBtn) {
-                downloadBtn.onclick = () => {
-                    createDocxFromText(result, filename);
-                };
-            }
             
             this.showToast('✅ Готово!');
             
@@ -1502,7 +1621,12 @@ class PreepDocs {
     }
     
     // Генерация документа из описания
-    generateDocumentFromPrompt(prompt) {
+    generateDocumentFromPrompt(prompt, source) {
+        const timestamp = new Date().toLocaleString('ru-RU');
+        const header = source !== 'текст' 
+            ? `[Обработан файл: ${source}]\n\n` 
+            : '';
+        
         const templates = {
             'аренд': `ДОГОВОР АРЕНДЫ КВАРТИРЫ
 
@@ -1556,13 +1680,13 @@ ____________________ /__________________/
         // Простой поиск по ключевым словам
         for (const [key, template] of Object.entries(templates)) {
             if (prompt.toLowerCase().includes(key)) {
-                return template;
+                return header + template;
             }
         }
         
-        return `ДОКУМЕНТ ПО ВАШЕМУ ЗАПРОСУ
+        return header + `ДОКУМЕНТ ПО ВАШЕМУ ЗАПРОСУ
 
-Запрос: "${prompt}"
+Запрос: "${prompt.substring(0, 200)}${prompt.length > 200 ? '...' : ''}"
 
 Договор составлен с учетом требований ГК РФ.
 
@@ -1583,8 +1707,12 @@ ____________________ /__________________/
     }
     
     // Заполнение шаблона данными
-    fillTemplate(prompt) {
-        const lines = prompt.split('\n');
+    fillTemplate(input, source) {
+        const header = source !== 'текст' 
+            ? `[Заполнение шаблона на основе файла: ${source}]\n\n` 
+            : '';
+        
+        const lines = input.split('\n');
         const data = {};
         
         // Простой парсинг (для демо)
@@ -1595,9 +1723,9 @@ ____________________ /__________________/
             }
         });
         
-        return `ЗАПОЛНЕННЫЙ ШАБЛОН
+        return header + `ЗАПОЛНЕННЫЙ ШАБЛОН
 
-Данные из вашего запроса:
+Данные из вашего ${source === 'текст' ? 'запроса' : 'файла'}:
 ${Object.entries(data).map(([k, v]) => `- ${k}: ${v}`).join('\n')}
 
 Документ будет сформирован на основе готового шаблона с подстановкой этих данных.
@@ -1612,7 +1740,11 @@ ${Object.entries(data).map(([k, v]) => `- ${k}: ${v}`).join('\n')}
     }
     
     // Проверка документа
-    checkDocument(prompt) {
+    checkDocument(input, source) {
+        const header = source !== 'текст' 
+            ? `[Проверка документа из файла: ${source}]\n\n` 
+            : '';
+        
         const checks = [
             {
                 pattern: /паспорт|серия|номер|выдан/i,
@@ -1635,13 +1767,13 @@ ${Object.entries(data).map(([k, v]) => `- ${k}: ${v}`).join('\n')}
         const recommendations = [];
         
         checks.forEach(check => {
-            if (!check.pattern.test(prompt)) {
+            if (!check.pattern.test(input)) {
                 recommendations.push(check.message.replace('✅', '❌'));
             }
         });
         
         if (recommendations.length === 0) {
-            return `РЕЗУЛЬТАТ ПРОВЕРКИ ДОКУМЕНТА
+            return header + `РЕЗУЛЬТАТ ПРОВЕРКИ ДОКУМЕНТА
 
 ✅ Документ выглядит корректно.
 ✅ Присутствуют основные реквизиты.
@@ -1652,7 +1784,7 @@ ${Object.entries(data).map(([k, v]) => `- ${k}: ${v}`).join('\n')}
 - Убедитесь, что документ подписан
 - При необходимости покажите юристу`;
         } else {
-            return `РЕЗУЛЬТАТ ПРОВЕРКИ ДОКУМЕНТА
+            return header + `РЕЗУЛЬТАТ ПРОВЕРКИ ДОКУМЕНТА
 
 ⚠️ Найдены потенциальные проблемы:
 
@@ -1676,8 +1808,8 @@ ${recommendations.join('\n')}
     
     downloadAIResult() {
         const text = document.getElementById('aiResultContent').textContent;
-        createDocxFromText(text, 'preep-document.docx');
-        this.showToast('📥 DOCX файл создан');
+        createWordDoc(text, 'preep-document.doc');
+        this.showToast('📥 Word-файл создан');
     }
     
     // ===== ОПЛАТА =====
