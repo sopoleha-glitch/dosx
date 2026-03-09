@@ -5,6 +5,49 @@ emailjs.init("JaUjXNKg7r2iZsTfq");
 const YOOMONEY_CLIENT_ID = 'F7642ED1CA446A7CB47557510D5A8638B35B180125A793FCF6A2EB8F98BBBAC9';
 
 // ============================================
+// БИБЛИОТЕКА ДЛЯ СОЗДАНИЯ DOCX
+// ============================================
+function createDocxFromText(text, filename) {
+    // Простой HTML, который Word откроет как документ
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { 
+            font-family: 'Times New Roman', Times, serif; 
+            font-size: 12pt;
+            line-height: 1.5;
+            margin: 2cm;
+        }
+        h1 { color: #2563eb; font-size: 16pt; }
+        h2 { font-size: 14pt; }
+        .footer { 
+            margin-top: 50px; 
+            font-size: 10pt; 
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    ${text.replace(/\n/g, '<br>')}
+    <div class="footer">
+        <p>Создано на Preep Docs • ${new Date().toLocaleDateString('ru-RU')}</p>
+    </div>
+</body>
+</html>`;
+    
+    const blob = new Blob([html], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename.endsWith('.docx') ? filename : filename + '.docx';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// ============================================
 // РЕЖИМ РАЗРАБОТЧИКА
 // ============================================
 const DEV_MODE = true; // true = режим разработчика (эмуляция покупок)
@@ -13,7 +56,6 @@ const DEV_MODE = true; // true = режим разработчика (эмуля
 // КАТАЛОГ ДОКУМЕНТОВ (15 штук)
 // ============================================
 const documentsCatalog = [
-    // 1. Договор аренды квартиры
     {
         id: 1,
         title: "Договор аренды квартиры",
@@ -28,12 +70,10 @@ const documentsCatalog = [
             "Кто платит коммунальные услуги",
             "Права на проживание с животными"
         ],
-        formats: ["DOCX"], // Только DOCX
+        formats: ["DOCX"],
         popular: true,
         downloads: 1543
     },
-    
-    // 2. Расписка о получении денег
     {
         id: 2,
         title: "Расписка о получении денег",
@@ -52,8 +92,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 2341
     },
-    
-    // 3. Договор купли-продажи автомобиля
     {
         id: 3,
         title: "Договор купли-продажи автомобиля",
@@ -72,8 +110,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 1876
     },
-    
-    // 4. Сборник претензий (6 образцов)
     {
         id: 4,
         title: "Сборник претензий (6 образцов)",
@@ -93,8 +129,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 987
     },
-    
-    // 5. Трудовой договор
     {
         id: 5,
         title: "Трудовой договор",
@@ -115,8 +149,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 654
     },
-    
-    // 6. Договор дарения
     {
         id: 6,
         title: "Договор дарения (с актом)",
@@ -135,8 +167,6 @@ const documentsCatalog = [
         popular: false,
         downloads: 543
     },
-    
-    // 7. Договор займа
     {
         id: 7,
         title: "Договор займа (с процентами)",
@@ -156,8 +186,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 1432
     },
-    
-    // 8. Соглашение о детях при разводе
     {
         id: 8,
         title: "Соглашение о детях и разделе имущества",
@@ -176,8 +204,6 @@ const documentsCatalog = [
         popular: false,
         downloads: 432
     },
-    
-    // 9. Сборник завещаний (4 вида)
     {
         id: 9,
         title: "Сборник завещаний (4 вида)",
@@ -196,8 +222,6 @@ const documentsCatalog = [
         popular: false,
         downloads: 876
     },
-    
-    // 10. Счет на оплату
     {
         id: 10,
         title: "Счет на оплату (бланк)",
@@ -216,8 +240,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 2345
     },
-    
-    // 11. Договор оказания услуг
     {
         id: 11,
         title: "Договор оказания услуг (универсальный)",
@@ -236,8 +258,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 1543
     },
-    
-    // 12. Договор купли-продажи товара
     {
         id: 12,
         title: "Договор купли-продажи товара (с актом)",
@@ -256,8 +276,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 876
     },
-    
-    // 13. Акт выполненных работ
     {
         id: 13,
         title: "Акт выполненных работ (оказанных услуг)",
@@ -276,8 +294,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 1654
     },
-    
-    // 14. Сборник доверенностей (5 видов)
     {
         id: 14,
         title: "Сборник доверенностей (5 видов)",
@@ -296,8 +312,6 @@ const documentsCatalog = [
         popular: true,
         downloads: 765
     },
-    
-    // 15. Договор подряда
     {
         id: 15,
         title: "Договор подряда (с ТЗ и календарным планом)",
@@ -339,8 +353,8 @@ const TARIFFS = {
     pro: {
         name: "PRO",
         price: 499,
-        discount: 0.2, // 20% скидка
-        bonusMultiplier: 2, // удвоенные бонусы
+        discount: 0.2,
+        bonusMultiplier: 2,
         aiGenerations: 10
     }
 };
@@ -660,10 +674,8 @@ class EmailAuth {
             const TEMPLATE_ID = "template_s9gd3tg";
             
             const templateParams = {
-                email: email,
-                code: this.verificationCode,
-                from_name: "Preep Docs",
-                reply_to: "appar.raprar@yandex.ru"
+                to_email: email,
+                code: this.verificationCode
             };
             
             console.log('Отправляем запрос с параметрами:', templateParams);
@@ -1060,22 +1072,15 @@ class PreepDocs {
         document.head.appendChild(style);
     }
     
-    // ===== МЕТОДЫ РАЗРАБОТЧИКА =====
-    
     downloadFile(id) {
         const doc = documentsCatalog.find(d => d.id === id);
         if (!doc) return;
         
-        // Ссылка на DOCX файл в папке docs
         const fileUrl = `https://sopoleha-glitch.github.io/dosx/docs/${id}.docx`;
-        
-        // Открываем ссылку в новой вкладке
         window.open(fileUrl, '_blank');
-        
         this.showToast(`📥 Скачивание "${doc.title}" начато`);
     }
     
-    // Для обратной совместимости
     downloadDevFile(id) {
         this.downloadFile(id);
     }
@@ -1115,8 +1120,6 @@ class PreepDocs {
         this.updateAIInfo();
         this.showToast('🔄 Тестовые данные сброшены');
     }
-    
-    // ===== КАТАЛОГ =====
     
     displayDocuments(filteredDocs = null) {
         const container = document.getElementById('docsContainer');
@@ -1245,8 +1248,6 @@ class PreepDocs {
         this.openModal('docModal');
     }
     
-    // ===== КОРЗИНА =====
-    
     addToCart(id) {
         const doc = documentsCatalog.find(d => d.id === id);
         if (!doc) return;
@@ -1338,8 +1339,6 @@ class PreepDocs {
         return bonus;
     }
     
-    // ===== БОНУСЫ =====
-    
     updateBonusInfo() {
         const bonusSpan = document.getElementById('bonusGenerations');
         if (bonusSpan) {
@@ -1406,7 +1405,9 @@ class PreepDocs {
         this.updateCartCount();
     }
     
-    // ===== НЕЙРОСЕТЬ =====
+    // ============================================
+    // НЕЙРОСЕТЬ — НОВАЯ ВЕРСИЯ
+    // ============================================
     
     updateAIInfo() {
         const aiLeftSpan = document.getElementById('aiGenerationsLeft');
@@ -1448,49 +1449,117 @@ class PreepDocs {
             return;
         }
         
+        const mode = document.getElementById('aiMode')?.value || 'generate';
+        
         document.getElementById('aiResult').style.display = 'none';
         document.getElementById('generateAiBtn').disabled = true;
         document.getElementById('generateAiBtn').innerHTML = '⏳ Генерация...';
         
         try {
-            const response = await fetch('/api/generate-doc', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    prompt: prompt,
-                    type: document.getElementById('aiDocType').value,
-                    style: document.getElementById('aiStyle').value
-                })
-            });
+            // Здесь будет вызов реального API
+            // Пока используем тестовые данные
             
-            const data = await response.json();
+            let result = '';
+            let filename = '';
             
-            if (data.success) {
-                currentUser.aiGenerationsLeft--;
-                this.saveUserData();
-                this.updateAIInfo();
-                
-                document.getElementById('aiResultContent').textContent = data.document;
-                document.getElementById('aiResult').style.display = 'block';
-                this.showToast('Документ создан!');
-            } else {
-                throw new Error(data.error || 'Ошибка генерации');
+            if (mode === 'generate') {
+                result = this.generateDocumentFromPrompt(prompt);
+                filename = 'generated-document.docx';
+            } else if (mode === 'fill') {
+                result = this.fillTemplate(prompt);
+                filename = 'filled-template.docx';
+            } else if (mode === 'check') {
+                result = this.checkDocument(prompt);
+                filename = 'document-check.docx';
             }
+            
+            // Уменьшаем счетчик генераций
+            currentUser.aiGenerationsLeft--;
+            this.saveUserData();
+            this.updateAIInfo();
+            
+            // Показываем результат
+            document.getElementById('aiResultContent').textContent = result;
+            document.getElementById('aiResult').style.display = 'block';
+            
+            // Добавляем кнопку скачивания DOCX
+            const downloadBtn = document.getElementById('downloadAiResult');
+            if (downloadBtn) {
+                downloadBtn.onclick = () => {
+                    createDocxFromText(result, filename);
+                };
+            }
+            
+            this.showToast('✅ Готово!');
             
         } catch (error) {
             console.error('AI Error:', error);
-            this.showToast('Ошибка генерации. Используем тестовый режим');
-            
-            document.getElementById('aiResultContent').textContent = this.getTestDocument(prompt);
-            document.getElementById('aiResult').style.display = 'block';
-            
+            this.showToast('Ошибка генерации');
         } finally {
             document.getElementById('generateAiBtn').disabled = false;
             document.getElementById('generateAiBtn').innerHTML = '🔮 Создать документ';
         }
     }
     
-    getTestDocument(prompt) {
+    // Генерация документа из описания
+    generateDocumentFromPrompt(prompt) {
+        const templates = {
+            'аренд': `ДОГОВОР АРЕНДЫ КВАРТИРЫ
+
+г. Москва                                         ${new Date().toLocaleDateString('ru-RU')}
+
+Гражданин РФ _____________________________________, паспорт: серия ____ № ______, 
+выдан ___________________________________________, проживающий по адресу: _______________________,
+именуемый в дальнейшем "Арендодатель", с одной стороны, и
+
+Гражданин РФ _____________________________________, паспорт: серия ____ № ______, 
+выдан ___________________________________________, проживающий по адресу: _______________________,
+именуемый в дальнейшем "Арендатор", с другой стороны, заключили настоящий договор о нижеследующем:
+
+1. ПРЕДМЕТ ДОГОВОРА
+1.1. Арендодатель передает, а Арендатор принимает во временное владение и пользование квартиру, 
+расположенную по адресу: __________________________________________, общей площадью ___ кв.м.
+1.2. Квартира принадлежит Арендодателю на праве собственности.
+
+2. АРЕНДНАЯ ПЛАТА
+2.1. Арендная плата составляет _______ рублей в месяц.
+2.2. Оплата производится ежемесячно не позднее ___ числа каждого месяца.
+
+3. СРОК ДЕЙСТВИЯ ДОГОВОРА
+3.1. Договор заключен сроком на ___ месяцев с момента подписания.
+
+4. ПОДПИСИ СТОРОН
+Арендодатель: _____________ /__________________/
+Арендатор: _____________ /__________________/
+
+Дата составления: ${new Date().toLocaleDateString('ru-RU')}`,
+
+            'расписк': `РАСПИСКА
+
+г. _______________                                ${new Date().toLocaleDateString('ru-RU')}
+
+Я, ___________________________________________, паспорт: серия ____ № ______,
+выдан _______________________________________, проживающий по адресу: _______________________,
+получил от _________________________________, паспорт: серия ____ № ______,
+выдан _______________________________________, проживающего по адресу: _______________________,
+денежные средства в сумме _______ (__________________) рублей.
+
+Обязуюсь вернуть указанную сумму в срок до "___" __________ 20__ года.
+
+____________________ /__________________/
+
+Свидетели:
+1. ____________________ /__________________/
+2. ____________________ /__________________/`
+        };
+        
+        // Простой поиск по ключевым словам
+        for (const [key, template] of Object.entries(templates)) {
+            if (prompt.toLowerCase().includes(key)) {
+                return template;
+            }
+        }
+        
         return `ДОКУМЕНТ ПО ВАШЕМУ ЗАПРОСУ
 
 Запрос: "${prompt}"
@@ -1498,9 +1567,102 @@ class PreepDocs {
 Договор составлен с учетом требований ГК РФ.
 
 1. ПРЕДМЕТ ДОГОВОРА
-... (тестовый документ) ...
+... (содержание документа) ...
 
-(Для реальной генерации подключите API)`;
+2. ПРАВА И ОБЯЗАННОСТИ СТОРОН
+... (права и обязанности) ...
+
+3. ОТВЕТСТВЕННОСТЬ СТОРОН
+... (ответственность) ...
+
+4. ПОДПИСИ СТОРОН
+____________________ /__________________/
+____________________ /__________________/
+
+Дата: ${new Date().toLocaleDateString('ru-RU')}`;
+    }
+    
+    // Заполнение шаблона данными
+    fillTemplate(prompt) {
+        const lines = prompt.split('\n');
+        const data = {};
+        
+        // Простой парсинг (для демо)
+        lines.forEach(line => {
+            if (line.includes(':')) {
+                const [key, value] = line.split(':').map(s => s.trim());
+                data[key] = value;
+            }
+        });
+        
+        return `ЗАПОЛНЕННЫЙ ШАБЛОН
+
+Данные из вашего запроса:
+${Object.entries(data).map(([k, v]) => `- ${k}: ${v}`).join('\n')}
+
+Документ будет сформирован на основе готового шаблона с подстановкой этих данных.
+
+Например:
+ФИО Арендодателя: ${data['Арендодатель'] || '_____________'}
+ФИО Арендатора: ${data['Арендатор'] || '_____________'}
+Сумма: ${data['Сумма'] || '_______'} рублей
+Срок: ${data['Срок'] || '___'} месяцев
+
+Полный текст договора будет доступен после подключения реального API.`;
+    }
+    
+    // Проверка документа
+    checkDocument(prompt) {
+        const checks = [
+            {
+                pattern: /паспорт|серия|номер|выдан/i,
+                message: "✅ Паспортные данные указаны"
+            },
+            {
+                pattern: /подпис|фамилия|имя|отчество/i,
+                message: "✅ Стороны идентифицированы"
+            },
+            {
+                pattern: /сумма|руб|₽|цена/i,
+                message: "✅ Указана сумма/цена"
+            },
+            {
+                pattern: /дата|срок|период/i,
+                message: "✅ Указаны сроки"
+            }
+        ];
+        
+        const recommendations = [];
+        
+        checks.forEach(check => {
+            if (!check.pattern.test(prompt)) {
+                recommendations.push(check.message.replace('✅', '❌'));
+            }
+        });
+        
+        if (recommendations.length === 0) {
+            return `РЕЗУЛЬТАТ ПРОВЕРКИ ДОКУМЕНТА
+
+✅ Документ выглядит корректно.
+✅ Присутствуют основные реквизиты.
+✅ Структура документа соблюдена.
+
+Рекомендации:
+- Проверьте правильность всех данных
+- Убедитесь, что документ подписан
+- При необходимости покажите юристу`;
+        } else {
+            return `РЕЗУЛЬТАТ ПРОВЕРКИ ДОКУМЕНТА
+
+⚠️ Найдены потенциальные проблемы:
+
+${recommendations.join('\n')}
+
+Рекомендации:
+- Дополните документ недостающими данными
+- Проверьте соответствие законодательству
+- При необходимости проконсультируйтесь с юристом`;
+        }
     }
     
     copyAIResult() {
@@ -1514,14 +1676,8 @@ class PreepDocs {
     
     downloadAIResult() {
         const text = document.getElementById('aiResultContent').textContent;
-        const blob = new Blob([text], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `document_${Date.now()}.txt`;
-        a.click();
-        URL.revokeObjectURL(url);
-        this.showToast('Файл скачан');
+        createDocxFromText(text, 'preep-document.docx');
+        this.showToast('📥 DOCX файл создан');
     }
     
     // ===== ОПЛАТА =====
