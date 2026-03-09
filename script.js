@@ -1,3 +1,6 @@
+// Инициализация EmailJS с твоим ключом
+emailjs.init("JaUjXNKg7r2iZsTfq");
+
 // Конфигурация ЮMoney
 const YOOMONEY_CLIENT_ID = 'F7642ED1CA446A7CB47557510D5A8638B35B180125A793FCF6A2EB8F98BBBAC9';
 
@@ -675,41 +678,30 @@ class EmailAuth {
         // Запускаем таймер
         this.startTimer();
         
-        // Показываем сообщение о отправке
         app.showToast('⏳ Отправка кода...');
         
         try {
-            // ВАЖНО: используем полный URL
-            const fullUrl = window.location.origin + '/api/send-email-code';
-            console.log('Отправляем запрос на:', fullUrl);
+            // ВАЖНО: ЗАМЕНИ ЭТИ ЗНАЧЕНИЯ НА СВОИ!
+            // Их нужно взять из личного кабинета EmailJS
+            const SERVICE_ID = "service_9x8ehr5";  // ID сервиса (Email Services)
+            const TEMPLATE_ID = "template_abc123"; // ID шаблона (Email Templates)
             
-            const response = await fetch(fullUrl, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
+            const response = await emailjs.send(
+                SERVICE_ID,
+                TEMPLATE_ID,
+                {
+                    to_email: email,
                     code: this.verificationCode
-                })
-            });
+                }
+            );
             
-            const data = await response.json();
-            console.log('Ответ от сервера:', data);
+            console.log('EmailJS ответ:', response);
+            app.showToast(`✅ Код отправлен на ${email}`);
             
-            if (response.ok) {
-                app.showToast(`✅ Код отправлен на ${email}`);
-                console.log('🔐 Ваш код (для отладки):', this.verificationCode);
-            } else {
-                console.error('Ошибка от сервера:', data);
-                app.showToast('⚠️ Ошибка отправки. Смотри консоль (F12)');
-                console.log('🔐 Ваш код для входа:', this.verificationCode);
-            }
         } catch (error) {
-            console.error('Ошибка соединения:', error);
-            app.showToast('⚠️ Ошибка соединения. Код в консоли');
-            console.log('🔐 Ваш код для входа:', this.verificationCode);
+            console.error('Ошибка EmailJS:', error);
+            app.showToast('⚠️ Ошибка отправки. Код в консоли');
+            console.log('🔐 Ваш код:', this.verificationCode);
         }
     }
     
